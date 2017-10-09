@@ -51,7 +51,31 @@
 	\section{Detailed task description}
 	
 	\section{Requirements}
-	
+	\begin{mytable}{Requirements}{}{|c|c|}
+		\hline
+		id1 & The system shall let somebody enter if she typed in an existing user name and the connected password. \\
+		\hline
+		id2 & The users without admin privileges shall not delete anything from the database. \\
+		\hline
+		id3 & The GUI side shall validate its input fields. \\
+		\hline
+		id4 & The system shall defend against SQL injection. \\
+		\hline
+		id5 & The database shall store the hash values of the passwords instead of the plain text. \\
+		\hline
+		id6 & The system lets users create new exercises. \\
+		\hline
+		id7 & The users with admin privileges may delete exercises from the database. \\
+		\hline
+		id8 & The business logic shall provide a coaching phase before the exercising phase. \\
+		\hline
+		id9 & The business logic shall provide exercises from the user's knowledge level or below that. \\
+		\hline
+		id10 & Server shall be able to serve multiple clients.
+		
+		\hline
+	\end{mytable}
+
 	
 	\section{Technical parameters}
 	Both client and server are going to be written in Java in order to be usable on all platforms. The GUI is going to be designed with JavaFX. The server will use Oracle Database. To run the server one needs Maven and WildFly (which is a Maven plugin). The client and server are going to communicate through REST calls.

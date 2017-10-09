@@ -44,11 +44,30 @@
 	\date{}
 	\maketitle
 	\section*{Introduction}
-	This document presents the requirement specification of the software architectures homework \textsl{Language Learning Application}. First, the assigned task is introduced, which is followed by the detailed description of the task. Next, the technical parameters of the software developed for the particular task is presented. Finally, a use-case diagram is given that depicts the essential use-cases of the software.
+	This document presents the requirement specification of the software architectures homework \textsl{Language Learning Application}. First, the assigned task is introduced, which is followed by the detailed description of the task. Next, the technical parameters of the software developed for the particular task are presented. Finally, a use-case diagram is displayed that depicts the essential use-cases of the software.
 	\section{The task}
 	The task is to create an application aiding foreign language learning. The foreign words and sentences can be organized into lessons by means of associated meta information. A central server is responsible for the management and storage of data. In addition to a server component, the application comprises of a client component supporting the management of the server as well as the conduction of lessons. The platforms, serving as the basis of the application, can be chosen freely.
 	
 	\section{Detailed task description}
+	The goal of the project is to create an application that facilitates the learning of English language for Hungarian speakers.
+	
+	To facilitate the use of the application, all functionalities shall be reachable via a graphical interface. The application shall support the registration and authentication of users. The application shall be used only by authenticated users, that is,  users shall be requested to login before any functionality of the application could be utilized. There shall be two types of users: \textsl{simple users} and \textsl{super users}. Both types of users shall be able to use the following functionalities: \emph{learning} the English language via lessons and \emph{creating exercises}. Additionally, super users shall be able to \emph{register new users} and \emph{delete exercises}.
+	
+	The learning activity shall be conducted using \emph{lessons}. A lesson shall consist of two phases: a \emph{coaching} period, where the goal is to introduce new English words and phrases to the user, and an \emph{exercising} period, where the acquired knowledge of the user shall be checked. The application shall have three types of exercises:
+	\begin{itemize}
+		\item choosing the correct Hungarian word for an English word from four possible words,
+		\item giving (typing) a correct Hungarian phrase for an English phrase,
+		\item giving (typing) a correct Hungarian or English word (according to the task) for an object that is depicted by a figure.
+	\end{itemize}
+	A lesson shall comprise of ten exercises which are randomly chosen from a database while taking the knowledge level of users into account. The application shall count the correct answers given by particular users during lessons. On correct answers the application shall give the users \emph{experience points}, which represent the knowledge level of a particular user. Higher level users shall receive harder exercises during lessons. 
+
+	Exercises shall be created in one of the following ways:
+	\begin{itemize}
+		\item a single English-Hungarian word pair can be registered to the application,
+		\item a single English-Hungarian phrase pair can be registered to the application,
+		\item a figure depicting an object can be added in addition to the words that describe the particular object.
+	\end{itemize}
+	
 	
 	\section{Requirements}
 	\begin{mytable}{Requirements}{}{|c|c|}
@@ -86,7 +105,7 @@
 		\resizebox{160mm}{!} {
 			\includegraphics{figures/use-case.pdf}
 		}
-		\caption{Use-case diagram}
+		\caption{Use-case diagram depicting the use-cases of the application.}
 		\label{fig:use-case}
 	\end{figure}
 %	This tutorial presents the \framework\ from a practical aspect. First, a short summary of the framework functionalities is given which is followed by the presentation of composite system elements as well as the semantics a composite system conforms to. Next, an installation guide setting up the \framework\ is presented. Finally, the functionalities of the framework are demonstrated based on a case-study called MoDeS$^3$.

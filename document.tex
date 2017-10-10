@@ -51,47 +51,48 @@
 	\section{Detailed task description}
 	The goal of the project is to create an application that facilitates the learning of English language for Hungarian speakers.
 	
-	To facilitate the use of the application, all functionalities shall be reachable via a graphical interface. The application shall support the registration and authentication of users. The application shall be used only by authenticated users, that is,  users shall be requested to login before any functionality of the application could be utilized. There shall be two types of users: \textsl{simple usera} and \textsl{super user}. Both types of users shall be able to use the following functionalities: \emph{learning} the English language via lessons and \emph{creating exercises}. Additionally, super users shall be able to \emph{register new users} and \emph{delete exercises}.
+	To facilitate the use of the application, all functionalities shall be reachable via a graphical interface. The application shall support the registration and authentication of users. The application shall be used only by authenticated users, that is,  users shall be requested to login before any functionality of the application could be utilized. There shall be two types of users: \textsl{simple user} and \textsl{super user}. Both types of users shall be able to use the following functionalities: \emph{learning} the English language via lessons and \emph{creating exercises}. Additionally, super users shall be able to \emph{register new users} and \emph{delete exercises}.
 	
-	The learning activity shall be conducted using \emph{lessons}. A lesson shall consist of two phases: a \emph{coaching} period, where the goal is to introduce new English words and phrases to the user, and an \emph{exercising} period, where the acquired knowledge of the user shall be checked. The application shall have three types of exercises:
+	The learning activity shall be conducted based on \emph{lessons}. A lesson shall consist of two phases: a \emph{coaching} period, where the goal is to introduce new English words and phrases to the user, and an \emph{exercising} period, where the acquired knowledge of the user shall be checked. The application shall have three types of exercises:
 	\begin{itemize}
 		\item choosing the correct Hungarian word for an English word from four possible words,
 		\item giving (typing) a correct Hungarian phrase for an English phrase,
 		\item giving (typing) a correct Hungarian or English word (according to the task) for an object that is depicted by a figure.
 	\end{itemize}
-	A single lesson shall comprise of ten exercises which are randomly chosen from a database while taking the knowledge level of users into account. The application shall count the correct answers given by particular users during lessons. On correct answers the application shall give the users \emph{experience points}, which represent the knowledge level of a particular user. Higher level users shall receive harder exercises during lessons. 
+	A single lesson shall comprise of ten exercises which are randomly chosen from a database based on the knowledge level of the playing user. The application shall count the correct answers given by particular users during lessons. On correct answers the application shall give the users \emph{experience points}, which represent the knowledge level of a particular user. Higher level users shall receive harder exercises during lessons. 
 
 	Exercises shall be created in one of the following ways:
 	\begin{itemize}
 		\item a single English-Hungarian word pair can be registered to the application,
 		\item a single English-Hungarian phrase pair can be registered to the application,
-		\item a figure depicting an object can be added in addition to the words that describe the particular object.
+		\item a figure depicting an object can be added in addition to the English and Hungarian words that describe the particular object.
 	\end{itemize}
 	
 	
 	\section{Requirements}
+	This section introduces the mandatory and optional requirements regarding the application.
 	\begin{enumerate}
-		\item The application shall allow somebody to login only if she typed in an existing user name and the associated password.
-		\item A user without super user privileges shall not be able to delete anything from the database.
-		\item The application shall validate the content of input fields given by users.
-		\item The application shall be able to recognize and counter SQL injection attacks.
-		\item The database shall store the hash values of the passwords instead of the plain text.
-		\item The application shall allow authenticated users to create new exercises.
-		\item A user with super user privileges shall be able to delete exercises from the database.
-		\item The business logic shall provide a coaching phase before the exercising phase.
-		\item The business logic shall provide exercises matching or below the user's knowledge level.
-		\item The application server shall be able to serve multiple clients. 
+		\item Mandatory: The application shall allow somebody to login only if she typed in an existing user name and the associated password.
+		\item Mandatory: A user without super user privileges shall not be able to delete anything from the database.
+		\item Mandatory:  The application shall validate the content of input fields given by users.
+		\item Mandatory:  The application shall be able to recognize and counter SQL injection attacks.
+		\item Mandatory:  The database shall store the hash values of the passwords instead of the plain text.
+		\item Mandatory: The application shall allow authenticated users to create new exercises.
+		\item Optional: A user with super user privileges shall be able to delete exercises from the database.
+		\item Mandatory: The business logic shall provide a coaching phase before the exercising phase.
+		\item  Mandatory:  The business logic shall provide exercises matching or below the user's knowledge level.
+		\item Optional: The application server shall be able to serve multiple clients parallely. 
 
 	\end{enumerate}
 	
 	\section{Technical parameters}
-	Both the client and server components of the application are going to be written in Java in order to enhance reuse on all platforms. The graphical interface of the application is going to be developed using JavaFX. The server is going to be based on an Oracle relational database. The running of the server component is going to be based on Maven WildFly. The client and server components are going to communicate through REST calls.
+	Both the client and server components of the application are going to be based on the Java 8 platform in order to enhance reuse on all platforms. The graphical interface of the application is going to be developed using JavaFX. The server is going to be based on an Oracle relational database version 11.0. The running of the server component is going to be based on Maven WildFly version 1.7.0. The client and server components are going to communicate through REST calls.
 	
 	\section{Use-cases}
 	Figure \ref{fig:use-case} depicts the high level use-cases of the application.
 	\begin{figure}[htbp]
 		\center
-		\resizebox{160mm}{!} {
+		\resizebox{155mm}{!} {
 			\includegraphics{figures/use-case.pdf}
 		}
 		\caption{Use-case diagram depicting the use-cases of the application.}

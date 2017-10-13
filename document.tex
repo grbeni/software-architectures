@@ -57,7 +57,7 @@
 	\begin{itemize}
 		\item choosing the correct Hungarian word for an English word from four possible words,
 		\item giving (typing) a correct Hungarian phrase for an English phrase,
-		\item giving (typing) a correct Hungarian or English word (according to the task) for an object that is depicted by a figure.
+		\item giving (typing) a correct English word for an object that is depicted by a figure.
 	\end{itemize}
 	A single lesson shall comprise of ten exercises which are randomly chosen from a database based on the knowledge level of the playing user. The application shall count the correct answers given by particular users during lessons. On correct answers the application shall give the users \emph{experience points}, which represent the knowledge level of a particular user. Higher level users shall receive harder exercises during lessons. 
 
@@ -73,12 +73,13 @@
 	This section introduces the mandatory and optional requirements regarding the application.
 	\begin{enumerate}
 		\item Mandatory: The application shall allow somebody to login only if she typed in an existing user name and the associated password.
-		\item Mandatory: A user without super user privileges shall not be able to delete anything from the database.
 		\item Mandatory:  The application shall validate the content of input fields given by users.
 		\item Mandatory:  The application shall be able to recognize and counter SQL injection attacks.
 		\item Mandatory:  The database shall store the hash values of the passwords instead of the plain text.
 		\item Mandatory: The application shall allow authenticated users to create new exercises.
-		\item Optional: A user with super user privileges shall be able to delete exercises from the database.
+		\item Mandatory: A user without super user privileges shall not be able to delete exercises from the database that she is not authorized to access.
+		\item Optional: A user without super user privileges shall be able to delete exercises from the database that she created.
+		\item Optional: A user with super user privileges shall be able to delete arbitrary exercises from the database.
 		\item Mandatory: The business logic shall provide a coaching phase before the exercising phase.
 		\item  Mandatory:  The business logic shall provide exercises matching or below the user's knowledge level.
 		\item Optional: The application server shall be able to serve multiple clients parallely. 

@@ -12,6 +12,10 @@ Thumbs.db
 .RData
 .Rproj.user
 
+# Documentation #
+*.pdf
+document.*
+
 ### Gradle ###
 .gradle
 build/

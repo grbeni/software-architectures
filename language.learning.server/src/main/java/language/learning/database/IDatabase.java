@@ -1,15 +1,13 @@
 package language.learning.database;
 
-import language.learning.datatype.User;
+import language.learning.user.User;
 
 public interface IDatabase {
 	
 	public User getUser(String username);
 	
-	// TODO
-	public boolean addExerciseSentence();
 	
 	// TODO
-	public boolean addExerciseWord();
+	public int addExercise();
 
 }

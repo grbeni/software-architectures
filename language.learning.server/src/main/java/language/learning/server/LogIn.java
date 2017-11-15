@@ -2,9 +2,9 @@ package language.learning.server;
 
 import language.learning.database.Database;
 import language.learning.database.IDatabase;
-import language.learning.datatype.User;
+import language.learning.user.User;
 
-public class Management implements IManagement {
+public class LogIn implements ILogIn {
 
 	private IDatabase db = Database.getInstance();
 	

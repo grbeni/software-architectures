@@ -2,8 +2,8 @@ package language.learning.database;
 
 import org.apache.log4j.Logger;
 
-import language.learning.datatype.User;
 import language.learning.logger.LoggerWrapper;
+import language.learning.user.User;
 
 public class Database implements IDatabase {
 
@@ -16,7 +16,11 @@ public class Database implements IDatabase {
 		log.trace("Database created");
 	}
 	
-	public static Database getInstance() {
+	/**
+	 * Method for accessing the database object.	
+	 * @return singleton database instance
+	 */
+	synchronized public static Database getInstance() {
 		log.trace("Database instance getter");
 		
 		if (instance == null) {
@@ -29,23 +33,15 @@ public class Database implements IDatabase {
 	@Override
 	public User getUser(String username) {
 		// TODO
-		User dummyUser = new User();
-		dummyUser.setUsername("dummy");
-		dummyUser.setPasswordHash(12345);
+		User dummyUser = new User("dummy", 12345);
 				
 		return dummyUser;
 	}
 
 	@Override
-	public boolean addExerciseSentence() {
+	public int addExercise() {
 		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean addExerciseWord() {
-		// TODO Auto-generated method stub
-		return true;
+		return 0;
 	}
 	
 }

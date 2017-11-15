@@ -17,7 +17,7 @@ public class AddExercise implements IAddExercise {
 	// TODO
 	@Override
 	public int addExercise(Exercise exercise) {
-		log.info("Exercise to be added: " + exercise.getEnglishWord() + " - " + exercise.getHungarianWord());
+		log.info("Exercise to be added: " + exercise.getEnglish() + " - " + exercise.getHungarian());
 		
 		return db.addExercise();
 	}

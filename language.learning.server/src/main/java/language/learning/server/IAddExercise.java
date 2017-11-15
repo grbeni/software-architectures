@@ -14,7 +14,6 @@ public interface IAddExercise {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	int addExercise(Exercise exercise);
 	
 	// TODO

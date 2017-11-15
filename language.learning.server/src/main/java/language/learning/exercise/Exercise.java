@@ -1,12 +1,13 @@
 package language.learning.exercise;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import language.learning.logger.LoggerWrapper;
 
 public class Exercise {
 
-	private static final Logger log = (new LoggerWrapper(Exercise.class.getName())).getLog();
+	private static final Logger log = (new LoggerWrapper(Exercise.class.getName(), Level.ERROR)).getLog();
 	
 	// The word in English
 	private String english;
@@ -20,6 +21,7 @@ public class Exercise {
 		log.trace("Exercise created");
 	}
 	
+	
 	public Exercise(String englishWord, String hungarianWord) {
 		log.trace("WordExercise created with word: " + english + " - " + hungarian);
 		
@@ -29,23 +31,42 @@ public class Exercise {
 	
 	
 	/**
-	 * Getter for English word.
-	 * @return English word
+	 * Getter for English.
+	 * @return English
 	 */
-	public String getEnglishWord() {
+	public String getEnglish() {
 		log.trace("English getter: " + english);
 		
 		return english;
 	}
 	
 	/**
-	 * Getter for Hungarian word.
-	 * @return Hungarian word
+	 * Setter for English.
+	 * @param english
 	 */
-	public String getHungarianWord() {
+	public void setEnglish(String english) {
+		log.error("English set to: " + english);
+		
+		this.english = english;
+	}
+	
+	/**
+	 * Getter for Hungarian.
+	 * @return Hungarian
+	 */
+	public String getHungarian() {
 		log.trace("Hungarian getter: " + hungarian);
 		
 		return hungarian;
 	}
+	
+	/**
+	 * Setter for Hungarian.
+	 * @param hungarian
+	 */
+	public void setHungarian(String hungarian) {
+		log.error("Hungarian set to: " + hungarian);
 		
+		this.hungarian = hungarian;
+	}
 }

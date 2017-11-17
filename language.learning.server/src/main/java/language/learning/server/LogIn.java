@@ -11,7 +11,11 @@ public class LogIn implements ILogIn {
 	@Override
 	public User logIn(String username) {
 		
-		User user = db.getUser(username);
+		User user = null;
+		if (db.connect()) {
+			user = db.getUser(username);
+		}
+		
 		
 		return user;
 	}

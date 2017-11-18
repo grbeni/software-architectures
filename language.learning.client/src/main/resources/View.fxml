@@ -61,7 +61,7 @@
 			<!-- User info label -->
 			<Label fx:id="userInfoLabel" text="User name, level, experience" prefWidth="303" prefHeight="17" />	
 			<!-- Disconnect button -->
-			<Button fx:id="disconnectButton" text="Disconnect" />	
+			<Button fx:id="disconnectButton" text="Disconnect" onAction="#disconnectEventHandler" />	
 		</HBox>
 	</VBox>
 
@@ -75,10 +75,10 @@
 					<StackPane>					
 						<!-- Start learning button -->
 						<Button fx:id="startLearningButton" text="Start Learning" prefWidth="180" prefHeight="40"
-							visible="false" style="-fx-font-size: 1.5em; " />					
+							visible="true" style="-fx-font-size: 1.5em; " onAction="#startLearningEventHandler" />					
 						
 						<!-- Coaching state -->
-						<VBox visible="true">							
+						<VBox fx:id="coachingBox" visible="false">							
 							<HBox alignment="CENTER">
 								<padding>
 									<Insets top="20.0" bottom="20.0" />
@@ -97,13 +97,13 @@
 							</HBox>
 							<!-- Next button -->
 							<HBox alignment="CENTER">
-								<Button fx:id="nextCoachingButton" text="Next" prefWidth="80">
+								<Button fx:id="nextCoachingButton" text="Next" prefWidth="80" onAction="#nextCoachingEventHandler" >
 								</Button>
 							</HBox>
 						</VBox>
 						
 						<!-- Four English words exercise -->
-						<VBox fx:id="fourWordsLayout" visible="false">
+						<VBox fx:id="fourWordsBox" visible="false">
 							<!-- Layout for the task specification -->
 							<HBox alignment="CENTER" spacing="10">						
 								<!-- Label to display the task -->
@@ -116,17 +116,17 @@
 							<!-- Layout for the buttons -->
 							<HBox alignment="CENTER" spacing="10">
 								<Button fx:id="choiceOneButton" text="Choice one" prefWidth="150" prefHeight="40"
-									visible="true" />
+									visible="true" onAction="#choiceOneEventHandler" />
 								<Button fx:id="choiceTwoButton" text="Choice two" prefWidth="150" prefHeight="40"
-									visible="true" />
+									visible="true" onAction="#choiceTwoEventHandler" />
 								<Button fx:id="choiceThreeButton" text="Choice three" prefWidth="150" prefHeight="40"
-									visible="true" />
+									visible="true" onAction="#choiceThreeEventHandler" />
 								<Button fx:id="choiceFourButton" text="Choice four" prefWidth="150" prefHeight="40"
-									visible="true" />
+									visible="true" onAction="#choiceFourEventHandler" />
 							</HBox>
 						</VBox>
 						<!-- Translation exercise -->
-						<VBox fx:id="translationLayout" visible="false">
+						<VBox fx:id="translationBox" visible="false">
 							<!-- Layout for the task specification -->
 							<HBox alignment="CENTER" spacing="10">
 								<!-- Label to the translatable phrase -->
@@ -145,7 +145,7 @@
 							</HBox>
 						</VBox>
 						<!-- Image recognition exercise -->
-						<VBox fx:id="imageLayout" visible="false">
+						<VBox fx:id="imageRecognitionBox" visible="false">
 							<!-- Layout for the image -->
 							<HBox alignment="CENTER" spacing="10">
 								<padding>
@@ -165,14 +165,22 @@
 									visible="true" />
 							</HBox>
 						</VBox>
+						<!-- Summary -->
+						<VBox fx:id="summaryBox" alignment="CENTER" visible="false" spacing="10" >
+							<Label fx:id="correctAnswersLabel" style="-fx-font-size: 2.0em; " text="Congratulations!" />
+							<Label fx:id="correctAnswersLabel" style="-fx-font-size: 1.1em; " />
+							<Label fx:id="experienceGainedLabel" style="-fx-font-size: 1.1em; " />
+							<Button fx:id="resetLearningButton" text="Finalize Result" prefWidth="130" prefHeight="40"
+									visible="true" onAction="#resetLearningEventHandler" />
+						</VBox>
 					</StackPane>
 					<!-- Info about the tasks -->
-					<HBox fx:id="connectionInfoLayout" alignment="CENTER_LEFT" spacing="10">	
+					<HBox alignment="CENTER_LEFT" spacing="10">	
 						<padding>
 							<Insets top="10.0" />
 						</padding>
 						<!-- Exercise label -->
-						<Label fx:id="exerciseCountLabel" text="Finished tasks: 0/10" />	
+						<Label fx:id="exerciseCountLabel" />	
 					</HBox>
 				</VBox>
 			</Tab>

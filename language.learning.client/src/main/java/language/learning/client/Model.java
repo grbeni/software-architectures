@@ -9,6 +9,7 @@ package language.learning.client;
 
 import java.sql.*;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -97,83 +98,9 @@ public class Model {
 	 *            User's password
 	 * @return True on success, false on fail
 	 */
-	public boolean connect(String userName, String password) {
-
-		try {
-
-			// If connection status is disconnected
-			if (connection == null || !connection.isValid(30)) {
-
-				if (connection == null) {
-
-					// Load the specified database driver
-					Class.forName(driverName);
-
-					// Driver is for Oracle 12cR1 (certified with JDK 7 and JDK
-					// 8)
-					if (java.lang.System.getProperty("java.vendor").equals("Microsoft Corp.")) {
-//						DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-					}
-				} else {
-
-					connection.close();
-
-				}
-
-				// Create new connection and get metadata
-				connection = DriverManager.getConnection(databaseUrl, userName, password);
-				DatabaseMetaData dbmd = connection.getMetaData();
-
-				databaseProductName = dbmd.getDatabaseProductName();
-				databaseProductVersion = dbmd.getDatabaseProductVersion();
-
-			}
-
-			return true;
-
-		} catch (SQLException e) {
-			lastError = "error ".concat(e.toString());
-			return false;
-
-		} catch (ClassNotFoundException e) {
-			lastError = "error ".concat(e.toString());
-			return false;
-
-		}
-
-	}
-
-	/**
-	 * Tests the database connection by submitting a query
-	 *
-	 * @return True on success, false on fail
-	 */
-	public String testConnection() {
-
-		try {
-
-			// Create SQL query and execute it
-			// If user input has to be processed, use PreparedStatement instead!
-			Statement stmt = connection.createStatement();
-			ResultSet rset = stmt.executeQuery("SELECT count(*) FROM oktatas.igazolvanyok");
-
-			// Process the results
-			String result = null;
-			while (rset.next()) {
-				result = String.format("Total number of rows in 'Igazolvanyok' table in 'Oktatas' schema: %s",
-						rset.getString(1));
-			}
-
-			// Close statement
-			stmt.close();
-
-			return result;
-
-		} catch (SQLException e) {
-			lastError = "error ".concat(e.toString());
-			return null;
-
-		}
+	public boolean connect(String userName, String password, List<String> log) {	
+		
+		return true;
 	}
 
 	/**

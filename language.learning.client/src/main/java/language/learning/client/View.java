@@ -1,15 +1,9 @@
-/**
- * This JavaFX skeleton is provided for the Software Laboratory 5 course. Its structure
- * should provide a general guideline for the students.
- * As suggested by the JavaFX model, we'll have a GUI (view),
- * a controller class (this one) and a model.
- */
-
 package language.learning.client;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -40,7 +34,17 @@ public class View {
 	private VBox rootLayout;
 	@FXML
 	private HBox connectionLayout;
-
+	@FXML
+	private VBox coachingBox;
+	@FXML
+	private VBox fourWordsBox;
+	@FXML
+	private VBox translationBox;
+	@FXML
+	private VBox imageRecognitionBox;
+	@FXML
+	private VBox summaryBox;
+	
 	// Texts
 	@FXML
 	private TextField userNameField;
@@ -93,6 +97,8 @@ public class View {
 	@FXML
 	private Button sendImageDescriptionButton;
 	@FXML
+	private Button resetLearningButton;
+	@FXML
 	private Button addExerciseButton;
 	@FXML
 	private Button deleteExerciseButton;
@@ -100,7 +106,6 @@ public class View {
 	private Button addUserButton;
 	@FXML
 	private Button deleteUserButton;
-
 
 	// Labels
 	@FXML
@@ -117,6 +122,10 @@ public class View {
 	private Label translatablePhraseLabel;
 	@FXML
 	private Label exerciseCountLabel;
+	@FXML
+	private Label correctAnswersLabel;
+	@FXML
+	private Label experienceGainedLabel;
 
 	// Tabs
 	@FXML
@@ -128,19 +137,15 @@ public class View {
 	
 	// Alert window
 	Alert alertWindow = new Alert(AlertType.ERROR);
+	
+	// Experience ratio
+	private final int EXPERIENCE_RATIO = 10;
+	private final int TASK_COUNT = 10;
+	
+	// Inner variables
+	private int correctAnswerCount = 0;
+	private int answerCount = 0;
 
-	// Titles and map keys of table columns search
-	String searchColumnTitles[] = new String[] { "Befekteto neve", "Reszveny neve", "Tranzakcios mennyiseg", "Tranzakcios egysegar" };
-	String searchColumnKeys[] = new String[] { "col1", "col2", "col3", "col4" };
-
-	// Titles and map keys of table columns statistics
-	String statisticsColumnTitles[] = new String[] { "Reszveny neve", "Atlagos havi tranzakcioszam"};
-	String statisticsColumnKeys[] = new String[] { "cegnev", "atltrszam" };
-
-
-	/**
-	 * View constructor
-	 */
 	public View() {
 		controller = new Controller();
 	}
@@ -150,120 +155,237 @@ public class View {
 	 */
 	@FXML
 	public void initialize() {
-		// Clear username and password textfields and display status
+		// Set display status
 		connectionStateLabel.setTextFill(Color.web("#ee0000"));
-		logMsg("LOLGEX");
 	}
 
 	/**
-	 * Initialize controller with data from AppMain (now only sets stage)
+	 * Initialize controller with data from AppMain.
 	 *
-	 * @param stage
-	 *            The top level JavaFX container
+	 * @param stage The top level JavaFX container
 	 */
 	public void initData(Stage stage) {
-		// Set 'onClose' event handler (of the container)
+		// Set 'onClose' event handler of the container
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent winEvent) {
-				List<String> log = new ArrayList<>();
-				// We try to commit
-				// If the autocommit is true, then the commit will be unsuccessful, but that should not bother us
-				controller.commit(log);
-				for (String string : log) logMsg(string);
+				System.out.println("Exiting...");				
 			}
 		});
 	}
 
 	/**
-	 * This is called whenever the connect button is pressed.
+	 * Called whenever the connect button is pressed.
 	 */
 	@FXML
 	private void connectEventHandler(ActionEvent event) {
 		//Log container
-		List<String> log = new ArrayList<>();
+		List<String> log = new ArrayList<String>();
 
 		// Controller connect method will do everything for us, just call
-		// it
 		if (controller.connect(userNameField.getText(), passwordField.getText(), log)) {
 			connectionStateLabel.setText("Connection created");
 			connectionStateLabel.setTextFill(Color.web("#009900"));
 		}
-
-		//Write log to gui
-		for (String string : log) { 
-			logMsg(string); 
-			if (string.startsWith("error ")) {
-				alertWindow.setContentText(string.replaceFirst("^error ", ""));
-				alertWindow.show();
-			}
+		userInfoLabel.setText("User name");
+		
+		// Write log to the GUI
+		logList(log);
+	}
+	
+	/**
+	 * Called whenever the disconnect button is pressed.
+	 */
+	@FXML
+	private void disconnectEventHandler(ActionEvent event) {
+		//Log container
+		List<String> log = new ArrayList<String>();
+		
+		connectionStateLabel.setText("Disconnected");
+		connectionStateLabel.setTextFill(Color.web("#ee0000"));
+		userInfoLabel.setText("");
+		
+		// Write log to the GUI
+		logList(log);
+	}
+	
+	/**
+	 * Called whenever the start learning button is pressed.
+	 */
+	@FXML
+	private void startLearningEventHandler(ActionEvent event) {
+		//Log container
+		List<String> log = new ArrayList<String>();
+		System.out.println("Started coaching");
+		
+		// Get coaching tasks
+		
+		// Change the window
+		startLearningButton.setVisible(false);
+		coachingBox.setVisible(true);
+		
+		// Write log to the GUI
+		logList(log);
+	}
+	
+	/**
+	 * Called whenever the next coaching button is pressed.
+	 */
+	@FXML
+	private void nextCoachingEventHandler(ActionEvent event) {
+		//Log container
+		List<String> log = new ArrayList<String>();
+		
+		englishWordLabel.setText("Next English word");
+		hungarianWordLabel.setText("Next Hungarian word");
+		
+		// Get coaching tasks
+		
+		// At the end of coaching period
+		coachingBox.setVisible(false);
+		fourWordsBox.setVisible(true);
+		
+		// Write log to the GUI
+		logList(log);
+	}
+	
+	private void testChoiceAnswer(Button choiceButton) {
+		++answerCount;
+		exerciseCountLabel.setText("Finished tasks: " + answerCount + "/" + TASK_COUNT);
+		
+		if (answerCount >= 10) {
+			finishExercises();
 		}
 	}
-
-
-	/**
-	 * This is called whenever the edit button is pressed
-	 * Task 2,3,4
-	 * USE controller modify method (verify data in controller !!!)
-	 * @param event
-	 *            Contains details about the JavaFX event
-	 */
-	@FXML
-	private void editEventHandler(ActionEvent event) {
-		List<String> log = new ArrayList<>();
-		
-		logRecord(log);
-	}
-
-
-	/**
-	 * This is called whenever the commit button is pressed
-	 * Task 4
-	 * USE controller commit method
-	 * Don't forget SET the commit button disable state
-	 * LOG:
-	 * 	commit ok: if commit return true
-	 *  commit failed: if commit return false
-	 * @param event
-	 *            Contains details about the JavaFX event
-	 */
-	@FXML
-	private void commitEventHandler(ActionEvent event) {
-		List<String> log = new ArrayList<>();
-		controller.commit(log);
-		logRecord(log);
-	}
-
-
-
-	/**
-	 * This is called whenever the statistics button is pressed
-	 * Task 5
-	 * USE controller getStatistics method
-	 * @param event
-	 *            Contains details about the JavaFX event
-	 */
-	@FXML
-	private void statisticsEventHandler(ActionEvent event) {
-		List<String> log = new ArrayList<>();
-		
-		logRecord(log);	
+	
+	private void finishExercises() {
+		if (answerCount >= 10) {
+			fourWordsBox.setVisible(false);
+			translationBox.setVisible(false);
+			imageRecognitionBox.setVisible(false);
+			summaryBox.setVisible(true);
 			
+			correctAnswersLabel.setText("Correct answers: " + correctAnswerCount);
+			experienceGainedLabel.setText("Experience gained: " + correctAnswerCount * EXPERIENCE_RATIO);
+		
+			answerCount = 0;
+			correctAnswerCount = 0;
+		}
+		
+		
 	}
+	
+	
+	/**
+	 * Called whenever the choice one button is pressed.
+	 */
+	@FXML
+	private void choiceOneEventHandler(ActionEvent event) {
+		//Log container
+		List<String> log = new ArrayList<String>();
+		
+		testChoiceAnswer(choiceOneButton);
+		
+		// Get coaching tasks
+		
+		// Write log to the GUI
+		logList(log);
+	}
+	
+	/**
+	 * Called whenever the choice two button is pressed.
+	 */
+	@FXML
+	private void choiceTwoEventHandler(ActionEvent event) {
+		//Log container
+		List<String> log = new ArrayList<String>();
+		
+		testChoiceAnswer(choiceTwoButton);
+		
+		// Get coaching tasks
+		
+		// Write log to the GUI
+		logList(log);
+	}
+	
+	/**
+	 * Called whenever the choice three button is pressed.
+	 */
+	@FXML
+	private void choiceThreeEventHandler(ActionEvent event) {
+		//Log container
+		List<String> log = new ArrayList<String>();
+		
+		testChoiceAnswer(choiceThreeButton);
+		
+		// Get coaching tasks
+		
+		// Write log to the GUI
+		logList(log);
+	}
+	
+	/**
+	 * Called whenever the choice four button is pressed.
+	 */
+	@FXML
+	private void choiceFourEventHandler(ActionEvent event) {
+		//Log container
+		List<String> log = new ArrayList<String>();
+		
+		testChoiceAnswer(choiceFourButton);
+		
+		// Get coaching tasks
+		
+		// Write log to the GUI
+		logList(log);
+	}
+	
+	/**
+	 * Called whenever the reset learning button is pressed.
+	 */
+	@FXML
+	private void resetLearningEventHandler(ActionEvent event) {
+		summaryBox.setVisible(false);
+		startLearningButton.setVisible(true);
+	}
+	
+//		@FXML
+//		private Button choiceOneButton;
+//		@FXML
+//		private Button choiceTwoButton;
+//		@FXML
+//		private Button choiceThreeButton;
+//		@FXML
+//		private Button choiceFourButton;
+//		@FXML
+//		private Button sendTranslationButton;
+//		@FXML
+//		private Button sendImageDescriptionButton;
+//		@FXML
+//		private Button addExerciseButton;
+//		@FXML
+//		private Button deleteExerciseButton;
+//		@FXML
+//		private Button addUserButton;
+//		@FXML
+//		private Button deleteUserButton;
+
 
 	/**
-	 * Appends the message (with a line break added) to the log.
-	 *
-	 * @param message The message to be logged
+	 * Appends the message (with a line break added) to the logs.
 	 */
 	protected void logMsg(String message) {
 		logTextArea1.appendText(message + "\n");
 		logTextArea2.appendText(message + "\n");
 	}
 	
-	private void logRecord(List<String> log) {
+	/**
+	 * Appends the list of messages (with a line break added) to the logs and
+	 * pops up an alert window in case of a logged error message.
+	 */
+	protected void logList(List<String> log) {
 		for (String string : log) {
 			logMsg(string);	
-			if (!string.equals("commit ok") && !string.equals("insert occured") && !string.equals("update occured")) {
+			if (string.startsWith("error ")) {
 				alertWindow.setContentText(string.replaceFirst("^error ", ""));
 				alertWindow.show();
 			}

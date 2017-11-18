@@ -61,27 +61,42 @@
 		<tabs>
 
 			<!-- Language learning tab -->
-			<Tab fx:id="logTab" text="Learning" closable="False">
+			<Tab fx:id="logTab" text="Learning" closable="False">				
+				<!-- A single stack pane with multiple panes: only one is visible in accordance with the current task --> 
+				<StackPane>				
 				
-				<!-- A single stack pane with multiple panes: only one is visible according to the task --> 
-				<StackPane>
-				<!-- Log scroll panel -->
-				<ScrollPane fitToWidth="true" visible="False">
-					<padding>
-						<Insets bottom="0" left="0" right="0" top="10.0" />
-					</padding>
-
-					<!-- Log text area -->
-					<TextArea fx:id="logTextArea" editable="false"
-						prefRowCount="20" prefColumnCount="20" VBox.vgrow="ALWAYS"
-						HBox.hgrow="ALWAYS" />
-				</ScrollPane>
-				
-				
-				<Button fx:id="startLearningButton" text="Start Learning" prefWidth="180" prefHeight="40" visible="true"
-				style="-fx-font-size: 1.5em; " />
+					<!-- Start learning button -->
+					<Button fx:id="startLearningButton" text="Start Learning" prefWidth="180" prefHeight="40"
+						visible="false" style="-fx-font-size: 1.5em; " />					
+					
+					<!-- Four English words exercise -->
+					<VBox visible="true">
+						<HBox fx:id="taskTextLayout" alignment="CENTER" spacing="10">
+							<padding>
+								<Insets bottom="0" left="0" right="0" top="13.0" />
+							</padding>
+							
+							<!-- Label to display the task -->
+							<Label fx:id="taskLabel"
+							 style="-fx-font-size: 1.2em; " text="Exercise text" alignment="CENTER" />
+								
+							<padding>
+								<Insets bottom="20.0" left="0" right="0" top="20.0" />
+							</padding>
+						</HBox>
+						<HBox fx:id="taskTextLayout" alignment="CENTER" spacing="10">
+							<Button fx:id="choiceOneButton" text="Choice one" prefWidth="150" prefHeight="40"
+								visible="true" />
+							<Button fx:id="choiceTwoButton" text="Choice two" prefWidth="150" prefHeight="40"
+								visible="true" />
+							<Button fx:id="choiceThreeButton" text="Choice three" prefWidth="150" prefHeight="40"
+								visible="true" />
+							<Button fx:id="choiceFourButton" text="Choice four" prefWidth="150" prefHeight="40"
+								visible="true" />
+						</HBox>
+					</VBox>
+					
 				</StackPane>
-
 			</Tab>
 
 			<!-- Search tab -->

@@ -107,16 +107,24 @@ public class View {
 	private Label connectionStateLabel;
 	@FXML
 	private Label userInfoLabel;
+	@FXML
+	private Label englishWordLabel;
+	@FXML
+	private Label hungarianWordLabel;
+	@FXML
+	private Label translatableWordLabel;
+	@FXML
+	private Label translatablePhraseLabel;
+	@FXML
+	private Label exerciseCountLabel;
 
 	// Tabs
 	@FXML
-	private Tab editTab;
+	private Tab learningTab;
 	@FXML
-	private Tab statisticsTab;
+	private Tab manageExercisesTab;
 	@FXML
-	private Tab logTab;
-	@FXML
-	private Tab searchTab;
+	private Tab manageUsersTab;
 	
 	// Alert window
 	Alert alertWindow = new Alert(AlertType.ERROR);

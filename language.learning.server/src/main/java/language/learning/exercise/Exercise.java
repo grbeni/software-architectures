@@ -15,6 +15,9 @@ public class Exercise {
 	// The word in Hungarian
 	private String hungarian;
 	
+	// The level of the exercise
+	private ExerciseLevel exerciseLevel;
+	
 
 	// Constructors
 	public Exercise() {
@@ -45,7 +48,7 @@ public class Exercise {
 	 * @param english
 	 */
 	public void setEnglish(String english) {
-		log.error("English set to: " + english);
+		log.trace("English set to: " + english);
 		
 		this.english = english;
 	}
@@ -65,8 +68,28 @@ public class Exercise {
 	 * @param hungarian
 	 */
 	public void setHungarian(String hungarian) {
-		log.error("Hungarian set to: " + hungarian);
+		log.trace("Hungarian set to: " + hungarian);
 		
 		this.hungarian = hungarian;
+	}
+
+	/**
+	 * Getter for exercise level.
+	 * @return exercise level
+	 */
+	public ExerciseLevel getExerciseLevel() {
+		log.trace("Exercise level getter: " + exerciseLevel.toString());
+		
+		return exerciseLevel;
+	}
+
+	/**
+	 * Setter for exercise level.
+	 * @param exerciseLevel
+	 */
+	public void setExerciseLevel(ExerciseLevel exerciseLevel) {
+		log.trace("Exercise level set to: " + exerciseLevel.toString());
+		
+		this.exerciseLevel = exerciseLevel;
 	}
 }

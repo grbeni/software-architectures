@@ -70,21 +70,18 @@
 						visible="false" style="-fx-font-size: 1.5em; " />					
 					
 					<!-- Four English words exercise -->
-					<VBox visible="true">
-						<HBox fx:id="taskTextLayout" alignment="CENTER" spacing="10">
-							<padding>
-								<Insets bottom="0" left="0" right="0" top="13.0" />
-							</padding>
-							
+					<VBox fx:id="fourWordsLayout" visible="false">
+						<!-- Layout for the task specification -->
+						<HBox alignment="CENTER" spacing="10">						
 							<!-- Label to display the task -->
-							<Label fx:id="taskLabel"
-							 style="-fx-font-size: 1.2em; " text="Exercise text" alignment="CENTER" />
-								
 							<padding>
 								<Insets bottom="20.0" left="0" right="0" top="20.0" />
-							</padding>
+							</padding>		
+							<Label fx:id="taskLabel"
+							 style="-fx-font-size: 1.2em; " text="Exercise text" alignment="CENTER" />											
 						</HBox>
-						<HBox fx:id="taskTextLayout" alignment="CENTER" spacing="10">
+						<!-- Layout for the buttons -->
+						<HBox alignment="CENTER" spacing="10">
 							<Button fx:id="choiceOneButton" text="Choice one" prefWidth="150" prefHeight="40"
 								visible="true" />
 							<Button fx:id="choiceTwoButton" text="Choice two" prefWidth="150" prefHeight="40"
@@ -95,7 +92,25 @@
 								visible="true" />
 						</HBox>
 					</VBox>
-					
+					<!-- Translation exercise -->
+					<VBox fx:id="translationLayout" visible="true">
+						<!-- Layout for the task specification -->
+						<HBox alignment="CENTER" spacing="10">
+							<!-- Label to the translatable phrase -->
+							<padding>
+								<Insets bottom="20.0" left="0" right="0" top="20.0" />
+							</padding>		
+							<Label fx:id="taskLabel"
+							 style="-fx-font-size: 1.2em; " text="Exercise text" alignment="CENTER" />									
+						</HBox>
+						<!-- Layout for the input -->
+						<HBox alignment="CENTER" spacing="10">
+							<TextField fx:id="translationTextField" prefWidth="550"
+							 style="-fx-font-size: 1.1em; " text="Translate the text..." alignment="CENTER" />
+							<Button fx:id="sendButton" text="Send" prefWidth="100" prefHeight="40"
+								visible="true" />
+						</HBox>
+					</VBox>
 				</StackPane>
 			</Tab>
 

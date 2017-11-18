@@ -29,15 +29,18 @@ public interface ILearning {
 	 * Method for accessing exercises for the given level of user.
 	 * If equals then returns only the same level exercises, otherwise 
 	 * returns the same and below level exercises.
-	 * @param userLevel the knowledge level of the user
-	 * @param equals 1 (true), 0 (false)
+	 * @param type word or sentence type exercise
+	 * @param userLevel userLevel the knowledge level of the user
+	 * @param equals equals 1 (true), 0 (false)
 	 * @return
 	 */
 	@GET
 	@Path("{find}")
-	//@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	Exercises getExercisesWithUserLevel(@QueryParam("level") String userLevel, @QueryParam("equals") int equals);
+	Exercises getExercisesWithUserLevel(@QueryParam("type") String type, 
+										@QueryParam("level") String userLevel, 
+										@QueryParam("equals") int equals);
+	
 	
 	@PUT
 	@Path("{score}")

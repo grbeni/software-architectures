@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import language.learning.database.Database;
 import language.learning.database.IDatabase;
 import language.learning.exercise.Exercise;
+import language.learning.exercise.ExerciseLevel;
 import language.learning.exercise.ExerciseType;
 import language.learning.exercise.Exercises;
 import language.learning.logger.LoggerWrapper;
@@ -22,17 +23,19 @@ public class Learning implements ILearning {
 	
 	@Override
 	public Exercises getExercises(String type) {
-		log.trace("Get all exercise with type: " + type);
+		log.info("Get all exercise with type: " + type);
 		
 		List<Exercise> exerciseList = new ArrayList<>();
 		
 		if (db.connect()) {
-			log.trace("Establishing connection was successful.");
+			log.info("Establishing connection was successful.");
 			
 			exerciseList = db.getAllExercise(ExerciseType.valueOf(type.toUpperCase()));
+			
+			db.disconnect();
 		}
 		else {
-			log.trace("Establishing connection was not successful.");
+			log.info("Establishing connection was not successful.");
 		}
 		
 		Exercises ex = new Exercises(exerciseList);
@@ -40,17 +43,33 @@ public class Learning implements ILearning {
 		return ex;
 	}
 
-	// TODO
+
 	@Override
-	public Exercises getExercisesWithUserLevel(String userLevel, int equals) {
-		log.error("equals: " + equals);
-//		try {
-//			UserLevel level = UserLevel.valueOf(userLevel.toUpperCase());
-//		} catch (IllegalArgumentException e) {
-//			log.error("No such user level: " + userLevel);
-//		}
+	public Exercises getExercisesWithUserLevel(String type, String userLevel, int equals) {
+		log.info("Get " + type + " exercises: " + userLevel + ", " + equals);
+		
+		boolean onlyAtLevel;
 		List<Exercise> exerciseList = new ArrayList<>();
-		exerciseList.add(new Exercise("dog", "kutya"));
+		
+		if (equals == 1) {
+			onlyAtLevel = true;
+		}
+		else {
+			onlyAtLevel = false;
+		}
+		
+		if (db.connect()) {
+			log.info("Establishing connection was successful.");
+			exerciseList = db.getExercisesWithUserLevel(ExerciseType.valueOf(type.toUpperCase()),
+														ExerciseLevel.valueOf(userLevel.toUpperCase()),
+														onlyAtLevel);
+			
+			db.disconnect();
+		}
+		else {
+			log.info("Establishing connection was not successful.");
+		}
+		
 		Exercises ex = new Exercises(exerciseList);
 		
 		return ex;

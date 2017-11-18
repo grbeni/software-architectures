@@ -9,7 +9,7 @@ public class LoggerWrapper {
 	private Logger log;
 	
 	// Default level of the logging
-	private final Level logLevel = Level.TRACE;
+	private final Level logLevel = Level.INFO;
 	
 	
 	/**

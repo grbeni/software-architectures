@@ -40,7 +40,7 @@ public class Database implements IDatabase {
 	 * Default constructor. Private because of the singleton pattern.
 	 */
 	private Database() {
-		log.trace("Database created");
+		log.info("Database created");
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class Database implements IDatabase {
 	 * @return singleton database instance
 	 */
 	synchronized public static Database getInstance() {
-		log.trace("Database instance getter");
+		log.info("Database instance getter");
 
 		// Double-checked locking
 		if (instance == null) {
@@ -66,7 +66,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public boolean connect() {
-		log.trace("Connect to database: " + DATABASE_URL + " with " + DATABASE_USERNAME + " - " + DATABASE_PASSWORD);
+		log.info("Connect to database: " + DATABASE_URL + " with " + DATABASE_USERNAME + " - " + DATABASE_PASSWORD);
 
 		boolean successful = true;
 
@@ -110,7 +110,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public boolean disconnect() {
-		log.trace("Disconnect from database.");
+		log.info("Disconnect from database.");
 
 		boolean successful = true;
 
@@ -135,7 +135,7 @@ public class Database implements IDatabase {
 		PreparedStatement preparedStatement = null;
 
 		String queryUser = "SELECT * " + "FROM APPLICATIONUSER " + "WHERE USERNAME = ?";
-		log.error("username: " + username);
+		
 		try {
 			preparedStatement = connection.prepareStatement(queryUser);
 			preparedStatement.setString(1, username);
@@ -146,18 +146,14 @@ public class Database implements IDatabase {
 		}
 
 		if (resultSet != null) {
-			log.error("result set is not null");
+			
 			try {
 				if (resultSet.next()) {
-					log.error("resultSet has next");
 					user = new User();
 					user.setUserName(resultSet.getString("USERNAME"));
 					user.setPasswordHash(resultSet.getInt("USERPASSWORD"));
 					user.setScore(resultSet.getInt("USERSCORE"));
 					user.setUserLevel(UserLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
-				}
-				else {
-					log.error("resultSet does not have next");
 				}
 			} catch (SQLException e) {
 				log.error(e.getMessage());
@@ -169,7 +165,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public int addExercise(Exercise exercise, ExerciseType type) {
-		log.trace("Add execise: " + exercise.getEnglish() + " - " + exercise.getHungarian());
+		log.info("Add execise: " + exercise.getEnglish() + " - " + exercise.getHungarian());
 
 		int nextVal = 0;
 
@@ -182,7 +178,7 @@ public class Database implements IDatabase {
 			if (rs != null) {
 				if (rs.next()) {
 					nextVal = rs.getInt(1);
-					log.trace("EXERCISE_SEQ.NEXTVAL: " + nextVal);
+					log.info("EXERCISE_SEQ.NEXTVAL: " + nextVal);
 				}
 			}
 
@@ -197,8 +193,7 @@ public class Database implements IDatabase {
 			} else {
 				insertSql = "INSERT INTO SENTENCEEXERCISE VALUES(?, ?, ?, ?)";
 			}
-			try {
-				log.error(insertSql);
+			try {				
 				PreparedStatement insertStm = connection.prepareStatement(insertSql);
 				
 				insertStm.setInt(1, nextVal);
@@ -218,7 +213,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public List<Exercise> getAllExercise(ExerciseType type) {
-		log.trace("Get all exercise with type: " + type);
+		log.info("Get all exercise with type: " + type);
 		
 		List<Exercise> exerciseList = new ArrayList<>();
 		
@@ -237,18 +232,74 @@ public class Database implements IDatabase {
 			ResultSet resultSet = preparedStm.executeQuery();
 			
 			if (resultSet != null) {
-				while (resultSet.next()) {
-					Exercise exercise = new Exercise();
-					exercise.setEnglish(resultSet.getString("ENGLISH"));
-					exercise.setHungarian(resultSet.getString("HUNGARIAN"));
-					exercise.setExerciseLevel(ExerciseLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
-					
-					exerciseList.add(exercise);
-				}
+				exerciseList = resultSetToExerciseList(resultSet);
 			}
 			
 		} catch (SQLException e) {
 			log.error(e.getMessage());
+		}
+		
+		return exerciseList;
+	}
+
+	@Override
+	public List<Exercise> getExercisesWithUserLevel(ExerciseType type, ExerciseLevel level, boolean onlyAtLevel) {
+		log.info("Get " + type + " exercise with level: " + level + ", " + onlyAtLevel);
+		
+		List<Exercise> exerciseList = new ArrayList<>();
+		
+		String table = "";
+		String queryString = "";
+		
+		if (type == ExerciseType.SENTENCE) {
+			table = "SENTENCEEXERCISE";
+		}
+		else {
+			table = "WORDEXERCISE";
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT * FROM ").append(table).append(" WHERE KNOWLEDGELEVELID ");
+		
+		if (onlyAtLevel) {
+			sb.append("= ");
+		}
+		else {
+			sb.append("<= ");
+		}
+		sb.append("?");
+		
+		queryString = sb.toString();
+		log.info("Query string: " + queryString);
+		
+		try {
+			PreparedStatement preparedStm = connection.prepareStatement(queryString);
+			preparedStm.setInt(1, level.ordinal() + 1);
+			
+			ResultSet resultSet = preparedStm.executeQuery();
+			
+			if (resultSet != null) {
+				exerciseList = resultSetToExerciseList(resultSet);
+			}
+			
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+		}
+		
+		
+		return exerciseList;
+	}
+	
+	private List<Exercise> resultSetToExerciseList(ResultSet resultSet) throws SQLException {
+		List<Exercise> exerciseList = new ArrayList<>();
+		
+		while (resultSet.next()) {
+			Exercise exercise = new Exercise();
+			exercise.setEnglish(resultSet.getString("ENGLISH"));
+			exercise.setHungarian(resultSet.getString("HUNGARIAN"));
+			exercise.setExerciseLevel(ExerciseLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
+			
+			exerciseList.add(exercise);
 		}
 		
 		return exerciseList;

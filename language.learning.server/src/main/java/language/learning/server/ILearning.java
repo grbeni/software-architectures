@@ -16,12 +16,13 @@ import language.learning.user.User;
 public interface ILearning {
 
 	/**
-	 * Method for accessing all exercise.
-	 * @return all exercise
+	 * Method for accessing all exercise in a given type.
+	 * @param type exercise type, can be sentence or word
+	 * @return all exercise with a given type
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	Exercises getExercises();
+	Exercises getExercises(@QueryParam("type") String type);
 	
 	
 	/**

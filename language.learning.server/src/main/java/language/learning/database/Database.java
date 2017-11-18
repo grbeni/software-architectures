@@ -5,10 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import language.learning.exercise.Exercise;
+import language.learning.exercise.ExerciseLevel;
 import language.learning.exercise.ExerciseType;
 import language.learning.logger.LoggerWrapper;
 import language.learning.user.User;
@@ -27,6 +30,7 @@ public class Database implements IDatabase {
 	private static final String DATABASE_USERNAME = "SYSTEM";
 	private static final String DATABASE_PASSWORD = "password";
 
+	// Object representing the connection
 	private Connection connection = null;
 
 	// Singleton instance of this class
@@ -66,6 +70,7 @@ public class Database implements IDatabase {
 
 		boolean successful = true;
 
+		// For the first time
 		if (connection == null) {
 			try {
 				connectToDatabase();
@@ -77,6 +82,7 @@ public class Database implements IDatabase {
 		} 
 		else {
 			try {
+				// If there has been a connection.close() call
 				if (connection.isClosed()) {
 					connectToDatabase();
 				} else {
@@ -90,6 +96,11 @@ public class Database implements IDatabase {
 		return successful;
 	}
 	
+	/**
+	 * Creates the connection to the database.
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	private void connectToDatabase() throws ClassNotFoundException, SQLException {
 		Class.forName(DATABASE_DRIVER);
 		connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
@@ -158,7 +169,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public int addExercise(Exercise exercise, ExerciseType type) {
-		log.error("Add execise: " + exercise.getEnglish() + " - " + exercise.getHungarian()); // TODO trace
+		log.trace("Add execise: " + exercise.getEnglish() + " - " + exercise.getHungarian());
 
 		int nextVal = 0;
 
@@ -171,7 +182,7 @@ public class Database implements IDatabase {
 			if (rs != null) {
 				if (rs.next()) {
 					nextVal = rs.getInt(1);
-					log.error("EXERCISE_SEQ.NEXTVAL: " + nextVal); // TODO trace level
+					log.trace("EXERCISE_SEQ.NEXTVAL: " + nextVal);
 				}
 			}
 
@@ -203,6 +214,44 @@ public class Database implements IDatabase {
 		}
 
 		return nextVal;
+	}
+
+	@Override
+	public List<Exercise> getAllExercise(ExerciseType type) {
+		log.trace("Get all exercise with type: " + type);
+		
+		List<Exercise> exerciseList = new ArrayList<>();
+		
+		String queryString = "";
+		
+		if (type == ExerciseType.SENTENCE) {
+			queryString = "SELECT * FROM SENTENCEEXERCISE";
+		}
+		else {
+			queryString = "SELECT * FROM WORDEXERCISE";
+		}
+		
+		try {
+			PreparedStatement preparedStm = connection.prepareStatement(queryString);
+			
+			ResultSet resultSet = preparedStm.executeQuery();
+			
+			if (resultSet != null) {
+				while (resultSet.next()) {
+					Exercise exercise = new Exercise();
+					exercise.setEnglish(resultSet.getString("ENGLISH"));
+					exercise.setHungarian(resultSet.getString("HUNGARIAN"));
+					exercise.setExerciseLevel(ExerciseLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
+					
+					exerciseList.add(exercise);
+				}
+			}
+			
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+		}
+		
+		return exerciseList;
 	}
 
 }

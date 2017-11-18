@@ -23,13 +23,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.collections.FXCollections ?>
 <?import java.lang.String ?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 
 <!-- All the GUI components -->
 <!-- Root (vertical box) layout -->
 <VBox fx:controller="language.learning.client.View" xmlns:fx="http://javafx.com/fxml/1"
 	fx:id="rootLayout" alignment="CENTER" spacing="10" prefWidth="600"
-	prefHeight="460" minWidth="700" minHeight="460">
+	prefHeight="490" minWidth="700" minHeight="490">
 
 	<!-- Set padding values -->
 	<padding>
@@ -37,24 +39,30 @@
 	</padding>
 
 	<!-- Connection panel -->
-	<HBox fx:id="connectionLayout" alignment="CENTER" spacing="10">
-
-		<!-- Username field -->
-		<TextField fx:id="usernameField" maxWidth="200" maxHeight="27"
-			minWidth="100" minHeight="27" prefWidth="150" prefHeight="27" />
-
-		<!-- Password field -->
-		<TextField fx:id="passwordField" maxWidth="200" maxHeight="27"
-			minWidth="100" minHeight="27" prefWidth="150" prefHeight="27" />
-
-		<!-- Connect button -->
-		<Button fx:id="connectButton" text="Connect" prefWidth="80" onAction="#connectEventHandler" />
-
-		<!-- Label to show the connection status -->
-		<Label fx:id="connectionStateLabel" minWidth="200" minHeight="17"
-			prefWidth="200" prefHeight="17" />
-
-	</HBox>
+	<VBox>
+		<HBox fx:id="connectionLayout" alignment="CENTER" spacing="10">	
+			<!-- Username field -->
+			<TextField fx:id="usernameField" maxWidth="200" maxHeight="27"
+				minWidth="100" minHeight="27" prefWidth="150" prefHeight="27" />	
+			<!-- Password field -->
+			<TextField fx:id="passwordField" maxWidth="200" maxHeight="27"
+				minWidth="100" minHeight="27" prefWidth="150" prefHeight="27" />	
+			<!-- Connect button -->
+			<Button fx:id="connectButton" text="Connect" prefWidth="80" onAction="#connectEventHandler" />	
+			<!-- Label to show the connection status -->
+			<Label fx:id="connectionStateLabel" minWidth="200" minHeight="17"
+				prefWidth="200" prefHeight="17" />
+		</HBox>
+		<HBox fx:id="connectionInfoLayout" alignment="CENTER_LEFT" spacing="10">	
+			<padding>
+				<Insets left="25.0" top="10.0" />
+			</padding>
+			<!-- User info label -->
+			<Label fx:id="userNameLabel" text="User name, level, experience" prefWidth="303" prefHeight="17" />	
+			<!-- Disconnect button -->
+			<Button fx:id="connectButton" text="Disconnect" />	
+		</HBox>
+	</VBox>
 
 	<!-- Tabbed panel -->
 	<TabPane>
@@ -93,7 +101,7 @@
 						</HBox>
 					</VBox>
 					<!-- Translation exercise -->
-					<VBox fx:id="translationLayout" visible="true">
+					<VBox fx:id="translationLayout" visible="false">
 						<!-- Layout for the task specification -->
 						<HBox alignment="CENTER" spacing="10">
 							<!-- Label to the translatable phrase -->
@@ -107,6 +115,28 @@
 						<HBox alignment="CENTER" spacing="10">
 							<TextField fx:id="translationTextField" prefWidth="550"
 							 style="-fx-font-size: 1.1em; " text="Translate the text..." alignment="CENTER" />
+							<Button fx:id="sendButton" text="Send" prefWidth="100" prefHeight="40"
+								visible="true" />
+						</HBox>
+					</VBox>
+					<!-- Image recognition exercise -->
+					<VBox fx:id="imageLayout" visible="true">
+						<!-- Layout for the image -->
+						<HBox alignment="CENTER" spacing="10">
+							<!-- Label to the translatable phrase -->
+							<padding>
+								<Insets bottom="20.0" left="0" right="0" top="20.0" />
+							</padding>		
+							<ImageView fx:id="imageView">
+								<image>
+									<Image url="spongya.jpg" />
+   								</image>
+							</ImageView>									
+						</HBox>
+						<!-- Layout for the input -->
+						<HBox alignment="CENTER" spacing="10">
+							<TextField fx:id="translationTextField" prefWidth="550"
+							 style="-fx-font-size: 1.1em; " text="Specify the depicted object..." alignment="CENTER" />
 							<Button fx:id="sendButton" text="Send" prefWidth="100" prefHeight="40"
 								visible="true" />
 						</HBox>

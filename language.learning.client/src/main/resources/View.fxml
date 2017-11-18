@@ -30,8 +30,8 @@
 <!-- All the GUI components -->
 <!-- Root (vertical box) layout -->
 <VBox fx:controller="language.learning.client.View" xmlns:fx="http://javafx.com/fxml/1"
-	fx:id="rootLayout" alignment="CENTER" spacing="10" prefWidth="600"
-	prefHeight="490" minWidth="700" minHeight="490">
+	fx:id="rootLayout" alignment="CENTER" spacing="10" prefWidth="700"
+	prefHeight="600" minWidth="700" minHeight="600">
 
 	<!-- Set padding values -->
 	<padding>
@@ -78,8 +78,7 @@
 							visible="false" style="-fx-font-size: 1.5em; " />					
 						
 						<!-- Coaching state -->
-						<VBox visible="true">
-							
+						<VBox visible="true">							
 							<HBox alignment="CENTER">
 								<padding>
 									<Insets top="20.0" bottom="20.0" />
@@ -98,7 +97,7 @@
 							</HBox>
 							<!-- Next button -->
 							<HBox alignment="CENTER">
-								<Button fx:id="nextButton" text="Next">
+								<Button fx:id="nextButton" text="Next" prefWidth="80">
 								</Button>
 							</HBox>
 						</VBox>

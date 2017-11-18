@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- This JavaFX skeleton is provided for the Software Laboratory 5 course. 
-	Its structure should provide a general guideline for the students. As suggested 
+<!-- The JavaFX skeleton providing the basics of the view. As suggested 
 	by the JavaFX model, we'll have a GUI/view (this one), a controller class 
 	and a model. -->
 
@@ -20,6 +19,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.collections.FXCollections ?>
 <?import java.lang.String ?>
 
@@ -28,7 +29,7 @@
 <!-- Root (vertical box) layout -->
 <VBox fx:controller="language.learning.client.View" xmlns:fx="http://javafx.com/fxml/1"
 	fx:id="rootLayout" alignment="CENTER" spacing="10" prefWidth="600"
-	prefHeight="460" minWidth="600" minHeight="460">
+	prefHeight="460" minWidth="700" minHeight="460">
 
 	<!-- Set padding values -->
 	<padding>
@@ -59,11 +60,13 @@
 	<TabPane>
 		<tabs>
 
-			<!-- Log tab -->
-			<Tab fx:id="logTab" text=" Log " closable="False">
-
+			<!-- Language learning tab -->
+			<Tab fx:id="logTab" text="Learning" closable="False">
+				
+				<!-- A single stack pane with multiple panes: only one is visible according to the task --> 
+				<StackPane>
 				<!-- Log scroll panel -->
-				<ScrollPane fitToWidth="true">
+				<ScrollPane fitToWidth="true" visible="False">
 					<padding>
 						<Insets bottom="0" left="0" right="0" top="10.0" />
 					</padding>
@@ -73,6 +76,11 @@
 						prefRowCount="20" prefColumnCount="20" VBox.vgrow="ALWAYS"
 						HBox.hgrow="ALWAYS" />
 				</ScrollPane>
+				
+				
+				<Button fx:id="startLearningButton" text="Start Learning" prefWidth="180" prefHeight="40" visible="true"
+				style="-fx-font-size: 1.5em; " />
+				</StackPane>
 
 			</Tab>
 
@@ -186,6 +194,8 @@
 
 				</VBox>
 
-			</Tab></tabs></TabPane>
+			</Tab>
+		</tabs>
+	</TabPane>
 
 </VBox>

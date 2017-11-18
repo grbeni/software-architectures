@@ -38,7 +38,7 @@ public class AppMain extends Application {
 			// Set scene (and the title of the window) and display it
 			Scene scene = new Scene(viewRoot);
 			primaryStage.setScene(scene);
-			primaryStage.setTitle("MyJwsApplication");
+			primaryStage.setTitle("Language Learning");
 			primaryStage.show();
 
 		} catch (Exception e) {

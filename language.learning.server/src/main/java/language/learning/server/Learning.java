@@ -13,6 +13,7 @@ import language.learning.exercise.ExerciseType;
 import language.learning.exercise.Exercises;
 import language.learning.logger.LoggerWrapper;
 import language.learning.user.User;
+import language.learning.user.UserLevel;
 
 public class Learning implements ILearning {
 
@@ -35,7 +36,7 @@ public class Learning implements ILearning {
 			db.disconnect();
 		}
 		else {
-			log.info("Establishing connection was not successful.");
+			log.warn("Establishing connection was not successful.");
 		}
 		
 		Exercises ex = new Exercises(exerciseList);
@@ -67,7 +68,7 @@ public class Learning implements ILearning {
 			db.disconnect();
 		}
 		else {
-			log.info("Establishing connection was not successful.");
+			log.warn("Establishing connection was not successful.");
 		}
 		
 		Exercises ex = new Exercises(exerciseList);
@@ -75,13 +76,38 @@ public class Learning implements ILearning {
 		return ex;
 	}
 
-	// TODO
+
 	@Override
 	public void updateUserScore(int score, User user) {
-		log.error("new score: " + score);
-		log.error("UPDATE: name, pw, level, score " + user.getUsername() + " " 
-				+ user.getPasswordHash() + " " + user.getUserLevel() + " " + user.getScore());
+		log.info("Update " + user.getUsername() + "'s score from: " + user.getScore() + " to: " + score);
 		
+		if (db.connect()) {
+			log.info("Establishing connection was successful.");
+			
+			db.updateUserScore(user, score);
+			
+			db.disconnect();
+		}
+		else {
+			log.warn("Establishing connection was not successful.");
+		}
+	}
+
+
+	@Override
+	public void updateUserLevel(String userLevel, User user) {
+		log.info("Update " + user.getUsername() + "'s level from: " + user.getUserLevel() + " to: " + userLevel);
+		
+		if (db.connect()) {
+			log.info("Establishing connection was successful.");
+			
+			db.updateUserLevel(user, UserLevel.valueOf(userLevel.toUpperCase()));
+			
+			db.disconnect();
+		}
+		else {
+			log.warn("Establishing connection was not successful.");
+		}
 	}
 
 }

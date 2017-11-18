@@ -6,6 +6,7 @@ import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseLevel;
 import language.learning.exercise.ExerciseType;
 import language.learning.user.User;
+import language.learning.user.UserLevel;
 
 public interface IDatabase {
 	
@@ -50,5 +51,19 @@ public interface IDatabase {
 	 * @return
 	 */
 	public int addExercise(Exercise exercise, ExerciseType type);
+	
+	/**
+	 * Method for updating a user's score.
+	 * @param user
+	 * @param score
+	 */
+	public void updateUserScore(User user, int score);
+	
+	/**
+	 * Method for updating a user's level.
+	 * @param user
+	 * @param level
+	 */
+	public void updateUserLevel(User user, UserLevel level);
 
 }

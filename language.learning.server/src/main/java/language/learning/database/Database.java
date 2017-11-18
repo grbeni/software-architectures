@@ -305,4 +305,46 @@ public class Database implements IDatabase {
 		return exerciseList;
 	}
 
+	@Override
+	public void updateUserScore(User user, int score) {
+		log.info("Update " + user.getUsername() + "'s score from: " + user.getScore() + " to: " + score);
+		
+		String updateString = "UPDATE APPLICATIONUSER SET USERSCORE = ? WHERE USERNAME = ? AND USERPASSWORD = ?";
+		
+		try {
+			PreparedStatement preparedUpdate = connection.prepareStatement(updateString);
+			preparedUpdate.setInt(1, score);
+			preparedUpdate.setString(2, user.getUsername());
+			preparedUpdate.setInt(3, user.getPasswordHash());
+			
+			int modified = preparedUpdate.executeUpdate();
+			
+			log.info("Number of modified rows: " + modified);
+			
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+		}
+	}
+
+	@Override
+	public void updateUserLevel(User user, UserLevel level) {
+		log.info("Update " + user.getUsername() + "'s level from: " + user.getUserLevel() + " to: " + level);
+		
+		String updateString = "UPDATE APPLICATIONUSER SET KNOWLEDGELEVELID = ? WHERE USERNAME = ? AND USERPASSWORD = ?";
+		
+		try {
+			PreparedStatement preparedUpdate = connection.prepareStatement(updateString);
+			preparedUpdate.setInt(1, level.ordinal() + 1);
+			preparedUpdate.setString(2, user.getUsername());
+			preparedUpdate.setInt(3, user.getPasswordHash());
+			
+			int modified = preparedUpdate.executeUpdate();
+			
+			log.info("Number of modified rows: " + modified);
+			
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+		}
+	}
+
 }

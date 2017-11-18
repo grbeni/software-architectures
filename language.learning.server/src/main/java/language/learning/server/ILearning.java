@@ -4,7 +4,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -42,10 +41,26 @@ public interface ILearning {
 										@QueryParam("equals") int equals);
 	
 	
+	/**
+	 * Updates the score of the given user to the given score.
+	 * @param score
+	 * @param user
+	 */
 	@PUT
-	@Path("{score}")
+	@Path("score")
 	@Consumes(MediaType.APPLICATION_JSON)
-	void updateUserScore(@PathParam("score") int score, User user);
+	void updateUserScore(@QueryParam("score") int score, User user);
+	
+	
+	/**
+	 * Updates the given user's level to the given level. 
+	 * @param userLevel
+	 * @param user
+	 */
+	@PUT
+	@Path("level")
+	@Consumes(MediaType.APPLICATION_JSON)
+	void updateUserLevel(@QueryParam("level") String userLevel, User user);
 		
 	
 }

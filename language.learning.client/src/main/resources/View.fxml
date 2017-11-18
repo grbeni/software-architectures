@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- The JavaFX skeleton providing the basics of the view. As suggested 
-	by the JavaFX model, we'll have a GUI/view (this one), a controller class 
+	by the JavaFX model, we are going to have a GUI/view (this one), a controller class 
 	and a model. -->
 
 <?import javafx.scene.layout.VBox?>
@@ -178,117 +178,88 @@
 				</VBox>
 			</Tab>
 
-			<!-- Search tab -->
-			<Tab fx:id="searchTab" text=" Search " closable="False">
-
-				<!-- Search panel -->
-				<VBox spacing="10">
+			<!-- Manage exercises tab -->
+			<Tab fx:id="manageExercisesTab" text="Manage Exercises" closable="False">
+				<VBox spacing="20">
 					<padding>
 						<Insets bottom="10" left="0" right="0" top="10.0" />
 					</padding>
-
-					<!-- Search input panel -->
-					<HBox alignment="CENTER" spacing="10">
-
-						<!-- Search keyword field -->
-						<TextField fx:id="searchTextField" HBox.hgrow="ALWAYS" />
-
-						<!-- Search button -->
-						<Button fx:id="searchButton" text="Search" onAction="#searchEventHandler" />
-
-					</HBox>
-
-					<!-- Search table (scrollable by default) -->
-					<TableView fx:id="searchTable" editable="false">
-						<columns>
-						</columns>
-					</TableView>
-
+					<!-- Add and delete input panels -->
+					<VBox spacing="10">
+						<Label text="Add new exercise:" style="-fx-font-size: 1.1em; " />	
+						<HBox alignment="CENTER" spacing="10">	
+							<!-- Phrases field -->
+							<TextField fx:id="addEnglishPhraseField" text="English phrase..." HBox.hgrow="ALWAYS" />
+							<TextField fx:id="addHungarianPhraseField" text="Hungarian phrase..." HBox.hgrow="ALWAYS" />
+							<!-- Add exercise button -->
+							<Button fx:id="addExerciseButton" text="Add Exercise" prefWidth="120" />	
+						</HBox>
+					</VBox>
+					<VBox spacing="10">
+						<Label text="Delete exercise:" style="-fx-font-size: 1.1em; " />	
+						<HBox alignment="CENTER" spacing="10">	
+							<!-- Search keyword field -->
+							<TextField fx:id="deleteEnglishPhraseField" text="English phrase..." HBox.hgrow="ALWAYS" />
+							<TextField fx:id="deleteHungarianPhraseField" text="Hungarian phrase..." HBox.hgrow="ALWAYS" />
+							<!-- Add exercise button -->
+							<Button fx:id="deleteExerciseButton" text="Delete Exercise" prefWidth="120"/>	
+						</HBox>
+					</VBox>
+					<!-- Log -->
+					<VBox>
+						<padding>
+							<Insets bottom="0" left="0" right="0" top="100.0" />
+						</padding>
+						<ScrollPane fitToWidth="true">		
+							<!-- Log text area -->
+							<TextArea fx:id="logTextArea" editable="false"
+								prefRowCount="20" prefColumnCount="20" VBox.vgrow="ALWAYS"
+								HBox.hgrow="ALWAYS" />
+						</ScrollPane>
+					</VBox>
 				</VBox>
-
 			</Tab>
 
-			<!-- !TODO: This is the place you should modify the tabs, you must review this -->
-			
-			<Tab fx:id="editTab" text=" Edit " closable="False">
-				<GridPane hgap="10" vgap="10">
-				
-			    <Label text="RTID: "
-			        GridPane.columnIndex="0" GridPane.rowIndex="1"/>			 
-			    <TextField fx:id="rtid" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-			    
-			    <Label text="Cegnev: "
-			        GridPane.columnIndex="0" GridPane.rowIndex="2"/>			 
-			    <TextField fx:id="companyName" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-			    
-			    <Label text="Kibocsatas: "
-			        GridPane.columnIndex="0" GridPane.rowIndex="3"/>			 
-			    <TextField fx:id="issue" GridPane.columnIndex="1" GridPane.rowIndex="3" text="2000-01-01"/>
-			    
-			    <Label text="Nevertek: "
-			        GridPane.columnIndex="0" GridPane.rowIndex="4"/>			 
-			    <TextField fx:id="value" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-			    
-			    <Label text="Arfolyam: "
-			        GridPane.columnIndex="0" GridPane.rowIndex="5"/>			 
-			    <TextField fx:id="rate" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-			    
-			    <Label text="Megjegyzes: "
-			        GridPane.columnIndex="0" GridPane.rowIndex="6"/>			 
-			    <TextField fx:id="comment" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-			    
-			    <Label text="BefektetoID: "
-			        GridPane.columnIndex="0" GridPane.rowIndex="7"/>			 
-			    <TextField fx:id="befektetoId" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-			    
-			    <!--<Label text="Sample:"
-			        GridPane.columnIndex="0" GridPane.rowIndex="3"/>			 	
-			     <ComboBox fx:id="comboSample" GridPane.columnIndex="1" GridPane.rowIndex="3">
-			      <items>
-			        <FXCollections fx:factory="observableArrayList">
-			          <String fx:value="Y" />
-			          <String fx:value="N" />
-			        </FXCollections>
-			      </items>
-			    </ComboBox>  -->
-			    
-			    <HBox spacing="10" GridPane.columnSpan="2" GridPane.columnIndex="0" GridPane.rowIndex="8">
-
-						
-						<Button fx:id="commitButton" text="Commit" onAction="#commitEventHandler"/>
-
-						
-						<Button fx:id="editButton" text="Edit" onAction="#editEventHandler" />
-
-				</HBox>
-			    
-				</GridPane>
-				
-			</Tab>
-			
-			<Tab fx:id="statisticsTab" text=" Statistics " closable="False">
-
-				<!-- Search panel -->
-				<VBox spacing="10">
+			<!-- Admin management tab -->			
+			<Tab fx:id="manageUsersTab" text="Manage Users" closable="False" disable="false">
+				<VBox spacing="20">
 					<padding>
 						<Insets bottom="10" left="0" right="0" top="10.0" />
 					</padding>
-
-					
-					<HBox alignment="CENTER" spacing="10">
-						
-						<Button fx:id="statisticsButton" text="Statistics" onAction="#statisticsEventHandler" />
-
-					</HBox>
-
-					<TableView fx:id="statisticsTable" editable="false">
-						<columns>
-						</columns>
-					</TableView>
-
-				</VBox>
-
-			</Tab>
+					<!-- Add and delete input panels -->
+					<VBox spacing="10">
+						<Label text="Add new user:" style="-fx-font-size: 1.1em; " />	
+						<HBox alignment="CENTER" spacing="10">	
+							<!-- Phrases field -->
+							<TextField fx:id="addUserNameField" text="User name" HBox.hgrow="ALWAYS" />
+							<TextField fx:id="addPasswordField" text="Password" HBox.hgrow="ALWAYS" />
+							<!-- Add exercise button -->
+							<Button fx:id="addUserButton" text="Create User" prefWidth="120" />	
+						</HBox>
+					</VBox>
+					<VBox spacing="10">
+						<Label text="Delete user:" style="-fx-font-size: 1.1em; " />	
+						<HBox alignment="CENTER" spacing="10">	
+							<!-- Search keyword field -->
+							<TextField fx:id="deleteUserField" text="User name" HBox.hgrow="ALWAYS" />
+							<!-- Add exercise button -->
+							<Button fx:id="deleteUserButton" text="Delete User" prefWidth="120"/>	
+						</HBox>
+					</VBox>
+					<!-- Log -->
+					<VBox>
+						<padding>
+							<Insets bottom="0" left="0" right="0" top="100.0" />
+						</padding>
+						<ScrollPane fitToWidth="true">		
+							<!-- Log text area -->
+							<TextArea fx:id="logTextArea" editable="false"
+								prefRowCount="20" prefColumnCount="20" VBox.vgrow="ALWAYS"
+								HBox.hgrow="ALWAYS" />
+						</ScrollPane>
+					</VBox>
+				</VBox>			
+			</Tab>			
 		</tabs>
 	</TabPane>
 

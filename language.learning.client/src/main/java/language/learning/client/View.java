@@ -139,28 +139,28 @@ public class View {
 		connectionStateLabel.setTextFill(Color.web("#ee0000"));
 
 		// Create table (search table) columns
-		for (int i = 0; i < searchColumnTitles.length; i++) {
-			// Create table column
-			TableColumn<Map, String> column = new TableColumn<>(searchColumnTitles[i]);
-			// Set map factory
-			column.setCellValueFactory(new MapValueFactory(searchColumnKeys[i]));
-			// Set width of table column
-			column.prefWidthProperty().bind(searchTable.widthProperty().divide(4));
-			// Add column to the table
-			searchTable.getColumns().add(column);
-		}
+//		for (int i = 0; i < searchColumnTitles.length; i++) {
+//			// Create table column
+//			TableColumn<Map, String> column = new TableColumn<>(searchColumnTitles[i]);
+//			// Set map factory
+//			column.setCellValueFactory(new MapValueFactory(searchColumnKeys[i]));
+//			// Set width of table column
+//			column.prefWidthProperty().bind(searchTable.widthProperty().divide(4));
+//			// Add column to the table
+//			searchTable.getColumns().add(column);
+//		}
 
 		// Create table (statistics table) columns
-		for (int i = 0; i < statisticsColumnTitles.length; i++) {
-			// Create table column
-			TableColumn<Map, String> column = new TableColumn<>(statisticsColumnTitles[i]);
-			// Set map factory
-			column.setCellValueFactory(new MapValueFactory(statisticsColumnKeys[i]));
-			// Set width of table column
-			column.prefWidthProperty().bind(statisticsTable.widthProperty().divide(2));
-			// Add column to the table
-			statisticsTable.getColumns().add(column);
-		}
+//		for (int i = 0; i < statisticsColumnTitles.length; i++) {
+//			// Create table column
+//			TableColumn<Map, String> column = new TableColumn<>(statisticsColumnTitles[i]);
+//			// Set map factory
+//			column.setCellValueFactory(new MapValueFactory(statisticsColumnKeys[i]));
+//			// Set width of table column
+//			column.prefWidthProperty().bind(statisticsTable.widthProperty().divide(2));
+//			// Add column to the table
+//			statisticsTable.getColumns().add(column);
+//		}
 
 	}
 

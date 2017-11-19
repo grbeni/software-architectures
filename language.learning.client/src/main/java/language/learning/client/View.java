@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javafx.event.ActionEvent;
@@ -24,6 +25,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import language.learning.exercise.Exercise;
 import language.learning.exercise.Exercises;
+import language.learning.exercise.FourWordsExercise;
+import language.learning.exercise.ExerciseType;
 import language.learning.user.User;
 
 /**
@@ -156,6 +159,8 @@ public class View {
 	private List<Exercise> exercises;
 	private List<Exercise> coachingExercises;
 	
+	private Exercise actualExercise;
+	private Button correctAnswer; // In case of four words exercise
 
 	public View() {
 		model = new ModelMock();
@@ -259,8 +264,9 @@ public class View {
 		List<String> log = new ArrayList<String>();
 		if (coachingExercises.size() <= 0) {
 			// At the end of coaching period
-			coachingBox.setVisible(false);
-			fourWordsBox.setVisible(true);
+//			coachingBox.setVisible(false);
+//			fourWordsBox.setVisible(true);
+			displayAnswers();
 			return;
 		}
 		// New random index
@@ -278,30 +284,112 @@ public class View {
 	
 	private void testChoiceAnswer(Button choiceButton) {
 		++answerCount;
+		
+		switch (actualExercise.getExerciseType()) {
+			case SENTENCE:
+				if (translationField.getText().equals(actualExercise.getHungarian())) {
+					++correctAnswerCount;
+				}
+			break;
+			case WORD:
+				if (correctAnswer.getText().equals(actualExercise.getHungarian())) {
+					++correctAnswerCount;
+				}
+			break;
+			case IMAGE:
+				if (imageDescriptionField.getText().equals(actualExercise.getHungarian())) {
+					++correctAnswerCount;
+				}
+			break;
+		}
+		
 		exerciseCountLabel.setText("Finished tasks: " + answerCount + "/" + TASK_COUNT);
+		
 		
 		if (answerCount >= 10) {
 			finishExercises();
+			return;
 		}
+		// New exercise
+		displayAnswers();
 	}
 	
 	private void finishExercises() {
-		if (answerCount >= 10) {
-			fourWordsBox.setVisible(false);
-			translationBox.setVisible(false);
-			imageRecognitionBox.setVisible(false);
-			summaryBox.setVisible(true);
+		fourWordsBox.setVisible(false);
+		translationBox.setVisible(false);
+		imageRecognitionBox.setVisible(false);
+		summaryBox.setVisible(true);
 			
-			correctAnswersLabel.setText("Correct answers: " + correctAnswerCount);
-			experienceGainedLabel.setText("Experience gained: " + correctAnswerCount * EXPERIENCE_RATIO);
+		correctAnswersLabel.setText("Correct answers: " + correctAnswerCount);
+		experienceGainedLabel.setText("Experience gained: " + correctAnswerCount * EXPERIENCE_RATIO);
 		
-			answerCount = 0;
-			correctAnswerCount = 0;
-		}
-		
-		
+		answerCount = 0;
+		correctAnswerCount = 0;		
 	}
 	
+	private void displayAnswers() {
+		if (exercises.size() <= 0) {
+			return;
+		}
+		actualExercise = exercises.remove(0);
+		switch (actualExercise.getExerciseType()) {
+			case SENTENCE:
+				setLearningBoxesInvisible();
+				translatablePhraseLabel.setText(actualExercise.getEnglish());
+				translationBox.setVisible(true);
+			break;
+			case WORD:
+				setLearningBoxesInvisible();
+				translatableWordLabel.setText(actualExercise.getEnglish());
+				setButtonAnswers((FourWordsExercise) actualExercise);
+				fourWordsBox.setVisible(true);
+			break;
+			case IMAGE:
+//				setLearningBoxesInvisible();
+//				translatablePhraseLabel.setText(actualExercise.getEnglish());
+//				imageRecognitionBox.setVisible(true);
+			break;
+		}
+	}
+	
+	private void setLearningBoxesInvisible() {
+		coachingBox.setVisible(false);
+		fourWordsBox.setVisible(false);
+		translationBox.setVisible(false);
+		imageRecognitionBox.setVisible(false);
+		summaryBox.setVisible(false);
+	}
+	
+	private void setButtonAnswers(FourWordsExercise exercise) {
+		int correctButtonNumber = (int) ((Math.random() * 100) % 4);
+		List<Button> wrongButtons = Arrays.asList(new Button[] {
+				choiceOneButton, choiceTwoButton, choiceThreeButton, choiceFourButton});
+		switch (correctButtonNumber) {
+			case 1:
+				choiceOneButton.setText(exercise.getHungarian());
+				wrongButtons.remove(choiceOneButton);
+				correctAnswer = choiceOneButton;
+			break;
+			case 2:
+				choiceTwoButton.setText(exercise.getHungarian());
+				wrongButtons.remove(choiceTwoButton);
+				correctAnswer = choiceTwoButton;
+			break;
+			case 3:
+				choiceThreeButton.setText(exercise.getHungarian());
+				wrongButtons.remove(choiceThreeButton);
+				correctAnswer = choiceThreeButton;
+			break;
+			case 4:
+				choiceFourButton.setText(exercise.getHungarian());
+				wrongButtons.remove(choiceFourButton);
+				correctAnswer = choiceFourButton;
+			break;
+		}
+		for (int i = 0; i < wrongButtons.size(); ++i) {
+			wrongButtons.get(i).setText(exercise.getWrongChoices().get(i));
+		}
+	}
 	
 	/**
 	 * Called whenever the choice one button is pressed.
@@ -312,8 +400,6 @@ public class View {
 		List<String> log = new ArrayList<String>();
 		
 		testChoiceAnswer(choiceOneButton);
-		
-		// Get coaching tasks
 		
 		// Write log to the GUI
 		logList(log);
@@ -329,8 +415,6 @@ public class View {
 		
 		testChoiceAnswer(choiceTwoButton);
 		
-		// Get coaching tasks
-		
 		// Write log to the GUI
 		logList(log);
 	}
@@ -344,8 +428,6 @@ public class View {
 		List<String> log = new ArrayList<String>();
 		
 		testChoiceAnswer(choiceThreeButton);
-		
-		// Get coaching tasks
 		
 		// Write log to the GUI
 		logList(log);
@@ -361,8 +443,6 @@ public class View {
 		
 		testChoiceAnswer(choiceFourButton);
 		
-		// Get coaching tasks
-		
 		// Write log to the GUI
 		logList(log);
 	}
@@ -377,14 +457,6 @@ public class View {
 		startLearningButton.setVisible(true);
 	}
 	
-//		@FXML
-//		private Button choiceOneButton;
-//		@FXML
-//		private Button choiceTwoButton;
-//		@FXML
-//		private Button choiceThreeButton;
-//		@FXML
-//		private Button choiceFourButton;
 //		@FXML
 //		private Button sendTranslationButton;
 //		@FXML

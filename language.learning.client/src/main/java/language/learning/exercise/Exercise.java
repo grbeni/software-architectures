@@ -36,6 +36,15 @@ public class Exercise {
 		this.hungarian = hungarianWord;
 	}
 	
+	/**
+	 * Getter for exercise type.
+	 * @return exercise level
+	 */
+	public ExerciseType getExerciseType() {
+		log.trace("Exercise type getter: " + exerciseType.toString());
+		
+		return exerciseType;
+	}
 	
 	/**
 	 * Getter for English.

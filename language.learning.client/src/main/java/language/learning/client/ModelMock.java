@@ -33,8 +33,8 @@ public class ModelMock implements IAddExercise, ILearning, ILogIn {
 		List<Exercise> exerciseList = Arrays.asList(new Exercise[] {
 				new Exercise("dog", "kutya"),
 				new Exercise("cat", "macska"),
-				new Exercise("carrot", "repa"),
-				new Exercise("boat", "hajo"),
+				new Exercise("carrot", "répa"),
+				new Exercise("boat", "hajó"),
 				new Exercise("apple", "alma"),
 				new ExerciseWithImage("Sponge Bob", "Spongya Bob", new Image("spongya.jpg")),
 				new FourWordsExercise("hammer", "kalapacs", Arrays.asList(new String[] {"szög", "fűrész", "gereblye"})),

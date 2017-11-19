@@ -232,8 +232,10 @@ public class View {
 	private void startLearningEventHandler(ActionEvent event) {
 		//Log container
 		List<String> log = new ArrayList<String>();
-		System.out.println("Started coaching");
-		
+		if (loggedInUser == null) {
+			alert("You are not logged in!");
+			return;
+		}		
 		// Get coaching tasks
 		Exercises retrievedExercises = model.getExercisesWithUserLevel(null, loggedInUser.getKnowledgeLevel().toString(), this.TASK_COUNT, false);
 		exercises = retrievedExercises.getExercises();
@@ -241,6 +243,7 @@ public class View {
 		
 		// Change the window
 		startLearningButton.setVisible(false);
+		nextCoachingEventHandler(event); // So the default values are not shown 
 		coachingBox.setVisible(true);
 		
 		// Write log to the GUI
@@ -260,8 +263,11 @@ public class View {
 			fourWordsBox.setVisible(true);
 			return;
 		}
+		// New random index
+		int nextIndex = (coachingExercises.size() % 3 - 1);
+		nextIndex = (nextIndex < 0) ? 0 : nextIndex;
 		
-		Exercise coachingExercise = coachingExercises.remove(0);
+		Exercise coachingExercise = coachingExercises.remove(nextIndex);
 		
 		englishWordLabel.setText(coachingExercise.getEnglish());
 		hungarianWordLabel.setText(coachingExercise.getHungarian());	
@@ -367,6 +373,7 @@ public class View {
 	@FXML
 	private void resetLearningEventHandler(ActionEvent event) {
 		summaryBox.setVisible(false);
+		exerciseCountLabel.setVisible(false);
 		startLearningButton.setVisible(true);
 	}
 	

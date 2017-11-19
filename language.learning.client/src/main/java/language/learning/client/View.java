@@ -32,6 +32,7 @@ import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.Exercises;
 import language.learning.exercise.FourWordsExercise;
+import language.learning.exercise.KnowledgeLevel;
 import language.learning.user.User;
 
 /**
@@ -162,7 +163,8 @@ public class View {
 	
 	// Experience ratio
 	private final int EXPERIENCE_RATIO = 10;
-	private final int TASK_COUNT = 10;
+	private final int EXERCISE_COUNT = 10;
+	private final int NEW_LEVEL_SCORE = 1000;
 	
 	// Inner variables
 	private int correctAnswerCount = 0;
@@ -170,7 +172,7 @@ public class View {
 	
 	private ModelMock model;
 	
-	private User loggedInUser; 
+	private User loggedInUser;
 	
 	private List<Exercise> exercises;
 	private List<Exercise> coachingExercises;
@@ -228,10 +230,32 @@ public class View {
 			connectionStateLabel.setText("Connection created");
 			connectionStateLabel.setTextFill(Color.web("#009900"));
 		}
-		userInfoLabel.setText(loggedInUser.getUsername() + " Experience: " + loggedInUser.getScore() + " Level: " + loggedInUser.getKnowledgeLevel());
+		printUserData();
 		
 		// Write log to the GUI
 		logList(log);
+	}
+	
+	private void printUserData() {
+		levelUp();
+		userInfoLabel.setText(loggedInUser.getUsername() + " Experience: " + loggedInUser.getScore()
+			+ " Level: " + loggedInUser.getKnowledgeLevel());
+	}
+	
+	private void levelUp() {
+		if (loggedInUser.getScore() / NEW_LEVEL_SCORE > 1) {
+			switch (loggedInUser.getKnowledgeLevel()) {
+				case BEGINNER:
+					loggedInUser.setKnowledgeLevel(KnowledgeLevel.INTERMEDIATE);
+				break;
+				case INTERMEDIATE:
+					loggedInUser.setKnowledgeLevel(KnowledgeLevel.EXPERT);
+				break;
+				default:
+					break;
+			}
+			loggedInUser.setScore(loggedInUser.getScore() % NEW_LEVEL_SCORE);
+		}
 	}
 	
 	/**
@@ -267,7 +291,8 @@ public class View {
 			return;
 		}		
 		// Get coaching tasks
-		Exercises retrievedExercises = model.getExercisesWithUserLevel(null, loggedInUser.getKnowledgeLevel().toString(), this.TASK_COUNT, false);
+		Exercises retrievedExercises = model.getExercisesWithUserLevel(null,
+				loggedInUser.getKnowledgeLevel().toString(), this.EXERCISE_COUNT, false);
 		exercises = new ArrayList<Exercise>(retrievedExercises.getExercises());
 		coachingExercises = new ArrayList<Exercise>(exercises);
 		
@@ -319,7 +344,7 @@ public class View {
 				checkAnswer(imageDescriptionField.getText(), actualExercise.getHungarian());
 			break;
 		}
-		exerciseCountLabel.setText("Finished exercises: " + answerCount + "/" + TASK_COUNT);		
+		exerciseCountLabel.setText("Finished exercises: " + answerCount + "/" + EXERCISE_COUNT);		
 		
 		if (answerCount >= 10) {
 			finishExercises();
@@ -351,7 +376,9 @@ public class View {
 		summaryBox.setVisible(true);
 			
 		correctAnswersLabel.setText("Correct answers: " + correctAnswerCount);
-		experienceGainedLabel.setText("Experience gained: " + correctAnswerCount * EXPERIENCE_RATIO);
+		int gainedExperience = correctAnswerCount * EXPERIENCE_RATIO;
+		loggedInUser.setScore(loggedInUser.getScore() + gainedExperience);
+		experienceGainedLabel.setText("Experience gained: " + gainedExperience);
 		
 		answerCount = 0;
 		correctAnswerCount = 0;		
@@ -485,9 +512,15 @@ public class View {
 	 */
 	@FXML
 	private void resetLearningEventHandler(ActionEvent event) {
+		// Resetting the view
 		summaryBox.setVisible(false);
 		exercisesInfoBox.setVisible(false);
 		startLearningButton.setVisible(true);
+		// Refreshing the labels
+		printUserData();
+		// Sending the data to the server
+		model.updateUserScore(loggedInUser.getScore(), loggedInUser);
+		model.updateUserLevel(loggedInUser.getKnowledgeLevel().toString(), loggedInUser);
 	}
 
 //		@FXML

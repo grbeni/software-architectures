@@ -1,6 +1,6 @@
 package language.learning.exercise;
 
-import java.awt.Image;
+import javafx.scene.image.Image;
 
 public class ExerciseWithImage extends Exercise {
 	

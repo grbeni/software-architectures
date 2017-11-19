@@ -8,18 +8,23 @@ import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.Exercises;
 import language.learning.exercise.FourWordsExercise;
+import language.learning.exercise.KnowledgeLevel;
 import language.learning.server.IAddExercise;
 import language.learning.server.ILearning;
 import language.learning.server.ILogIn;
 import language.learning.user.User;
 
 public class ModelMock implements IAddExercise, ILearning, ILogIn {
-
+	
+	/**
+	 * Connects to the server.
+	 */
 	@Override
 	public User logIn(String username, String passwordHash) {
 		User user = new User();
 		user.setUserName(username);
 		user.setPasswordHash(passwordHash);
+		user.setKnowledgeLevel(KnowledgeLevel.BEGINNER);
 		return user;
 	}
 

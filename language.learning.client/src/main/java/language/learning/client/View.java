@@ -1,9 +1,12 @@
 package language.learning.client;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.file.attribute.UserPrincipalLookupService;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -20,15 +23,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import language.learning.user.User;
 
 /**
  * The class responsible for the controlling of the view defined in the View.fxml file. 
  * @author Bence Graics
  */
 public class View {
-
-	private Controller controller;
-
+	
 	// Layouts
 	@FXML
 	private VBox rootLayout;
@@ -137,6 +139,8 @@ public class View {
 	
 	// Alert window
 	Alert alertWindow = new Alert(AlertType.ERROR);
+
+	
 	
 	// Experience ratio
 	private final int EXPERIENCE_RATIO = 10;
@@ -145,9 +149,13 @@ public class View {
 	// Inner variables
 	private int correctAnswerCount = 0;
 	private int answerCount = 0;
+	
+	private ModelMock model;
+	
+	private User loggedInUser; 
 
 	public View() {
-		controller = new Controller();
+		model = new ModelMock();
 	}
 
 	/**
@@ -178,15 +186,19 @@ public class View {
 	 */
 	@FXML
 	private void connectEventHandler(ActionEvent event) {
+		if (loggedInUser != null) {
+			alert("You are logged in!");
+			return;
+		}
 		//Log container
 		List<String> log = new ArrayList<String>();
-
+		loggedInUser = model.logIn(userNameField.getText(), passwordField.getText());
 		// Controller connect method will do everything for us, just call
-		if (controller.connect(userNameField.getText(), passwordField.getText(), log)) {
+		if (loggedInUser != null) {
 			connectionStateLabel.setText("Connection created");
 			connectionStateLabel.setTextFill(Color.web("#009900"));
 		}
-		userInfoLabel.setText("User name");
+		userInfoLabel.setText(loggedInUser.getUsername() + " Experience: " + loggedInUser.getScore() + " Level: " + loggedInUser.getKnowledgeLevel());
 		
 		// Write log to the GUI
 		logList(log);
@@ -197,8 +209,10 @@ public class View {
 	 */
 	@FXML
 	private void disconnectEventHandler(ActionEvent event) {
-		//Log container
+		// Log container
 		List<String> log = new ArrayList<String>();
+		// Disconnecting the user
+		loggedInUser = null;
 		
 		connectionStateLabel.setText("Disconnected");
 		connectionStateLabel.setTextFill(Color.web("#ee0000"));
@@ -386,12 +400,34 @@ public class View {
 		for (String string : log) {
 			logMsg(string);	
 			if (string.startsWith("error ")) {
-				alertWindow.setContentText(string.replaceFirst("^error ", ""));
-				alertWindow.show();
+				alert(string.replaceFirst("^error ", ""));
 			}
 		}
 	}
 	
+	protected void alert(String message) {
+		alertWindow.setContentText(message);
+		alertWindow.show();
+	}
 	
+	protected String hashPassword(String passwordToHash, String salt) {
+		String hash = null;
+	    try {
+	         MessageDigest md = MessageDigest.getInstance("SHA-512");
+	         md.update(salt.getBytes("UTF-8"));
+	         byte[] bytes = md.digest(passwordToHash.getBytes("UTF-8"));
+	         StringBuilder sb = new StringBuilder();
+	         for (int i = 0; i < bytes.length ; ++i){
+	            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+	         }
+	         hash = sb.toString();
+	        } 
+	       catch (NoSuchAlgorithmException e){
+	        e.printStackTrace();
+	       } catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	    return hash;
+	}
 
 }

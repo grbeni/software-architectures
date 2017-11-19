@@ -33,7 +33,7 @@ public interface ILogIn {
 	@Path("{username}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	boolean addUser(@PathParam("username") String username, String passwordHash);
+	boolean addUser(@PathParam("username") String username, String passwordHash, boolean isAdmin);
 	
 	/**
 	 * Method for user registration.

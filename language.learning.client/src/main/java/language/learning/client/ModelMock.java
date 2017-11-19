@@ -95,7 +95,7 @@ public class ModelMock implements IAddExercise, ILearning, ILogIn {
 	}
 
 	@Override
-	public boolean addUser(String username, String passwordHash) {
+	public boolean addUser(String username, String passwordHash, boolean isAdmin) {
 		// TODO Auto-generated method stub
 		return false;
 	}

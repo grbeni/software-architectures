@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -157,7 +158,10 @@ public class View {
 	@FXML
 	private ImageView imageView;
 	@FXML
-	private ImageView correctAnswerView;
+	private ImageView correctAnswerView;	
+
+	@FXML
+	private CheckBox isAdminCheckBox;
 	
 	@FXML
 	private ComboBox<KnowledgeLevel> knowledgeLevelSelector;
@@ -583,7 +587,8 @@ public class View {
 			return;
 		}
 		boolean result = model.addUser(addUserNameField.getText(),
-				hashPassword(addPasswordField.getText(), SALT));
+				hashPassword(addPasswordField.getText(), SALT), isAdminCheckBox.isSelected());
+		System.out.println(isAdminCheckBox.isSelected());
 		if (result) {
 			logMsg("User " + deleteUserField.getText() + " deleted.");
 		}

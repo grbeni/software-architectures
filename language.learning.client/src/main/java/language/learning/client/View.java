@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,25 +11,27 @@ import java.util.stream.Stream;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import language.learning.exercise.Exercise;
+import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.Exercises;
 import language.learning.exercise.FourWordsExercise;
-import language.learning.exercise.ExerciseType;
-import language.learning.exercise.ExerciseWithImage;
 import language.learning.user.User;
 
 /**
@@ -54,6 +55,10 @@ public class View {
 	private VBox imageRecognitionBox;
 	@FXML
 	private VBox summaryBox;
+	@FXML
+	private VBox learningTabBox;
+	@FXML
+	private HBox exercisesInfoBox;
 	
 	// Texts
 	@FXML
@@ -131,6 +136,8 @@ public class View {
 	@FXML
 	private Label translatablePhraseLabel;
 	@FXML
+	private Label correctAnswerLabel;
+	@FXML
 	private Label exerciseCountLabel;
 	@FXML
 	private Label correctAnswersLabel;
@@ -147,6 +154,8 @@ public class View {
 	
 	@FXML
 	private ImageView imageView;
+	@FXML
+	private ImageView correctAnswerView;
 	
 	// Alert window
 	Alert alertWindow = new Alert(AlertType.ERROR);
@@ -170,8 +179,13 @@ public class View {
 	private Button correctAnswer; // In case of four words exercise
 	private Button chosenAnswer; // In case of four words exercise
 
+	private final Image tickImage;
+	private final Image crossImage;
+	
 	public View() {
 		model = new ModelMock();
+		tickImage = new Image("tick.png", 100, 100, false, false);
+		crossImage = new Image("cross.png", 100, 100, false, false);
 	}
 
 	/**
@@ -225,6 +239,9 @@ public class View {
 	 */
 	@FXML
 	private void disconnectEventHandler(ActionEvent event) {
+		if (!startLearningButton.isVisible()) {
+			alert("You cannot disconnect during a lesson!");
+		}
 		// Log container
 		List<String> log = new ArrayList<String>();
 		// Disconnecting the user
@@ -293,30 +310,38 @@ public class View {
 		
 		switch (actualExercise.getExerciseType()) {
 			case SENTENCE:
-				if (translationField.getText().equals(actualExercise.getHungarian())) {
-					++correctAnswerCount;
-				}
+				checkAnswer(translationField.getText(), actualExercise.getHungarian());
 			break;
 			case WORD:
-				if (chosenAnswer == correctAnswer) {
-					++correctAnswerCount;
-				}
+				checkAnswer(chosenAnswer.getText(), correctAnswer.getText());
 			break;
 			case IMAGE:
-				if (imageDescriptionField.getText().equals(actualExercise.getHungarian())) {
-					++correctAnswerCount;
-				}
+				checkAnswer(imageDescriptionField.getText(), actualExercise.getHungarian());
 			break;
 		}
-		
-		exerciseCountLabel.setText("Finished tasks: " + answerCount + "/" + TASK_COUNT);		
+		exerciseCountLabel.setText("Finished exercises: " + answerCount + "/" + TASK_COUNT);		
 		
 		if (answerCount >= 10) {
 			finishExercises();
 			return;
 		}
+		// Delete image so it does not bother the following layouts
+		imageView.setImage(null);
 		// New exercise
 		displayAnswers();
+
+	}
+
+	private void checkAnswer(String givenAnswer, String correctAnswer) {
+		if (givenAnswer.equals(correctAnswer)) {
+			++correctAnswerCount;
+			correctAnswerLabel.setText("Correct answer!");
+			correctAnswerView.setImage(tickImage);
+		}
+		else {
+			correctAnswerLabel.setText("The correct asnwer would have been " + correctAnswer + ".");
+			correctAnswerView.setImage(crossImage);
+		}
 	}
 	
 	private void finishExercises() {
@@ -461,7 +486,7 @@ public class View {
 	@FXML
 	private void resetLearningEventHandler(ActionEvent event) {
 		summaryBox.setVisible(false);
-		exerciseCountLabel.setVisible(false);
+		exercisesInfoBox.setVisible(false);
 		startLearningButton.setVisible(true);
 	}
 

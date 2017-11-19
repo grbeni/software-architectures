@@ -11,11 +11,10 @@ import java.util.stream.Stream;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
@@ -29,6 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import language.learning.exercise.Exercise;
+import language.learning.exercise.ExerciseType;
 import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.Exercises;
 import language.learning.exercise.FourWordsExercise;
@@ -159,31 +159,40 @@ public class View {
 	@FXML
 	private ImageView correctAnswerView;
 	
-	// Alert window
-	Alert alertWindow = new Alert(AlertType.ERROR);
+	@FXML
+	private ComboBox<KnowledgeLevel> knowledgeLevelSelector;
 	
-	// Experience ratio
+	// Alert window
+	private Alert alertWindow = new Alert(AlertType.ERROR);
+	
+	// Constants
 	private final int EXPERIENCE_RATIO = 10;
 	private final int EXERCISE_COUNT = 10;
 	private final int NEW_LEVEL_SCORE = 1000;
 	
-	// Inner variables
+	// Inner variables for counting
 	private int correctAnswerCount = 0;
-	private int answerCount = 0;
+	private int answerCount = 0;	
 	
-	private ModelMock model;
-	
+	// Actual logged in user
 	private User loggedInUser;
 	
+	// The exercises that are retrieved when the user pressed on the play button
 	private List<Exercise> exercises;
 	private List<Exercise> coachingExercises;
-	
+	// The exercise that is being solved by the user
 	private Exercise actualExercise;
-	private Button correctAnswer; // In case of four words exercise
-	private Button chosenAnswer; // In case of four words exercise
+	
+	// The button references in case of the four word exercise
+	private Button correctAnswer; // This should be pressed by the user
+	private Button chosenAnswer; // This was actually pressed by the user
 
+	// Images for the correct and wrong answers
 	private final Image tickImage;
 	private final Image crossImage;
+	
+	// The object responsible for connecting to the server
+	private ModelMock model;
 	
 	public View() {
 		model = new ModelMock();
@@ -198,6 +207,10 @@ public class View {
 	public void initialize() {
 		// Set display status
 		connectionStateLabel.setTextFill(Color.web("#ee0000"));
+		// Fill the knowledge level selector
+		knowledgeLevelSelector.getItems().setAll(KnowledgeLevel.BEGINNER,
+				KnowledgeLevel.INTERMEDIATE, KnowledgeLevel.EXPERT);
+		knowledgeLevelSelector.getSelectionModel().selectFirst();
 	}
 
 	/**
@@ -527,13 +540,29 @@ public class View {
 
 	@FXML
 	private void addExerciseEventHandler() {
+		if (!isLoggedIn()) {
+			return;
+		}
+		String englishPhrase = addEnglishPhraseField.getText();
+		String hungarianPhrase = addHungarianPhraseField.getText();
+		ExerciseType exerciseType = (!englishPhrase.contains(" ") && !hungarianPhrase.contains(" ")) ?
+				ExerciseType.WORD : ExerciseType.SENTENCE;
 		
-		
-		model.addExercise(exerciseType, exerciseLevel, exercise);
+		boolean result = model.addExercise(exerciseType.toString(), knowledgeLevelSelector.getSelectionModel().getSelectedItem().toString(),
+				new Exercise(englishPhrase, hungarianPhrase));
+		if (result) {
+			logMsg("Exercise added.");
+		}
+		else {
+			logMsg("Error during creation.");
+		}
 	}
 	
 	@FXML
 	private void deleteExerciseEventHandler() {
+		if (!isLoggedIn()) {
+			return;
+		}
 		boolean result = model.deleteExercise(addEnglishPhraseField.getText(),
 				addHungarianPhraseField.getText());
 		if (result) {
@@ -545,9 +574,13 @@ public class View {
 	}
 	
 	@FXML
-	private void addUserEventHandler() {
+	private void createUserEventHandler() {
+		if (!isLoggedIn()) {
+			return;
+		}
 		if (!loggedInUser.isAdmin()) {
 			alert("Only administrators can add users!");
+			return;
 		}
 		boolean result = model.addUser(addUserNameField.getText(),
 				hashPassword(addPasswordField.getText(), SALT));
@@ -555,14 +588,18 @@ public class View {
 			logMsg("User " + deleteUserField.getText() + " deleted.");
 		}
 		else {
-			logMsg("Error during deletion.");
+			logMsg("Error during creation.");
 		}
 	}
 	
 	@FXML
 	private void deleteUserEventHandler() {
+		if (!isLoggedIn()) {
+			return;
+		}
 		if (!loggedInUser.isAdmin()) {
 			alert("Only administrators can delete users!");
+			return;
 		}
 		boolean result = model.deleteUser(deleteUserField.getText());
 		if (result) {
@@ -572,7 +609,14 @@ public class View {
 			logMsg("Error during deletion.");
 		}
 	}
-
+	
+	private boolean isLoggedIn() {
+		if (loggedInUser == null) {
+			alert("You are not logged in!");
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Appends the message (with a line break added) to the logs.

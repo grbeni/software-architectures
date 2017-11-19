@@ -141,7 +141,7 @@
 								<TextField fx:id="translationField" prefWidth="550"
 								 style="-fx-font-size: 1.1em; " promptText="Translate the text..." alignment="CENTER" />
 								<Button fx:id="sendTranslationButton" text="Send" prefWidth="100" prefHeight="40"
-									visible="true" />
+									visible="true" onAction="#sendTranslationEventHandler" />
 							</HBox>
 						</VBox>
 						<!-- Image recognition exercise -->
@@ -162,7 +162,7 @@
 								<TextField fx:id="imageDescriptionField" prefWidth="550"
 								 	style="-fx-font-size: 1.1em; " promptText="Specify the depicted object..." alignment="CENTER" />
 								<Button fx:id="sendImageDescriptionButton" text="Send" prefWidth="100" prefHeight="40"
-									visible="true" />
+									visible="true" onAction="#sendImageDescriptionEventHandler" />
 							</HBox>
 						</VBox>
 						<!-- Summary -->

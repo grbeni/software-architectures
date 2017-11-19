@@ -6,12 +6,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -27,6 +30,7 @@ import language.learning.exercise.Exercise;
 import language.learning.exercise.Exercises;
 import language.learning.exercise.FourWordsExercise;
 import language.learning.exercise.ExerciseType;
+import language.learning.exercise.ExerciseWithImage;
 import language.learning.user.User;
 
 /**
@@ -141,6 +145,9 @@ public class View {
 	@FXML
 	private Tab manageUsersTab;
 	
+	@FXML
+	private ImageView imageView;
+	
 	// Alert window
 	Alert alertWindow = new Alert(AlertType.ERROR);
 	
@@ -161,6 +168,7 @@ public class View {
 	
 	private Exercise actualExercise;
 	private Button correctAnswer; // In case of four words exercise
+	private Button chosenAnswer; // In case of four words exercise
 
 	public View() {
 		model = new ModelMock();
@@ -243,7 +251,7 @@ public class View {
 		}		
 		// Get coaching tasks
 		Exercises retrievedExercises = model.getExercisesWithUserLevel(null, loggedInUser.getKnowledgeLevel().toString(), this.TASK_COUNT, false);
-		exercises = retrievedExercises.getExercises();
+		exercises = new ArrayList<Exercise>(retrievedExercises.getExercises());
 		coachingExercises = new ArrayList<Exercise>(exercises);
 		
 		// Change the window
@@ -264,8 +272,6 @@ public class View {
 		List<String> log = new ArrayList<String>();
 		if (coachingExercises.size() <= 0) {
 			// At the end of coaching period
-//			coachingBox.setVisible(false);
-//			fourWordsBox.setVisible(true);
 			displayAnswers();
 			return;
 		}
@@ -282,7 +288,7 @@ public class View {
 		logList(log);
 	}
 	
-	private void testChoiceAnswer(Button choiceButton) {
+	private void testChoiceAnswer() {
 		++answerCount;
 		
 		switch (actualExercise.getExerciseType()) {
@@ -292,7 +298,7 @@ public class View {
 				}
 			break;
 			case WORD:
-				if (correctAnswer.getText().equals(actualExercise.getHungarian())) {
+				if (chosenAnswer == correctAnswer) {
 					++correctAnswerCount;
 				}
 			break;
@@ -303,8 +309,7 @@ public class View {
 			break;
 		}
 		
-		exerciseCountLabel.setText("Finished tasks: " + answerCount + "/" + TASK_COUNT);
-		
+		exerciseCountLabel.setText("Finished tasks: " + answerCount + "/" + TASK_COUNT);		
 		
 		if (answerCount >= 10) {
 			finishExercises();
@@ -331,6 +336,7 @@ public class View {
 		if (exercises.size() <= 0) {
 			return;
 		}
+		emptyTextFields();
 		actualExercise = exercises.remove(0);
 		switch (actualExercise.getExerciseType()) {
 			case SENTENCE:
@@ -345,9 +351,10 @@ public class View {
 				fourWordsBox.setVisible(true);
 			break;
 			case IMAGE:
-//				setLearningBoxesInvisible();
-//				translatablePhraseLabel.setText(actualExercise.getEnglish());
-//				imageRecognitionBox.setVisible(true);
+				setLearningBoxesInvisible();
+				ExerciseWithImage exerciseWithImage = (ExerciseWithImage) actualExercise;
+				imageView.setImage(exerciseWithImage.getImage());
+				imageRecognitionBox.setVisible(true);
 			break;
 		}
 	}
@@ -360,29 +367,34 @@ public class View {
 		summaryBox.setVisible(false);
 	}
 	
+	private void emptyTextFields() {		
+		translationField.setText("");
+		imageDescriptionField.setText("");
+	}
+	
 	private void setButtonAnswers(FourWordsExercise exercise) {
-		int correctButtonNumber = (int) ((Math.random() * 100) % 4);
-		List<Button> wrongButtons = Arrays.asList(new Button[] {
-				choiceOneButton, choiceTwoButton, choiceThreeButton, choiceFourButton});
+		int correctButtonNumber = (int) ((Math.random() * 100) % 4 + 1);
+		List<Button> wrongButtons = Stream.of(choiceOneButton, choiceTwoButton,
+				choiceThreeButton, choiceFourButton).collect(Collectors.toList());
 		switch (correctButtonNumber) {
 			case 1:
-				choiceOneButton.setText(exercise.getHungarian());
 				wrongButtons.remove(choiceOneButton);
+				choiceOneButton.setText(exercise.getHungarian());
 				correctAnswer = choiceOneButton;
 			break;
 			case 2:
-				choiceTwoButton.setText(exercise.getHungarian());
 				wrongButtons.remove(choiceTwoButton);
+				choiceTwoButton.setText(exercise.getHungarian());
 				correctAnswer = choiceTwoButton;
 			break;
 			case 3:
-				choiceThreeButton.setText(exercise.getHungarian());
 				wrongButtons.remove(choiceThreeButton);
+				choiceThreeButton.setText(exercise.getHungarian());
 				correctAnswer = choiceThreeButton;
 			break;
 			case 4:
-				choiceFourButton.setText(exercise.getHungarian());
 				wrongButtons.remove(choiceFourButton);
+				choiceFourButton.setText(exercise.getHungarian());
 				correctAnswer = choiceFourButton;
 			break;
 		}
@@ -396,13 +408,8 @@ public class View {
 	 */
 	@FXML
 	private void choiceOneEventHandler(ActionEvent event) {
-		//Log container
-		List<String> log = new ArrayList<String>();
-		
-		testChoiceAnswer(choiceOneButton);
-		
-		// Write log to the GUI
-		logList(log);
+		chosenAnswer = choiceOneButton;
+		testChoiceAnswer();
 	}
 	
 	/**
@@ -410,13 +417,8 @@ public class View {
 	 */
 	@FXML
 	private void choiceTwoEventHandler(ActionEvent event) {
-		//Log container
-		List<String> log = new ArrayList<String>();
-		
-		testChoiceAnswer(choiceTwoButton);
-		
-		// Write log to the GUI
-		logList(log);
+		chosenAnswer = choiceTwoButton;
+		testChoiceAnswer();
 	}
 	
 	/**
@@ -424,13 +426,8 @@ public class View {
 	 */
 	@FXML
 	private void choiceThreeEventHandler(ActionEvent event) {
-		//Log container
-		List<String> log = new ArrayList<String>();
-		
-		testChoiceAnswer(choiceThreeButton);
-		
-		// Write log to the GUI
-		logList(log);
+		chosenAnswer = choiceThreeButton;
+		testChoiceAnswer();
 	}
 	
 	/**
@@ -438,13 +435,24 @@ public class View {
 	 */
 	@FXML
 	private void choiceFourEventHandler(ActionEvent event) {
-		//Log container
-		List<String> log = new ArrayList<String>();
-		
-		testChoiceAnswer(choiceFourButton);
-		
-		// Write log to the GUI
-		logList(log);
+		chosenAnswer = choiceFourButton;
+		testChoiceAnswer();
+	}
+	
+	/**
+	 * Called whenever the send translation button is pressed.
+	 */
+	@FXML
+	private void sendTranslationEventHandler(ActionEvent event) {
+		testChoiceAnswer();
+	}
+	
+	/**
+	 * Called whenever the image description button is pressed.
+	 */
+	@FXML
+	private void sendImageDescriptionEventHandler(ActionEvent event) {
+		testChoiceAnswer();
 	}
 	
 	/**
@@ -456,11 +464,7 @@ public class View {
 		exerciseCountLabel.setVisible(false);
 		startLearningButton.setVisible(true);
 	}
-	
-//		@FXML
-//		private Button sendTranslationButton;
-//		@FXML
-//		private Button sendImageDescriptionButton;
+
 //		@FXML
 //		private Button addExerciseButton;
 //		@FXML

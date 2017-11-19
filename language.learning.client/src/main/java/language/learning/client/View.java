@@ -1,7 +1,6 @@
 package language.learning.client;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.file.attribute.UserPrincipalLookupService;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -23,6 +22,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import language.learning.exercise.Exercise;
+import language.learning.exercise.Exercises;
 import language.learning.user.User;
 
 /**
@@ -139,8 +140,6 @@ public class View {
 	
 	// Alert window
 	Alert alertWindow = new Alert(AlertType.ERROR);
-
-	
 	
 	// Experience ratio
 	private final int EXPERIENCE_RATIO = 10;
@@ -153,6 +152,10 @@ public class View {
 	private ModelMock model;
 	
 	private User loggedInUser; 
+	
+	private List<Exercise> exercises;
+	private List<Exercise> coachingExercises;
+	
 
 	public View() {
 		model = new ModelMock();
@@ -232,6 +235,9 @@ public class View {
 		System.out.println("Started coaching");
 		
 		// Get coaching tasks
+		Exercises retrievedExercises = model.getExercisesWithUserLevel(null, loggedInUser.getKnowledgeLevel().toString(), this.TASK_COUNT, false);
+		exercises = retrievedExercises.getExercises();
+		coachingExercises = new ArrayList<Exercise>(exercises);
 		
 		// Change the window
 		startLearningButton.setVisible(false);
@@ -248,15 +254,17 @@ public class View {
 	private void nextCoachingEventHandler(ActionEvent event) {
 		//Log container
 		List<String> log = new ArrayList<String>();
+		if (coachingExercises.size() <= 0) {
+			// At the end of coaching period
+			coachingBox.setVisible(false);
+			fourWordsBox.setVisible(true);
+			return;
+		}
 		
-		englishWordLabel.setText("Next English word");
-		hungarianWordLabel.setText("Next Hungarian word");
+		Exercise coachingExercise = coachingExercises.remove(0);
 		
-		// Get coaching tasks
-		
-		// At the end of coaching period
-		coachingBox.setVisible(false);
-		fourWordsBox.setVisible(true);
+		englishWordLabel.setText(coachingExercise.getEnglish());
+		hungarianWordLabel.setText(coachingExercise.getHungarian());	
 		
 		// Write log to the GUI
 		logList(log);

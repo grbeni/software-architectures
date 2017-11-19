@@ -32,7 +32,7 @@ public interface ILearning {
 	 * @param type word or sentence type exercise
 	 * @param userLevel userLevel the knowledge level of the user
 	 * @param count number of exercises required
-	 * @param equals equals 1 (true), 0 (false)
+	 * @param equals equals true, false
 	 * @return
 	 */
 	@GET
@@ -41,7 +41,7 @@ public interface ILearning {
 	Exercises getExercisesWithUserLevel(@QueryParam("type") String type, 
 										@QueryParam("level") String userLevel,
 										@QueryParam("count") int count,
-										@QueryParam("equals") int equals);
+										@QueryParam("equals") boolean equals);
 	
 	
 	/**

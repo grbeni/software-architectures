@@ -48,7 +48,7 @@ public class ModelMock implements IAddExercise, ILearning, ILogIn {
 	}
 
 	@Override
-	public Exercises getExercisesWithUserLevel(String type, String userLevel, int count, int equals) {
+	public Exercises getExercisesWithUserLevel(String type, String userLevel, int count, boolean equals) {
 		List<Exercise> exerciseList = Arrays.asList(new Exercise[] {
 				new Exercise("dog", "kutya"),
 				new Exercise("cat", "macska"),

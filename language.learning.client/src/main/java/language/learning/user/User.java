@@ -23,6 +23,9 @@ public class User {
 	// The score of the user.
 	private int score;	
 	
+	public boolean isAdmin() {
+		return isAdmin;
+	}
 	
 	/**
 	 * Getter for user name.

@@ -77,15 +77,33 @@ public class ModelMock implements IAddExercise, ILearning, ILogIn {
 	}
 
 	@Override
-	public int addExercise(String exerciseType, String exerciseLevel, Exercise exercise) {
+	public boolean addExercise(String exerciseType, String exerciseLevel, Exercise exercise) {
 		// TODO Auto-generated method stub
-		return 0;
+		return true;
+	}
+	
+	@Override
+	public boolean deleteExercise(String englishWord, String hungarianWord) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 	@Override
-	public int updateExerciseWithImage() {
+	public boolean updateExerciseWithImage() {
 		// TODO Auto-generated method stub
-		return 0;
+		return true;
+	}
+
+	@Override
+	public boolean addUser(String username, String passwordHash) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean deleteUser(String username) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

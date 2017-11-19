@@ -41,6 +41,7 @@ import language.learning.user.User;
  */
 public class View {
 	
+	private static final String SALT = "software-architecture";
 	// Layouts
 	@FXML
 	private VBox rootLayout;
@@ -224,7 +225,8 @@ public class View {
 		}
 		//Log container
 		List<String> log = new ArrayList<String>();
-		loggedInUser = model.logIn(userNameField.getText(), passwordField.getText());
+		loggedInUser = model.logIn(userNameField.getText(),
+				hashPassword(passwordField.getText(), SALT));
 		// Controller connect method will do everything for us, just call
 		if (loggedInUser != null) {
 			connectionStateLabel.setText("Connection created");
@@ -523,14 +525,53 @@ public class View {
 		model.updateUserLevel(loggedInUser.getKnowledgeLevel().toString(), loggedInUser);
 	}
 
-//		@FXML
-//		private Button addExerciseButton;
-//		@FXML
-//		private Button deleteExerciseButton;
-//		@FXML
-//		private Button addUserButton;
-//		@FXML
-//		private Button deleteUserButton;
+	@FXML
+	private void addExerciseEventHandler() {
+		
+		
+		model.addExercise(exerciseType, exerciseLevel, exercise);
+	}
+	
+	@FXML
+	private void deleteExerciseEventHandler() {
+		boolean result = model.deleteExercise(addEnglishPhraseField.getText(),
+				addHungarianPhraseField.getText());
+		if (result) {
+			logMsg("Exercise deleted.");
+		}
+		else {
+			logMsg("Error during deletion.");
+		}
+	}
+	
+	@FXML
+	private void addUserEventHandler() {
+		if (!loggedInUser.isAdmin()) {
+			alert("Only administrators can add users!");
+		}
+		boolean result = model.addUser(addUserNameField.getText(),
+				hashPassword(addPasswordField.getText(), SALT));
+		if (result) {
+			logMsg("User " + deleteUserField.getText() + " deleted.");
+		}
+		else {
+			logMsg("Error during deletion.");
+		}
+	}
+	
+	@FXML
+	private void deleteUserEventHandler() {
+		if (!loggedInUser.isAdmin()) {
+			alert("Only administrators can delete users!");
+		}
+		boolean result = model.deleteUser(deleteUserField.getText());
+		if (result) {
+			logMsg("User " + deleteUserField.getText() + " deleted.");
+		}
+		else {
+			logMsg("Error during deletion.");
+		}
+	}
 
 
 	/**

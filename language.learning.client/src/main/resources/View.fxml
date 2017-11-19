@@ -219,7 +219,8 @@
 							<TextField fx:id="addEnglishPhraseField" promptText="English phrase" HBox.hgrow="ALWAYS" />
 							<TextField fx:id="addHungarianPhraseField" promptText="Hungarian phrase" HBox.hgrow="ALWAYS" />
 							<!-- Add exercise button -->
-							<Button fx:id="addExerciseButton" text="Add Exercise" prefWidth="120" />	
+							<Button fx:id="addExerciseButton" text="Add Exercise" prefWidth="120" 
+								onAction="#addExerciseEventHandler />	
 						</HBox>
 					</VBox>
 					<VBox spacing="10">
@@ -229,7 +230,8 @@
 							<TextField fx:id="deleteEnglishPhraseField" promptText="English phrase" HBox.hgrow="ALWAYS" />
 							<TextField fx:id="deleteHungarianPhraseField" promptText="Hungarian phrase" HBox.hgrow="ALWAYS" />
 							<!-- Add exercise button -->
-							<Button fx:id="deleteExerciseButton" text="Delete Exercise" prefWidth="120"/>	
+							<Button fx:id="deleteExerciseButton" text="Delete Exercise" prefWidth="120" 
+								onAction="#deleteExerciseEventHandler />	
 						</HBox>
 					</VBox>
 					<!-- Log -->
@@ -266,7 +268,8 @@
 							<TextField fx:id="addUserNameField" promptText="User name" HBox.hgrow="ALWAYS" />
 							<PasswordField fx:id="addPasswordField" promptText="Password" HBox.hgrow="ALWAYS" />
 							<!-- Add exercise button -->
-							<Button fx:id="addUserButton" text="Create User" prefWidth="120" />	
+							<Button fx:id="addUserButton" text="Create User" prefWidth="120" 
+								onAction="#createUserEventHandler />	
 						</HBox>
 					</VBox>
 					<VBox spacing="10">
@@ -275,7 +278,8 @@
 							<!-- Search keyword field -->
 							<TextField fx:id="deleteUserField" promptText="User name" HBox.hgrow="ALWAYS" />
 							<!-- Add exercise button -->
-							<Button fx:id="deleteUserButton" text="Delete User" prefWidth="120"/>	
+							<Button fx:id="deleteUserButton" text="Delete User" prefWidth="120"
+								onAction="#deleteUserEventHandler "/>	
 						</HBox>
 					</VBox>
 					<!-- Log -->

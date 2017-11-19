@@ -34,7 +34,7 @@ public interface ILearning {
 	 * @return
 	 */
 	@GET
-	@Path("{find}")
+	@Path("find")
 	@Produces(MediaType.APPLICATION_JSON)
 	Exercises getExercisesWithUserLevel(@QueryParam("type") String type, 
 										@QueryParam("level") String userLevel, 

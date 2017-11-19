@@ -48,7 +48,7 @@ public interface IDatabase {
 	/**
 	 * Method for inserting new exercise into database.
 	 * @param exercise
-	 * @return
+	 * @return the id of the inserted exercise
 	 */
 	public int addExercise(Exercise exercise, ExerciseType type);
 	
@@ -65,5 +65,14 @@ public interface IDatabase {
 	 * @param level
 	 */
 	public void updateUserLevel(User user, UserLevel level);
-
+	
+	/**
+	 * Deletes the given exercise
+	 * @param english
+	 * @param hungarian
+	 * @return whether the deletion was successful
+	 */
+	public boolean deleteExercise(Exercise exercise);
+	
+	
 }

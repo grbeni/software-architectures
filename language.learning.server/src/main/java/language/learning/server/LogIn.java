@@ -31,4 +31,16 @@ public class LogIn implements ILogIn {
 		return user;
 	}
 
+	@Override
+	public boolean addUser(String username, String passwordHash) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean deleteUser(String username) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

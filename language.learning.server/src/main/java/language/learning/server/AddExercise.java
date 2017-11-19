@@ -17,36 +17,53 @@ public class AddExercise implements IAddExercise {
 	
 
 	@Override
-	public int addExercise(String exerciseType, String exerciseLevel, Exercise exercise) {
+	public boolean addExercise(Exercise exercise) {
 		log.info("Exercise to be added: " + exercise.getEnglish() + " - " + exercise.getHungarian() 
-			+ ", " + exerciseLevel + ", " + exerciseType);
+			+ ", " + exercise.getExerciseLevel() + ", " + exercise.getExerciseType());
 		
-		exercise.setExerciseLevel(ExerciseLevel.valueOf(exerciseLevel.toUpperCase()));
+		exercise.setExerciseLevel(ExerciseLevel.valueOf(exercise.getExerciseLevel().toString().toUpperCase()));
 		
 		int result = 0;
 		
 		if (db.connect()) {
-			log.trace("Establishing connection was successful.");
+			log.info("Establishing connection was successful.");
 			
-			result = db.addExercise(exercise, ExerciseType.valueOf(exerciseType.toUpperCase()));
+			result = db.addExercise(exercise, ExerciseType.valueOf(exercise.getExerciseType().toString().toUpperCase()));
 			
 			db.disconnect();
 		}
 		else {
-			log.trace("Establishing connection was not successful.");
+			log.info("Establishing connection was not successful.");
 		}
 		
-		return result;
-	}
-	
-	
+		// result > 0 means the insertion was successful
+		return (result > 0);
+	}	
 
-	// TODO
+
 	@Override
-	public int updateExerciseWithImage() {
-		log.info("Exercise to be updated: ");
+	public boolean deleteExercise(Exercise exercise) {
+		log.info("Exercise to be deleted: " + exercise.getEnglish() + " - " + exercise.getHungarian());
 		
-		return 0;
+		boolean success = false;
+		
+		if (db.connect()) {
+			log.info("Establishing connection was successful.");
+			
+			success = db.deleteExercise(exercise);
+		}
+		else {
+			log.info("Establishing connection was not successful.");
+		}
+		
+		return success;
+	}
+
+
+	@Override
+	public boolean updateExerciseWithImage() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

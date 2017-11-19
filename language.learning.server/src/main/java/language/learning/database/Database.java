@@ -163,53 +163,7 @@ public class Database implements IDatabase {
 		return user;
 	}
 
-	@Override
-	public int addExercise(Exercise exercise, ExerciseType type) {
-		log.info("Add execise: " + exercise.getEnglish() + " - " + exercise.getHungarian());
-
-		int nextVal = 0;
-
-		// Query the next value of the ID to be inserted
-		String sequenceNextQuery = "SELECT EXERCISE_SEQ.NEXTVAL FROM DUAL";
-		try {
-			PreparedStatement sequenceStm = connection.prepareStatement(sequenceNextQuery);
-			ResultSet rs = sequenceStm.executeQuery();
-
-			if (rs != null) {
-				if (rs.next()) {
-					nextVal = rs.getInt(1);
-					log.info("EXERCISE_SEQ.NEXTVAL: " + nextVal);
-				}
-			}
-
-		} catch (SQLException e) {
-			log.error(e.getMessage());
-		}
-
-		if (nextVal != 0) {
-			String insertSql = "";
-			if (type == ExerciseType.WORD) {
-				insertSql = "INSERT INTO WORDEXERCISE VALUES(?, ?, ?, ?)";
-			} else {
-				insertSql = "INSERT INTO SENTENCEEXERCISE VALUES(?, ?, ?, ?)";
-			}
-			try {				
-				PreparedStatement insertStm = connection.prepareStatement(insertSql);
-				
-				insertStm.setInt(1, nextVal);
-				insertStm.setString(2, exercise.getEnglish());
-				insertStm.setString(3, exercise.getHungarian());
-				insertStm.setInt(4, exercise.getExerciseLevel().ordinal() + 1);
-
-				insertStm.executeUpdate();
-
-			} catch (SQLException e) {
-				log.error(e.getMessage());
-			}
-		}
-
-		return nextVal;
-	}
+	
 
 	@Override
 	public List<Exercise> getAllExercise(ExerciseType type) {
@@ -279,6 +233,7 @@ public class Database implements IDatabase {
 			ResultSet resultSet = preparedStm.executeQuery();
 			
 			if (resultSet != null) {
+				log.error("not null");
 				exerciseList = resultSetToExerciseList(resultSet);
 			}
 			
@@ -301,10 +256,59 @@ public class Database implements IDatabase {
 			
 			exerciseList.add(exercise);
 		}
+		log.error("no next");
 		
 		return exerciseList;
 	}
 
+	@Override
+	public int addExercise(Exercise exercise, ExerciseType type) {
+		log.info("Add execise: " + exercise.getEnglish() + " - " + exercise.getHungarian());
+
+		int nextVal = 0;
+
+		// Query the next value of the ID to be inserted
+		String sequenceNextQuery = "SELECT EXERCISE_SEQ.NEXTVAL FROM DUAL";
+		try {
+			PreparedStatement sequenceStm = connection.prepareStatement(sequenceNextQuery);
+			ResultSet rs = sequenceStm.executeQuery();
+
+			if (rs != null) {
+				if (rs.next()) {
+					nextVal = rs.getInt(1);
+					log.info("EXERCISE_SEQ.NEXTVAL: " + nextVal);
+				}
+			}
+
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+		}
+
+		if (nextVal != 0) {
+			String insertSql = "";
+			if (type == ExerciseType.WORD) {
+				insertSql = "INSERT INTO WORDEXERCISE VALUES(?, ?, ?, ?)";
+			} else {
+				insertSql = "INSERT INTO SENTENCEEXERCISE VALUES(?, ?, ?, ?)";
+			}
+			try {				
+				PreparedStatement insertStm = connection.prepareStatement(insertSql);
+				
+				insertStm.setInt(1, nextVal);
+				insertStm.setString(2, exercise.getEnglish());
+				insertStm.setString(3, exercise.getHungarian());
+				insertStm.setInt(4, exercise.getExerciseLevel().ordinal() + 1);
+
+				insertStm.executeUpdate();
+
+			} catch (SQLException e) {
+				log.error(e.getMessage());
+			}
+		}
+
+		return nextVal;
+	}
+	
 	@Override
 	public void updateUserScore(User user, int score) {
 		log.info("Update " + user.getUsername() + "'s score from: " + user.getScore() + " to: " + score);
@@ -345,6 +349,32 @@ public class Database implements IDatabase {
 		} catch (SQLException e) {
 			log.error(e.getMessage());
 		}
+	}
+
+	@Override
+	public boolean deleteExercise(Exercise exercise) {
+		log.info("Delete " + exercise.getEnglish() + " - " + exercise.getHungarian());
+		
+		String deleteString = "";
+		int deleted = 0;
+		
+		if (exercise.getExerciseType() == ExerciseType.SENTENCE) {
+			deleteString = "DELETE SENTENCEEXERCISE WHERE ENGLISH = ? AND HUNGARIAN = ?";
+		}
+		else {
+			deleteString = "DELETE WORDEXERCISE WHERE ENGLISH = ? AND HUNGARIAN = ?";
+		}
+		
+		try {
+			PreparedStatement preparedDelete = connection.prepareStatement(deleteString);
+			deleted = preparedDelete.executeUpdate();
+			
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+		}
+		
+		// Deleted a row if deleted is greater than zero.
+		return deleted > 0;
 	}
 
 }

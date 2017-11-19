@@ -20,13 +20,13 @@ public class ExerciseWithImage extends Exercise {
 	 * @param hungarian Hungarian word
 	 * @param image image
 	 */
-	public ExerciseWithImage(String english, String hungarian, Image image) {
-		super(english, hungarian);
-		
-		this.image = image;
-		
-		log.trace("ExerciseWithImage created");
-	}
+//	public ExerciseWithImage(String english, String hungarian, Image image) {
+//		super(english, hungarian);
+//		
+//		this.image = image;
+//		
+//		log.trace("ExerciseWithImage created");
+//	}
 	
 	
 	/**

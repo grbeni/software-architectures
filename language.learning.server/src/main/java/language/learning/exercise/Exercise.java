@@ -1,13 +1,15 @@
 package language.learning.exercise;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import language.learning.logger.LoggerWrapper;
 
 public class Exercise {
 
-	private static final Logger log = (new LoggerWrapper(Exercise.class.getName(), Level.ERROR)).getLog();
+	private static final Logger log = (new LoggerWrapper(Exercise.class.getName())).getLog();
+	
+	// Exercise type
+	protected ExerciseType exerciseType;
 	
 	// The word in English
 	private String english;
@@ -25,13 +27,21 @@ public class Exercise {
 	}
 	
 	
-	public Exercise(String englishWord, String hungarianWord) {
-		log.trace("WordExercise created with word: " + english + " - " + hungarian);
+	/**
+	 * Getter for exercise type.
+	 * @return exercise level
+	 */
+	public ExerciseType getExerciseType() {
+		log.info("Exercise type getter: " + exerciseType);
 		
-		this.english = englishWord;
-		this.hungarian = hungarianWord;
+		return exerciseType;
 	}
 	
+	public void setExerciseType(ExerciseType exerciseType) {
+		log.info("Exercise type set to: " + exerciseType);
+		
+		this.exerciseType = exerciseType;
+	}
 	
 	/**
 	 * Getter for English.

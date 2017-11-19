@@ -1,28 +1,33 @@
 package language.learning.server;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import language.learning.exercise.Exercise;
 
-@Path("add")
+@Path("exercise")
 public interface IAddExercise {
 	
-	@Path("exercise")
 	@POST
+	@Path("add")
 	@Consumes(MediaType.APPLICATION_JSON)
-	int addExercise(@QueryParam("type") String exerciseType, @QueryParam("level") String exerciseLevel, Exercise exercise);
+	boolean addExercise(Exercise exercise);
 	
+	@DELETE
+	@Path("delete")
+	@Consumes(MediaType.APPLICATION_JSON)
+	boolean deleteExercise(Exercise exercise);
 	
 	// TODO
 	@PUT
+	@Path("update")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	int updateExerciseWithImage();
+	boolean updateExerciseWithImage();
 	
 }

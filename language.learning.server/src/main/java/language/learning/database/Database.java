@@ -198,7 +198,6 @@ public class Database implements IDatabase {
 		int modified = preparedUpdate.executeUpdate();
 
 		log.info("Number of modified rows: " + modified);
-
 	}
 
 	@Override
@@ -285,6 +284,12 @@ public class Database implements IDatabase {
 		return exerciseList;
 	}
 
+	/**
+	 * Converts the result set to exercise list.
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
 	private List<Exercise> resultSetToExerciseList(ResultSet resultSet) throws SQLException {
 		List<Exercise> exerciseList = new ArrayList<>();
 
@@ -332,26 +337,30 @@ public class Database implements IDatabase {
 	public boolean deleteExercise(Exercise exercise) throws SQLException {
 		log.info("Delete " + exercise.getEnglish() + " - " + exercise.getHungarian());
 
-		String deleteString = "";
+		String deleteWord = "DELETE SENTENCEEXERCISE WHERE ENGLISH = ? AND HUNGARIAN = ?";
+		String deleteSentence = "DELETE WORDEXERCISE WHERE ENGLISH = ? AND HUNGARIAN = ?";
 		int deleted = 0;
 
-		// TODO - delete from both since we don't know the type
-		if (exercise.getExerciseType() == ExerciseType.SENTENCE) {
-			deleteString = "DELETE SENTENCEEXERCISE WHERE ENGLISH = ? AND HUNGARIAN = ?";
-		} else {
-			deleteString = "DELETE WORDEXERCISE WHERE ENGLISH = ? AND HUNGARIAN = ?";
-		}
-
-		PreparedStatement preparedDelete = connection.prepareStatement(deleteString);
-		preparedDelete.setString(1, exercise.getEnglish());
-		preparedDelete.setString(2, exercise.getHungarian());
-
-		deleted = preparedDelete.executeUpdate();
+		PreparedStatement preparedDeleteWord = connection.prepareStatement(deleteWord);
+		preparedDeleteWord.setString(1, exercise.getEnglish());
+		preparedDeleteWord.setString(2, exercise.getHungarian());
+		deleted = preparedDeleteWord.executeUpdate();
+		
+		PreparedStatement preparedDeleteSentence = connection.prepareStatement(deleteSentence);
+		preparedDeleteSentence.setString(1, exercise.getEnglish());
+		preparedDeleteSentence.setString(2, exercise.getHungarian());
+		deleted += preparedDeleteSentence.executeUpdate();		
 
 		// Deleted a row if deleted is greater than zero.
 		return deleted > 0;
 	}
 
+	/**
+	 * Returns the corresponding id of the given user name.
+	 * @param username
+	 * @return
+	 * @throws SQLException
+	 */
 	private int getUserIdByUserName(String username) throws SQLException {
 		log.info("Get user id to " + username);
 

@@ -539,7 +539,7 @@ public class View {
 		printUserData();
 		// Sending the data to the server
 		model.updateUserScore(loggedInUser.getScore(), loggedInUser);
-		model.updateUserLevel(loggedInUser.getKnowledgeLevel().toString(), loggedInUser);
+		model.updateUserLevel(loggedInUser.getUserLevel().toString(), loggedInUser);
 	}
 
 	@FXML

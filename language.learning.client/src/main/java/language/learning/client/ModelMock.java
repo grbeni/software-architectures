@@ -1,20 +1,20 @@
 package language.learning.client;
 
-import javafx.scene.image.Image;
 import java.util.Arrays;
 import java.util.List;
 
+import javafx.scene.image.Image;
 import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.Exercises;
 import language.learning.exercise.FourWordsExercise;
 import language.learning.exercise.KnowledgeLevel;
-import language.learning.server.IAddExercise;
+import language.learning.server.IExerciseManager;
 import language.learning.server.ILearning;
-import language.learning.server.ILogIn;
+import language.learning.server.IUserManager;
 import language.learning.user.User;
 
-public class ModelMock implements IAddExercise, ILearning, ILogIn {
+public class ModelMock implements IExerciseManager, ILearning, IUserManager {
 	
 	/**
 	 * Connects to the server.
@@ -24,7 +24,7 @@ public class ModelMock implements IAddExercise, ILearning, ILogIn {
 		User user = new User();
 		user.setUserName(username);
 		user.setPasswordHash(passwordHash);
-		user.setKnowledgeLevel(KnowledgeLevel.BEGINNER);
+		user.setUserLevel(KnowledgeLevel.BEGINNER);
 		return user;
 	}
 
@@ -77,31 +77,49 @@ public class ModelMock implements IAddExercise, ILearning, ILogIn {
 	}
 
 	@Override
-	public boolean addExercise(String exerciseType, String exerciseLevel, Exercise exercise) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-	
-	@Override
-	public boolean deleteExercise(String englishWord, String hungarianWord) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
 	public boolean updateExerciseWithImage() {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
-	public boolean addUser(String username, String passwordHash, boolean isAdmin) {
+	public boolean deleteUser(String username) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean deleteUser(String username) {
+	public User logIn(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean addUser(User user) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Exercises getExercises(String type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Exercises getExercisesWithUserLevel(String type, String userLevel, int equals) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean addExercise(Exercise exercise) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean deleteExercise(Exercise exercise) {
 		// TODO Auto-generated method stub
 		return false;
 	}

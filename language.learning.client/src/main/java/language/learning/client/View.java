@@ -567,6 +567,10 @@ public class View {
 		if (!isLoggedIn()) {
 			return;
 		}
+		if (addEnglishPhraseField.getText().equals("") || addHungarianPhraseField.getText().equals("")) {
+			alert("Both text fields need to be filled!");
+			return;
+		}
 		boolean result = model.deleteExercise(addEnglishPhraseField.getText(),
 				addHungarianPhraseField.getText());
 		if (result) {

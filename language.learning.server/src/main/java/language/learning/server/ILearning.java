@@ -21,7 +21,7 @@ public interface ILearning {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	Exercises getExercises(@QueryParam("type") String type);
+	Exercises getExercises(@QueryParam("type") String type, @QueryParam("count") int count);
 	
 	
 	/**
@@ -30,15 +30,16 @@ public interface ILearning {
 	 * returns the same and below level exercises.
 	 * @param type word or sentence type exercise
 	 * @param userLevel userLevel the knowledge level of the user
-	 * @param equals equals 1 (true), 0 (false)
+	 * @param equals
 	 * @return
 	 */
 	@GET
-	@Path("find")
+	@Path("level")
 	@Produces(MediaType.APPLICATION_JSON)
 	Exercises getExercisesWithUserLevel(@QueryParam("type") String type, 
 										@QueryParam("level") String userLevel, 
-										@QueryParam("equals") int equals);
+										@QueryParam("equals") boolean equals, 
+										@QueryParam("count") int count);
 	
 	
 	/**

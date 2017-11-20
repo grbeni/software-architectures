@@ -22,7 +22,7 @@ public class Learning implements ILearning {
 	
 	
 	@Override
-	public Exercises getExercises(String type) {
+	public Exercises getExercises(String type, int count) {
 		log.info("Get all exercise with type: " + type);
 		
 		List<Exercise> exerciseList = new ArrayList<>();
@@ -45,24 +45,16 @@ public class Learning implements ILearning {
 
 
 	@Override
-	public Exercises getExercisesWithUserLevel(String type, String userLevel, int equals) {
+	public Exercises getExercisesWithUserLevel(String type, String userLevel, boolean equals, int count) {
 		log.info("Get " + type + " exercises: " + userLevel + ", " + equals);
 		
-		boolean onlyAtLevel;
-		List<Exercise> exerciseList = new ArrayList<>();
-		
-		if (equals == 1) {
-			onlyAtLevel = true;
-		}
-		else {
-			onlyAtLevel = false;
-		}
-		
+		List<Exercise> exerciseList = new ArrayList<>();		
+				
 		if (db.connect()) {
 			log.info("Establishing connection was successful.");
 			exerciseList = db.getExercisesWithUserLevel(ExerciseType.valueOf(type.toUpperCase()),
 														KnowledgeLevel.valueOf(userLevel.toUpperCase()),
-														onlyAtLevel);
+														equals);
 			
 			db.disconnect();
 		}

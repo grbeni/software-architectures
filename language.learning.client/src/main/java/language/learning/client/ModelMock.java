@@ -15,51 +15,25 @@ import language.learning.server.IUserManager;
 import language.learning.user.User;
 
 public class ModelMock implements IExerciseManager, ILearning, IUserManager {
-	
-	/**
-	 * Connects to the server.
-	 */
-	@Override
-	public User logIn(String username, String passwordHash) {
-		User user = new User();
-		user.setUserName(username);
-		user.setPasswordHash(passwordHash);
-		user.setUserLevel(KnowledgeLevel.BEGINNER);
-		return user;
-	}
 
 	@Override
 	public Exercises getExercises(String type, int count) {
-		List<Exercise> exerciseList = Arrays.asList(new Exercise[] {
-				new Exercise("dog", "kutya"),
-				new Exercise("cat", "macska"),
-				new Exercise("carrot", "répa"),
-				new Exercise("boat", "hajó"),
-				new Exercise("apple", "alma"),
-				new ExerciseWithImage("Sponge Bob", "Spongya Bob", new Image("spongya.jpg", 100, 100, true, false)),
-				new FourWordsExercise("hammer", "kalapacs", Arrays.asList(new String[] {"szög", "fűrész", "gereblye"})),
-				new FourWordsExercise("car", "autó", Arrays.asList(new String[] {"bickli", "motor", "busz"})),
-				new FourWordsExercise("cow", "szarvasmarha", Arrays.asList(new String[] {"sertes", "csirke", "lud"})),
-				new FourWordsExercise("violet", "lila", Arrays.asList(new String[] {"piros", "szürke", "fekete"}))				
-		});
-		
-		Exercises exercises = new Exercises(exerciseList);		
-		return exercises;
+		return null;
 	}
 
 	@Override
-	public Exercises getExercisesWithUserLevel(String type, String userLevel, int count, boolean equals) {
+	public Exercises getExercisesWithUserLevel(String type, String userLevel, boolean equals, int count) {
 		List<Exercise> exerciseList = Arrays.asList(new Exercise[] {
-				new Exercise("dog", "kutya"),
-				new Exercise("cat", "macska"),
-				new Exercise("carrot", "repa"),
-				new Exercise("boat", "hajo"),
-				new Exercise("apple", "alma"),
-				new ExerciseWithImage("Sponge Bob", "Spongya Bob", new Image("spongya.jpg")),
-				new FourWordsExercise("hammer", "kalapacs", Arrays.asList(new String[] {"szög", "fűrész", "gereblye"})),
-				new FourWordsExercise("car", "autó", Arrays.asList(new String[] {"bickli", "motor", "busz"})),
-				new FourWordsExercise("cow", "szarvasmarha", Arrays.asList(new String[] {"sertes", "csirke", "lud"})),
-				new FourWordsExercise("violet", "lila", Arrays.asList(new String[] {"piros", "szürke", "fekete"}))				
+				new Exercise("dog", "kutya", KnowledgeLevel.BEGINNER),
+				new Exercise("cat", "macska", KnowledgeLevel.BEGINNER),
+				new Exercise("carrot", "repa", KnowledgeLevel.BEGINNER),
+				new Exercise("boat", "hajo", KnowledgeLevel.BEGINNER),
+				new Exercise("apple", "alma", KnowledgeLevel.BEGINNER),
+				new ExerciseWithImage("Sponge Bob", "Spongya Bob", new Image("spongya.jpg"), KnowledgeLevel.BEGINNER),
+				new FourWordsExercise("hammer", "kalapacs", Arrays.asList(new String[] {"szög", "fűrész", "gereblye"}), KnowledgeLevel.BEGINNER),
+				new FourWordsExercise("car", "autó", Arrays.asList(new String[] {"bickli", "motor", "busz"}), KnowledgeLevel.BEGINNER),
+				new FourWordsExercise("cow", "szarvasmarha", Arrays.asList(new String[] {"sertes", "csirke", "lud"}), KnowledgeLevel.BEGINNER),
+				new FourWordsExercise("violet", "lila", Arrays.asList(new String[] {"piros", "szürke", "fekete"}), KnowledgeLevel.BEGINNER)				
 		});
 		
 		Exercises exercises = new Exercises(exerciseList);		
@@ -91,7 +65,7 @@ public class ModelMock implements IExerciseManager, ILearning, IUserManager {
 	@Override
 	public User logIn(String username) {
 		// TODO Auto-generated method stub
-		return null;
+		return new User(username, "asd", KnowledgeLevel.BEGINNER, 0, false);
 	}
 
 	@Override
@@ -101,25 +75,13 @@ public class ModelMock implements IExerciseManager, ILearning, IUserManager {
 	}
 
 	@Override
-	public Exercises getExercises(String type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Exercises getExercisesWithUserLevel(String type, String userLevel, int equals) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean addExercise(Exercise exercise) {
+	public boolean addExercise(Exercise exercise, User user) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean deleteExercise(Exercise exercise) {
+	public boolean deleteExercise(Exercise exercise, User user) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -28,12 +28,21 @@ public class Exercise {
 	}
 	
 	
-	public Exercise(String englishWord, String hungarianWord) {
+	public Exercise(String englishWord, String hungarianWord, KnowledgeLevel knowledgeLevel) {
 		log.info(exerciseType + " exercise created with word: " + english + " - " + hungarian);
 		
 		this.exerciseType = ExerciseType.SENTENCE;
 		this.english = englishWord;
 		this.hungarian = hungarianWord;
+		this.knowledgeLevel = knowledgeLevel;
+	}
+	
+	/**
+	 * Setter for exercise type.
+	 */
+	public void setExerciseType(ExerciseType exerciseType) {
+		log.info("Exercise type setter: " + exerciseType.toString());
+		this.exerciseType = exerciseType;
 	}
 	
 	/**

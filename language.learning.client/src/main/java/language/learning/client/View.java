@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -242,9 +243,17 @@ public class View {
 		}
 		//Log container
 		List<String> log = new ArrayList<String>();
-		loggedInUser = model.logIn(userNameField.getText(),
-				hashPassword(passwordField.getText(), SALT));
-		// Controller connect method will do everything for us, just call
+		loggedInUser = model.logIn(userNameField.getText());
+		if (loggedInUser == null) {
+			alert("Wrong user name!");
+			return;
+		}
+		// Checking the password
+//		if (!loggedInUser.getPasswordHash().equals(hashPassword(passwordField.getText(), SALT))) {
+//			alert("Wrong password!");
+//			return;
+//		}
+		// Connection succeeded
 		if (loggedInUser != null) {
 			connectionStateLabel.setText("Connection created");
 			connectionStateLabel.setTextFill(Color.web("#009900"));
@@ -258,17 +267,17 @@ public class View {
 	private void printUserData() {
 		levelUp();
 		userInfoLabel.setText(loggedInUser.getUsername() + " Experience: " + loggedInUser.getScore()
-			+ " Level: " + loggedInUser.getKnowledgeLevel());
+			+ " Level: " + loggedInUser.getUserLevel());
 	}
 	
 	private void levelUp() {
 		if (loggedInUser.getScore() / NEW_LEVEL_SCORE > 1) {
-			switch (loggedInUser.getKnowledgeLevel()) {
+			switch (loggedInUser.getUserLevel()) {
 				case BEGINNER:
-					loggedInUser.setKnowledgeLevel(KnowledgeLevel.INTERMEDIATE);
+					loggedInUser.setUserLevel(KnowledgeLevel.INTERMEDIATE);
 				break;
 				case INTERMEDIATE:
-					loggedInUser.setKnowledgeLevel(KnowledgeLevel.EXPERT);
+					loggedInUser.setUserLevel(KnowledgeLevel.EXPERT);
 				break;
 				default:
 					break;
@@ -310,8 +319,7 @@ public class View {
 			return;
 		}		
 		// Get coaching tasks
-		Exercises retrievedExercises = model.getExercisesWithUserLevel(null,
-				loggedInUser.getKnowledgeLevel().toString(), this.EXERCISE_COUNT, false);
+		Exercises retrievedExercises = retrieveExercises();
 		exercises = new ArrayList<Exercise>(retrievedExercises.getExercises());
 		coachingExercises = new ArrayList<Exercise>(exercises);
 		
@@ -322,6 +330,24 @@ public class View {
 		
 		// Write log to the GUI
 		logList(log);
+	}
+	
+	private Exercises retrieveExercises() {
+		assert 10 == this.EXERCISE_COUNT;
+		
+		Exercises wordExercises = model.getExercisesWithUserLevel(ExerciseType.WORD.toString(),
+				loggedInUser.getUserLevel().toString(), false, 4);
+		Exercises sentenceExercises = model.getExercisesWithUserLevel(ExerciseType.SENTENCE.toString(),
+				loggedInUser.getUserLevel().toString(), false, 4);
+		Exercises imageExercises = model.getExercisesWithUserLevel(ExerciseType.IMAGE.toString(),
+				loggedInUser.getUserLevel().toString(), false, 2);
+		
+		List<Exercise> exercises = new ArrayList<>(wordExercises.getExercises());
+		exercises.addAll(sentenceExercises.getExercises());
+		exercises.addAll(imageExercises.getExercises());
+		
+		Collections.shuffle(exercises);		
+		return new Exercises(exercises);
 	}
 	
 	/**
@@ -551,9 +577,11 @@ public class View {
 		String hungarianPhrase = addHungarianPhraseField.getText();
 		ExerciseType exerciseType = (!englishPhrase.contains(" ") && !hungarianPhrase.contains(" ")) ?
 				ExerciseType.WORD : ExerciseType.SENTENCE;
-		
-		boolean result = model.addExercise(exerciseType.toString(), knowledgeLevelSelector.getSelectionModel().getSelectedItem().toString(),
-				new Exercise(englishPhrase, hungarianPhrase));
+		// Creating the exercise object
+		Exercise createdExercise = new Exercise(englishPhrase, hungarianPhrase, knowledgeLevelSelector.getSelectionModel().getSelectedItem());
+		createdExercise.setExerciseType(exerciseType);
+		// Sending it to the server
+		boolean result = model.addExercise(createdExercise, loggedInUser);
 		if (result) {
 			logMsg("Exercise added.");
 		}
@@ -571,8 +599,10 @@ public class View {
 			alert("Both text fields need to be filled!");
 			return;
 		}
-		boolean result = model.deleteExercise(addEnglishPhraseField.getText(),
-				addHungarianPhraseField.getText());
+		// Creating the exercise object
+		Exercise createdExercise = new Exercise(deleteEnglishPhraseField.getText(), deleteHungarianPhraseField.getText(), null);
+		// Sending it to the server
+		boolean result = model.deleteExercise(createdExercise, loggedInUser);
 		if (result) {
 			logMsg("Exercise deleted.");
 		}
@@ -590,8 +620,10 @@ public class View {
 			alert("Only administrators can add users!");
 			return;
 		}
-		boolean result = model.addUser(addUserNameField.getText(),
-				hashPassword(addPasswordField.getText(), SALT), isAdminCheckBox.isSelected());
+		// Creating user object 
+		User createdUser = new User(addUserNameField.getText(),	hashPassword(addPasswordField.getText(), SALT),
+				KnowledgeLevel.BEGINNER, 0, isAdminCheckBox.isSelected());
+		boolean result = model.addUser(createdUser);
 		System.out.println(isAdminCheckBox.isSelected());
 		if (result) {
 			logMsg("User " + deleteUserField.getText() + " deleted.");

@@ -13,8 +13,8 @@ public class ExerciseWithImage extends Exercise {
 	 * @param hungarian Hungarian word
 	 * @param image image
 	 */
-	public ExerciseWithImage(String english, String hungarian, Image image) {
-		super(english, hungarian);
+	public ExerciseWithImage(String english, String hungarian, Image image, KnowledgeLevel knowledgeLevel) {
+		super(english, hungarian, knowledgeLevel);
 		this.exerciseType = ExerciseType.IMAGE;
 		this.image = image;
 		

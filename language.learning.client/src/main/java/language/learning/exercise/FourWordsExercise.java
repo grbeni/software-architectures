@@ -13,8 +13,8 @@ public class FourWordsExercise extends Exercise {
 	 * @param hungarian Hungarian word
 	 * @param wrongChoices wrong choices for the exercise
 	 */
-	public FourWordsExercise(String english, String hungarian, List<String> wrongChoices) {
-		super(english, hungarian);
+	public FourWordsExercise(String english, String hungarian, List<String> wrongChoices, KnowledgeLevel knowledgeLevel) {
+		super(english, hungarian, knowledgeLevel);
 		
 		this.exerciseType = ExerciseType.WORD;
 		this.wrongChoices = wrongChoices;

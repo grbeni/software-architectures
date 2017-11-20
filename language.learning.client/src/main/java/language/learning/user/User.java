@@ -9,8 +9,6 @@ public class User {
 	
 	private static final Logger log = (new LoggerWrapper(User.class.getName())).getLog();
 
-	private boolean isAdmin;
-	
 	// The user name of the user.
 	private String userName;
 	
@@ -18,21 +16,28 @@ public class User {
 	private String passwordHash;
 	
 	// The level of the user.
-	private KnowledgeLevel knowledgeLevel;
+	private KnowledgeLevel userLevel;
 	
 	// The score of the user.
-	private int score;	
+	private int score;
 	
-	public boolean isAdmin() {
-		return isAdmin;
+	// A user can be admin or not.
+	private boolean admin;	
+	
+	public User(String userName, String passwordHash, KnowledgeLevel userLevel, int score, boolean admin) {
+		this.userName = userName;
+		this.passwordHash = passwordHash;
+		this.userLevel = userLevel;
+		this.score = score;
+		this.admin = admin;
 	}
-	
+
 	/**
 	 * Getter for user name.
 	 * @return user name
 	 */
 	public String getUsername() {
-		log.trace("Get username: " + userName);
+		log.info("Get username: " + userName);
 		
 		return userName;
 	}
@@ -42,7 +47,7 @@ public class User {
 	 * @param userName
 	 */
 	public void setUserName(String userName) {
-		log.trace("Set username to: " + userName);
+		log.info("Set username to: " + userName);
 		
 		this.userName = userName;
 	}
@@ -52,7 +57,7 @@ public class User {
 	 * @return hash value of password
 	 */
 	public String getPasswordHash() {
-		log.trace("Get password hash: " + passwordHash);
+		log.info("Get password hash: " + passwordHash);
 		
 		return passwordHash;
 	}
@@ -62,7 +67,7 @@ public class User {
 	 * @param passwordHash
 	 */
 	public void setPasswordHash(String passwordHash) {
-		log.trace("Set password hash to: " + passwordHash);
+		log.info("Set password hash to: " + passwordHash);
 		
 		this.passwordHash = passwordHash;
 	}
@@ -71,20 +76,20 @@ public class User {
 	 * Getter for user level.
 	 * @return the knowledge level of the user
 	 */
-	public KnowledgeLevel getKnowledgeLevel() {
-		log.trace("Get knowledge level: " + knowledgeLevel);
+	public KnowledgeLevel getUserLevel() {
+		log.info("Get user level: " + userLevel);
 		
-		return knowledgeLevel;
+		return userLevel;
 	}
 	
 	/**
 	 * Setter for user level.
 	 * @param userLevel
 	 */
-	public void setKnowledgeLevel(KnowledgeLevel knowledgeLevel) {
-		log.trace("Set knowledge level to: " + knowledgeLevel);
+	public void setUserLevel(KnowledgeLevel userLevel) {
+		log.info("Set user level to: " + userLevel);
 		
-		this.knowledgeLevel = knowledgeLevel;
+		this.userLevel = userLevel;
 	}	
 
 	/**
@@ -92,7 +97,7 @@ public class User {
 	 * @return the score of the user
 	 */
 	public int getScore() {
-		log.trace("Get score: " + score);
+		log.info("Get score: " + score);
 		
 		return score;
 	}
@@ -102,9 +107,28 @@ public class User {
 	 * @param score
 	 */
 	public void setScore(int score) {
-		log.trace("Set score: " + score);
+		log.info("Set score: " + score);
 		
 		this.score = score;
 	}
 	
+	/**
+	 * Getter for admin.
+	 * @return
+	 */
+	public boolean isAdmin() {
+		log.info("Get admin: " + admin);
+		
+		return admin;
+	}
+
+	/**
+	 * Setter for admin.
+	 * @param admin
+	 */
+	public void setAdmin(boolean admin) {
+		log.info("Set admin to: " + admin);
+		
+		this.admin = admin;
+	}
 }

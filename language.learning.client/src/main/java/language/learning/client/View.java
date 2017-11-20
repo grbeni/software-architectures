@@ -345,7 +345,9 @@ public class View {
 		List<Exercise> exercises = new ArrayList<>(wordExercises.getExercises());
 		exercises.addAll(sentenceExercises.getExercises());
 		exercises.addAll(imageExercises.getExercises());
-		
+		if (exercises.size() < EXERCISE_COUNT) {
+			alert("Not enough exercises: " + exercises.size());
+		}
 		Collections.shuffle(exercises);		
 		return new Exercises(exercises);
 	}

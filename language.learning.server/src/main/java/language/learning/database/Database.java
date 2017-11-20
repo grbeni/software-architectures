@@ -64,39 +64,33 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public boolean connect() {
+	public boolean connect() throws ClassNotFoundException, SQLException {
 		log.info("Connect to database: " + DATABASE_URL + " with " + DATABASE_USERNAME + " - " + DATABASE_PASSWORD);
 
 		boolean successful = true;
 
 		// For the first time
 		if (connection == null) {
-			try {
-				connectToDatabase();
-			} catch (SQLException | ClassNotFoundException e) {
-				log.error(e.getMessage());
 
+			connectToDatabase();
+
+		} else {
+
+			// If there has been a connection.close() call
+			if (connection.isClosed()) {
+				connectToDatabase();
+			} else {
 				successful = false;
 			}
-		} 
-		else {
-			try {
-				// If there has been a connection.close() call
-				if (connection.isClosed()) {
-					connectToDatabase();
-				} else {
-					successful = false;
-				}
-			} catch (SQLException | ClassNotFoundException e) {
-				log.error(e.getMessage());
-			}
+
 		}
 
 		return successful;
 	}
-	
+
 	/**
 	 * Creates the connection to the database.
+	 * 
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
@@ -109,25 +103,18 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public boolean disconnect() {
+	public boolean disconnect() throws SQLException {
 		log.info("Disconnect from database.");
 
-		boolean successful = true;
-
 		if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				log.error(e.getMessage());
-				successful = false;
-			}
+			connection.close();
 		}
 
-		return successful;
+		return true;
 	}
 
 	@Override
-	public User getUser(String username) {
+	public User getUser(String username) throws SQLException {
 
 		User user = null;
 
@@ -135,306 +122,253 @@ public class Database implements IDatabase {
 		PreparedStatement preparedStatement = null;
 
 		String queryUser = "SELECT * " + "FROM APPLICATIONUSER " + "WHERE USERNAME = ?";
-		
-		try {
-			preparedStatement = connection.prepareStatement(queryUser);
-			preparedStatement.setString(1, username);
-			resultSet = preparedStatement.executeQuery();
 
-		} catch (SQLException e) {
-			log.error(e.getMessage());
-		}
+		preparedStatement = connection.prepareStatement(queryUser);
+		preparedStatement.setString(1, username);
+		resultSet = preparedStatement.executeQuery();
 
 		if (resultSet != null) {
-			
-			try {
-				if (resultSet.next()) {
-					user = new User();
-					user.setUserName(resultSet.getString("USERNAME"));
-					user.setPasswordHash(resultSet.getString("USERPASSWORD"));
-					user.setScore(resultSet.getInt("USERSCORE"));
-					user.setUserLevel(KnowledgeLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
-				}
-			} catch (SQLException e) {
-				log.error(e.getMessage());
+
+			if (resultSet.next()) {
+				user = new User();
+				user.setUserName(resultSet.getString("USERNAME"));
+				user.setPasswordHash(resultSet.getString("USERPASSWORD"));
+				user.setScore(resultSet.getInt("USERSCORE"));
+				user.setUserLevel(KnowledgeLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
 			}
+
 		}
 
 		return user;
 	}
 
-	
 	@Override
-	public boolean addUser(User user) {
+	public boolean addUser(User user) throws SQLException {
 		log.info("Add user: " + user.getUsername());
-		
+
 		int isAdmin = user.isAdmin() ? 1 : 0;
 		boolean success = false;
-		
-		String insertString = 
-				"INSERT INTO APPLICATIONUSER(ID, USERNAME, USERPASSWORD, USERSCORE, KNOWLEDGELEVELID, ISADMIN) "
-				+ "VALUES (USER_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";		
-		
-		try {
-			PreparedStatement preparedInsert = connection.prepareStatement(insertString);
-			preparedInsert.setString(1, user.getUsername());
-			preparedInsert.setString(2, user.getPasswordHash());
-			preparedInsert.setInt(3, user.getScore());
-			preparedInsert.setInt(4, user.getUserLevel().ordinal() + 1);
-			preparedInsert.setInt(5, isAdmin);
-			
-			if (preparedInsert.executeUpdate() > 0) {
-				success = true;
-			}
-			else {
-				success = false;
-			}			
-			
-		} catch (SQLException e) {
-			log.error(e.getMessage());
+
+		String insertString = "INSERT INTO APPLICATIONUSER(ID, USERNAME, USERPASSWORD, USERSCORE, KNOWLEDGELEVELID, ISADMIN) "
+				+ "VALUES (USER_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
+
+		PreparedStatement preparedInsert = connection.prepareStatement(insertString);
+		preparedInsert.setString(1, user.getUsername());
+		preparedInsert.setString(2, user.getPasswordHash());
+		preparedInsert.setInt(3, user.getScore());
+		preparedInsert.setInt(4, user.getUserLevel().ordinal() + 1);
+		preparedInsert.setInt(5, isAdmin);
+
+		if (preparedInsert.executeUpdate() > 0) {
+			success = true;
+		} else {
 			success = false;
 		}
-		
+
 		return success;
 	}
 
 	@Override
-	public int deleteUser(String username) {
+	public int deleteUser(String username) throws SQLException {
 		log.info("Delete user: " + username);
-		
+
 		int deletedCount = -1;
-		
+
 		String deleteString = "DELETE FROM APPLICATIONUSER WHERE USERNAME = ?";
-		
-		try {
-			PreparedStatement preparedDelete = connection.prepareStatement(deleteString);
-			preparedDelete.setString(1, username);
-			
-			deletedCount = preparedDelete.executeUpdate();
-			
-			
-		} catch (SQLException e) {
-			log.error(e.getMessage());
-		}
-		
+
+		PreparedStatement preparedDelete = connection.prepareStatement(deleteString);
+		preparedDelete.setString(1, username);
+
+		deletedCount = preparedDelete.executeUpdate();
+
 		return deletedCount;
 	}
-	
+
 	@Override
-	public void updateUserScore(User user, int score) {
+	public void updateUserScore(User user, int score) throws SQLException {
 		log.info("Update " + user.getUsername() + "'s score from: " + user.getScore() + " to: " + score);
-		
+
 		String updateString = "UPDATE APPLICATIONUSER SET USERSCORE = ? WHERE USERNAME = ? AND USERPASSWORD = ?";
-		
-		try {
-			PreparedStatement preparedUpdate = connection.prepareStatement(updateString);
-			preparedUpdate.setInt(1, score);
-			preparedUpdate.setString(2, user.getUsername());
-			preparedUpdate.setString(3, user.getPasswordHash());
-			
-			int modified = preparedUpdate.executeUpdate();
-			
-			log.info("Number of modified rows: " + modified);
-			
-		} catch (SQLException e) {
-			log.error(e.getMessage());
-		}
+
+		PreparedStatement preparedUpdate = connection.prepareStatement(updateString);
+		preparedUpdate.setInt(1, score);
+		preparedUpdate.setString(2, user.getUsername());
+		preparedUpdate.setString(3, user.getPasswordHash());
+
+		int modified = preparedUpdate.executeUpdate();
+
+		log.info("Number of modified rows: " + modified);
+
 	}
 
 	@Override
-	public void updateUserLevel(User user, KnowledgeLevel level) {
+	public void updateUserLevel(User user, KnowledgeLevel level) throws SQLException {
 		log.info("Update " + user.getUsername() + "'s level from: " + user.getUserLevel() + " to: " + level);
-		
+
 		String updateString = "UPDATE APPLICATIONUSER SET KNOWLEDGELEVELID = ? WHERE USERNAME = ? AND USERPASSWORD = ?";
-		
-		try {
-			PreparedStatement preparedUpdate = connection.prepareStatement(updateString);
-			preparedUpdate.setInt(1, level.ordinal() + 1);
-			preparedUpdate.setString(2, user.getUsername());
-			preparedUpdate.setString(3, user.getPasswordHash());
-			
-			int modified = preparedUpdate.executeUpdate();
-			
-			log.info("Number of modified rows: " + modified);
-			
-		} catch (SQLException e) {
-			log.error(e.getMessage());
-		}
+
+		PreparedStatement preparedUpdate = connection.prepareStatement(updateString);
+		preparedUpdate.setInt(1, level.ordinal() + 1);
+		preparedUpdate.setString(2, user.getUsername());
+		preparedUpdate.setString(3, user.getPasswordHash());
+
+		int modified = preparedUpdate.executeUpdate();
+
+		log.info("Number of modified rows: " + modified);
 	}
 
 	@Override
-	public List<Exercise> getAllExercise(ExerciseType type) {
+	public List<Exercise> getAllExercise(ExerciseType type) throws SQLException {
 		log.info("Get all exercise with type: " + type);
-		
+
 		List<Exercise> exerciseList = new ArrayList<>();
-		
+
 		String queryString = "";
-		
+
 		if (type == ExerciseType.SENTENCE) {
 			queryString = "SELECT * FROM SENTENCEEXERCISE";
-		}
-		else {
+		} else {
 			queryString = "SELECT * FROM WORDEXERCISE";
 		}
-		
-		try {
-			PreparedStatement preparedStm = connection.prepareStatement(queryString);
-			
-			ResultSet resultSet = preparedStm.executeQuery();
-			
-			if (resultSet != null) {
-				exerciseList = resultSetToExerciseList(resultSet);
-			}
-			
-		} catch (SQLException e) {
-			log.error(e.getMessage());
+
+		PreparedStatement preparedStm = connection.prepareStatement(queryString);
+
+		ResultSet resultSet = preparedStm.executeQuery();
+
+		if (resultSet != null) {
+			exerciseList = resultSetToExerciseList(resultSet);
 		}
-		
+
 		return exerciseList;
 	}
 
 	@Override
-	public List<Exercise> getExercisesWithUserLevel(ExerciseType type, KnowledgeLevel level, boolean onlyAtLevel) {
+	public List<Exercise> getExercisesWithUserLevel(ExerciseType type, 
+			KnowledgeLevel level, boolean onlyAtLevel) throws SQLException {
+		
 		log.info("Get " + type + " exercise with level: " + level + ", " + onlyAtLevel);
-		
+
 		List<Exercise> exerciseList = new ArrayList<>();
-		
+
 		String table = "";
 		String queryString = "";
-		
+
 		if (type == ExerciseType.SENTENCE) {
 			table = "SENTENCEEXERCISE";
-		}
-		else {
+		} else {
 			table = "WORDEXERCISE";
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT * FROM ").append(table).append(" WHERE KNOWLEDGELEVELID ");
-		
+
 		if (onlyAtLevel) {
 			sb.append("= ");
-		}
-		else {
+		} else {
 			sb.append("<= ");
 		}
 		sb.append("?");
-		
+
 		queryString = sb.toString();
 		log.info("Query string: " + queryString);
-		
-		try {
-			PreparedStatement preparedStm = connection.prepareStatement(queryString);
-			preparedStm.setInt(1, level.ordinal() + 1);
-			
-			ResultSet resultSet = preparedStm.executeQuery();
-			
-			if (resultSet != null) {
-				log.error("not null");
-				exerciseList = resultSetToExerciseList(resultSet);
-			}
-			
-		} catch (SQLException e) {
-			log.error(e.getMessage());
+
+		PreparedStatement preparedStm = connection.prepareStatement(queryString);
+		preparedStm.setInt(1, level.ordinal() + 1);
+
+		ResultSet resultSet = preparedStm.executeQuery();
+
+		if (resultSet != null) {
+			log.error("not null");
+			exerciseList = resultSetToExerciseList(resultSet);
 		}
-		
-		
+
 		return exerciseList;
 	}
-	
+
 	private List<Exercise> resultSetToExerciseList(ResultSet resultSet) throws SQLException {
 		List<Exercise> exerciseList = new ArrayList<>();
-		
+
 		while (resultSet.next()) {
 			Exercise exercise = new Exercise();
 			exercise.setEnglish(resultSet.getString("ENGLISH"));
 			exercise.setHungarian(resultSet.getString("HUNGARIAN"));
 			exercise.setExerciseLevel(KnowledgeLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
-			
+
 			exerciseList.add(exercise);
 		}
 		log.error("no next");
-		
+
 		return exerciseList;
 	}
 
 	@Override
-	public int addExercise(Exercise exercise, ExerciseType type) {
+	public int addExercise(Exercise exercise, User user) throws SQLException {
 		log.info("Add execise: " + exercise.getEnglish() + " - " + exercise.getHungarian());
 
-		int nextVal = 0;
+		int addCount = 0;
 
-		// Query the next value of the ID to be inserted
-		String sequenceNextQuery = "SELECT EXERCISE_SEQ.NEXTVAL FROM DUAL";
-		try {
-			PreparedStatement sequenceStm = connection.prepareStatement(sequenceNextQuery);
-			ResultSet rs = sequenceStm.executeQuery();
+		// Get id to a user
+		int userID = getUserIdByUserName(user.getUsername());
 
-			if (rs != null) {
-				if (rs.next()) {
-					nextVal = rs.getInt(1);
-					log.info("EXERCISE_SEQ.NEXTVAL: " + nextVal);
-				}
-			}
-
-		} catch (SQLException e) {
-			log.error(e.getMessage());
+		String insertSql = "";
+		if (exercise.getExerciseType() == ExerciseType.WORD) {
+			insertSql = "INSERT INTO WORDEXERCISE VALUES(WORDEXERCISE_SEQ.NEXTVAL, ?, ?, ?, ?)";
+		} else {
+			insertSql = "INSERT INTO SENTENCEEXERCISE VALUES(SENTENCEEXERCISE_SEQ.NEXTVAL, ?, ?, ?, ?)";
 		}
 
-		if (nextVal != 0) {
-			String insertSql = "";
-			if (type == ExerciseType.WORD) {
-				insertSql = "INSERT INTO WORDEXERCISE VALUES(?, ?, ?, ?)";
-			} else {
-				insertSql = "INSERT INTO SENTENCEEXERCISE VALUES(?, ?, ?, ?)";
-			}
-			try {				
-				PreparedStatement insertStm = connection.prepareStatement(insertSql);
-				
-				insertStm.setInt(1, nextVal);
-				insertStm.setString(2, exercise.getEnglish());
-				insertStm.setString(3, exercise.getHungarian());
-				insertStm.setInt(4, exercise.getExerciseLevel().ordinal() + 1);
+		PreparedStatement insertStm = connection.prepareStatement(insertSql);
+		insertStm.setString(1, exercise.getEnglish());
+		insertStm.setString(2, exercise.getHungarian());
+		insertStm.setInt(3, userID);
+		insertStm.setInt(4, exercise.getExerciseLevel().ordinal() + 1);
 
-				insertStm.executeUpdate();
+		addCount = insertStm.executeUpdate();
 
-			} catch (SQLException e) {
-				log.error(e.getMessage());
-			}
-		}
-
-		return nextVal;
+		return addCount;
 	}
-		
 
 	@Override
-	public boolean deleteExercise(Exercise exercise) {
+	public boolean deleteExercise(Exercise exercise) throws SQLException {
 		log.info("Delete " + exercise.getEnglish() + " - " + exercise.getHungarian());
-		
+
 		String deleteString = "";
 		int deleted = 0;
-		
+
+		// TODO - delete from both since we don't know the type
 		if (exercise.getExerciseType() == ExerciseType.SENTENCE) {
 			deleteString = "DELETE SENTENCEEXERCISE WHERE ENGLISH = ? AND HUNGARIAN = ?";
-		}
-		else {
+		} else {
 			deleteString = "DELETE WORDEXERCISE WHERE ENGLISH = ? AND HUNGARIAN = ?";
 		}
-		
-		try {
-			PreparedStatement preparedDelete = connection.prepareStatement(deleteString);
-			preparedDelete.setString(1, exercise.getEnglish());
-			preparedDelete.setString(2, exercise.getHungarian());
-			
-			deleted = preparedDelete.executeUpdate();
-			
-		} catch (SQLException e) {
-			log.error(e.getMessage());
-		}
-		
+
+		PreparedStatement preparedDelete = connection.prepareStatement(deleteString);
+		preparedDelete.setString(1, exercise.getEnglish());
+		preparedDelete.setString(2, exercise.getHungarian());
+
+		deleted = preparedDelete.executeUpdate();
+
 		// Deleted a row if deleted is greater than zero.
 		return deleted > 0;
 	}
 
+	private int getUserIdByUserName(String username) throws SQLException {
+		log.info("Get user id to " + username);
+
+		int id = -1;
+
+		String queryString = "SELECT ID FROM APPLICATIONUSER WHERE USERNAME = ?";
+
+		PreparedStatement preparedQuery = connection.prepareStatement(queryString);
+		ResultSet rs = preparedQuery.executeQuery();
+
+		if (rs != null) {
+			if (rs.next()) {
+				id = rs.getInt("ID");
+			}
+		}
+
+		return id;
+	}
 
 }

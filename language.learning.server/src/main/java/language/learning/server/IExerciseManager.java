@@ -9,6 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import language.learning.exercise.Exercise;
+import language.learning.user.User;
 
 @Path("exercise")
 public interface IExerciseManager {
@@ -16,12 +17,12 @@ public interface IExerciseManager {
 	@POST
 	@Path("add")
 	@Consumes(MediaType.APPLICATION_JSON)
-	boolean addExercise(Exercise exercise);
+	boolean addExercise(Exercise exercise, User user);
 	
 	@DELETE
 	@Path("delete")
 	@Consumes(MediaType.APPLICATION_JSON)
-	boolean deleteExercise(Exercise exercise);
+	boolean deleteExercise(Exercise exercise, User user);
 	
 	// TODO
 	@PUT

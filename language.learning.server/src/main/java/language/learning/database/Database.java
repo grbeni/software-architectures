@@ -423,6 +423,9 @@ public class Database implements IDatabase {
 		
 		try {
 			PreparedStatement preparedDelete = connection.prepareStatement(deleteString);
+			preparedDelete.setString(1, exercise.getEnglish());
+			preparedDelete.setString(2, exercise.getHungarian());
+			
 			deleted = preparedDelete.executeUpdate();
 			
 		} catch (SQLException e) {

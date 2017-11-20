@@ -5,13 +5,13 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import language.learning.user.User;
 
-@Path("login")
+@Path("user")
 public interface IUserManager {
 	
 	/**
@@ -20,28 +20,28 @@ public interface IUserManager {
 	 * @return user name and hash of the password in a JSON file
 	 */
 	@GET
-	@Path("{username}")
+	@Path("login")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	User logIn(@PathParam("username") String username);
+	User logIn(@QueryParam("username") String username);
 	
 	/**
 	 * Method for user registration.
 	 * @param username
 	 */
 	@POST
-	@Path("{username}")
+	@Path("add")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	boolean addUser(@PathParam("username") String username, String passwordHash, boolean isAdmin);
+	boolean addUser(User user);
 	
 	/**
 	 * Method for user registration.
 	 * @param username
 	 */
 	@DELETE
-	@Path("{username}")
+	@Path("delete")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	boolean deleteUser(@PathParam("username") String username);
+	boolean deleteUser(@QueryParam("username") String username);
 }

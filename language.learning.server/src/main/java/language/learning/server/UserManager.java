@@ -33,8 +33,8 @@ public class UserManager implements IUserManager {
 	}
 
 	@Override
-	public boolean addUser(String username, String passwordHash, boolean isAdmin) {
-		log.info("Add user: " + username + " - " + passwordHash);
+	public boolean addUser(User newUser) {
+		log.info("Add user: " + newUser.getUsername() + " - " + newUser.getPasswordHash());
 		
 		boolean success = false;
 		User user = null;
@@ -42,15 +42,15 @@ public class UserManager implements IUserManager {
 		if (db.connect()) {
 			log.info("Establishing connection was successful.");
 			
-			user = db.getUser(username);
+			user = db.getUser(newUser.getUsername());
 			
 			if (user == null) {
 				user = new User();
-				user.setUserName(username);
-				user.setPasswordHash(passwordHash);
+				user.setUserName(newUser.getUsername());
+				user.setPasswordHash(newUser.getPasswordHash());
 				user.setScore(0);
 				user.setUserLevel(KnowledgeLevel.BEGINNER);
-				user.setAdmin(isAdmin);
+				user.setAdmin(newUser.isAdmin());
 				
 				success = db.addUser(user);
 			}

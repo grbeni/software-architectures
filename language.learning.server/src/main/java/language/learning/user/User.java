@@ -2,6 +2,7 @@ package language.learning.user;
 
 import org.apache.log4j.Logger;
 
+import language.learning.exercise.KnowledgeLevel;
 import language.learning.logger.LoggerWrapper;
 
 public class User {
@@ -15,7 +16,7 @@ public class User {
 	private String passwordHash;
 	
 	// The level of the user.
-	private UserLevel userLevel;
+	private KnowledgeLevel userLevel;
 	
 	// The score of the user.
 	private int score;
@@ -68,7 +69,7 @@ public class User {
 	 * Getter for user level.
 	 * @return the knowledge level of the user
 	 */
-	public UserLevel getUserLevel() {
+	public KnowledgeLevel getUserLevel() {
 		log.info("Get user level: " + userLevel);
 		
 		return userLevel;
@@ -78,7 +79,7 @@ public class User {
 	 * Setter for user level.
 	 * @param userLevel
 	 */
-	public void setUserLevel(UserLevel userLevel) {
+	public void setUserLevel(KnowledgeLevel userLevel) {
 		log.info("Set user level to: " + userLevel);
 		
 		this.userLevel = userLevel;

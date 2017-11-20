@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import language.learning.database.Database;
 import language.learning.database.IDatabase;
 import language.learning.exercise.Exercise;
-import language.learning.exercise.ExerciseLevel;
+import language.learning.exercise.KnowledgeLevel;
 import language.learning.exercise.ExerciseType;
 import language.learning.logger.LoggerWrapper;
 
@@ -21,7 +21,7 @@ public class ExerciseManager implements IExerciseManager {
 		log.info("Exercise to be added: " + exercise.getEnglish() + " - " + exercise.getHungarian() 
 			+ ", " + exercise.getExerciseLevel() + ", " + exercise.getExerciseType());
 		
-		exercise.setExerciseLevel(ExerciseLevel.valueOf(exercise.getExerciseLevel().toString().toUpperCase()));
+		exercise.setExerciseLevel(KnowledgeLevel.valueOf(exercise.getExerciseLevel().toString().toUpperCase()));
 		
 		int result = 0;
 		

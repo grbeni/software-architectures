@@ -3,10 +3,9 @@ package language.learning.database;
 import java.util.List;
 
 import language.learning.exercise.Exercise;
-import language.learning.exercise.ExerciseLevel;
 import language.learning.exercise.ExerciseType;
+import language.learning.exercise.KnowledgeLevel;
 import language.learning.user.User;
-import language.learning.user.UserLevel;
 
 public interface IDatabase {
 	
@@ -55,7 +54,7 @@ public interface IDatabase {
 	 * @param user
 	 * @param level
 	 */
-	public void updateUserLevel(User user, UserLevel level);
+	public void updateUserLevel(User user, KnowledgeLevel level);
 	
 	/**
 	 * Returns all exercise with the given type.
@@ -71,7 +70,7 @@ public interface IDatabase {
 	 * @param onlyAtLevel if true, than only the same level exercise are returned, else the exercises below the level also
 	 * @return
 	 */
-	public List<Exercise> getExercisesWithUserLevel(ExerciseType type, ExerciseLevel level, boolean onlyAtLevel);
+	public List<Exercise> getExercisesWithUserLevel(ExerciseType type, KnowledgeLevel level, boolean onlyAtLevel);
 	
 	/**
 	 * Method for inserting new exercise into database.

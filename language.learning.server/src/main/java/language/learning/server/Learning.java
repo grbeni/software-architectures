@@ -8,12 +8,11 @@ import org.apache.log4j.Logger;
 import language.learning.database.Database;
 import language.learning.database.IDatabase;
 import language.learning.exercise.Exercise;
-import language.learning.exercise.ExerciseLevel;
 import language.learning.exercise.ExerciseType;
 import language.learning.exercise.Exercises;
+import language.learning.exercise.KnowledgeLevel;
 import language.learning.logger.LoggerWrapper;
 import language.learning.user.User;
-import language.learning.user.UserLevel;
 
 public class Learning implements ILearning {
 
@@ -62,7 +61,7 @@ public class Learning implements ILearning {
 		if (db.connect()) {
 			log.info("Establishing connection was successful.");
 			exerciseList = db.getExercisesWithUserLevel(ExerciseType.valueOf(type.toUpperCase()),
-														ExerciseLevel.valueOf(userLevel.toUpperCase()),
+														KnowledgeLevel.valueOf(userLevel.toUpperCase()),
 														onlyAtLevel);
 			
 			db.disconnect();
@@ -101,7 +100,7 @@ public class Learning implements ILearning {
 		if (db.connect()) {
 			log.info("Establishing connection was successful.");
 			
-			db.updateUserLevel(user, UserLevel.valueOf(userLevel.toUpperCase()));
+			db.updateUserLevel(user, KnowledgeLevel.valueOf(userLevel.toUpperCase()));
 			
 			db.disconnect();
 		}

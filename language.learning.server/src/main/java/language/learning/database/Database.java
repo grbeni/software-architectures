@@ -11,11 +11,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import language.learning.exercise.Exercise;
-import language.learning.exercise.ExerciseLevel;
 import language.learning.exercise.ExerciseType;
+import language.learning.exercise.KnowledgeLevel;
 import language.learning.logger.LoggerWrapper;
 import language.learning.user.User;
-import language.learning.user.UserLevel;
 
 public class Database implements IDatabase {
 
@@ -154,7 +153,7 @@ public class Database implements IDatabase {
 					user.setUserName(resultSet.getString("USERNAME"));
 					user.setPasswordHash(resultSet.getString("USERPASSWORD"));
 					user.setScore(resultSet.getInt("USERSCORE"));
-					user.setUserLevel(UserLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
+					user.setUserLevel(KnowledgeLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
 				}
 			} catch (SQLException e) {
 				log.error(e.getMessage());
@@ -243,7 +242,7 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public void updateUserLevel(User user, UserLevel level) {
+	public void updateUserLevel(User user, KnowledgeLevel level) {
 		log.info("Update " + user.getUsername() + "'s level from: " + user.getUserLevel() + " to: " + level);
 		
 		String updateString = "UPDATE APPLICATIONUSER SET KNOWLEDGELEVELID = ? WHERE USERNAME = ? AND USERPASSWORD = ?";
@@ -295,7 +294,7 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public List<Exercise> getExercisesWithUserLevel(ExerciseType type, ExerciseLevel level, boolean onlyAtLevel) {
+	public List<Exercise> getExercisesWithUserLevel(ExerciseType type, KnowledgeLevel level, boolean onlyAtLevel) {
 		log.info("Get " + type + " exercise with level: " + level + ", " + onlyAtLevel);
 		
 		List<Exercise> exerciseList = new ArrayList<>();
@@ -350,7 +349,7 @@ public class Database implements IDatabase {
 			Exercise exercise = new Exercise();
 			exercise.setEnglish(resultSet.getString("ENGLISH"));
 			exercise.setHungarian(resultSet.getString("HUNGARIAN"));
-			exercise.setExerciseLevel(ExerciseLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
+			exercise.setExerciseLevel(KnowledgeLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
 			
 			exerciseList.add(exercise);
 		}

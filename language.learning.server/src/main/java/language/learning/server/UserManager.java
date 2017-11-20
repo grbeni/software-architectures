@@ -4,9 +4,9 @@ import org.apache.log4j.Logger;
 
 import language.learning.database.Database;
 import language.learning.database.IDatabase;
+import language.learning.exercise.KnowledgeLevel;
 import language.learning.logger.LoggerWrapper;
 import language.learning.user.User;
-import language.learning.user.UserLevel;
 
 public class UserManager implements IUserManager {
 
@@ -49,7 +49,7 @@ public class UserManager implements IUserManager {
 				user.setUserName(username);
 				user.setPasswordHash(passwordHash);
 				user.setScore(0);
-				user.setUserLevel(UserLevel.BEGINNER);
+				user.setUserLevel(KnowledgeLevel.BEGINNER);
 				user.setAdmin(isAdmin);
 				
 				success = db.addUser(user);

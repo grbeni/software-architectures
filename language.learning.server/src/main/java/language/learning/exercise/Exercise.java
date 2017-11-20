@@ -18,7 +18,7 @@ public class Exercise {
 	private String hungarian;
 	
 	// The level of the exercise
-	private ExerciseLevel exerciseLevel;
+	private KnowledgeLevel exerciseLevel;
 	
 
 	// Constructors
@@ -87,7 +87,7 @@ public class Exercise {
 	 * Getter for exercise level.
 	 * @return exercise level
 	 */
-	public ExerciseLevel getExerciseLevel() {
+	public KnowledgeLevel getExerciseLevel() {
 		log.trace("Exercise level getter: " + exerciseLevel.toString());
 		
 		return exerciseLevel;
@@ -97,7 +97,7 @@ public class Exercise {
 	 * Setter for exercise level.
 	 * @param exerciseLevel
 	 */
-	public void setExerciseLevel(ExerciseLevel exerciseLevel) {
+	public void setExerciseLevel(KnowledgeLevel exerciseLevel) {
 		log.trace("Exercise level set to: " + exerciseLevel.toString());
 		
 		this.exerciseLevel = exerciseLevel;

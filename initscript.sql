@@ -1,6 +1,14 @@
-drop sequence EXERCISE_SEQ;
+drop sequence WORDEXERCISE_SEQ;
+drop sequence SENTENCEEXERCISE_SEQ;
+drop sequence USER_SEQ;
 
-create sequence EXERCISE_SEQ
+create sequence WORDEXERCISE_SEQ
+start with 1 increment by 1;
+
+create sequence SENTENCEEXERCISE_SEQ
+start with 1 increment by 1;
+
+create sequence USER_SEQ
 start with 1 increment by 1;
 
 drop table WordExercise;
@@ -20,7 +28,8 @@ create table ApplicationUser
 	UserName nvarchar2(15) not null,
 	UserPassword nvarchar2(128) not null,
 	UserScore int,
-	KnowledgeLevelID int references KnowledgeLevel(ID) not null
+	KnowledgeLevelID int references KnowledgeLevel(ID) not null,
+  IsAdmin number(1)
 );
 
 create table WordExercise
@@ -45,11 +54,11 @@ insert into KnowledgeLevel(ID, LevelName) values (1, 'EASY');
 insert into KnowledgeLevel(ID, LevelName) values (2, 'MEDIUM');
 insert into KnowledgeLevel(ID, LevelName) values (3, 'HARD');
 
-insert into ApplicationUser(ID, UserName, UserPassword, UserScore, KnowledgeLevelID) values (1,'dummyuser',12345, 0, 1);
-insert into ApplicationUser(ID, UserName, UserPassword, UserScore, KnowledgeLevelID) values (2,'advanceduser',54321, 0, 2);
+insert into ApplicationUser(ID, UserName, UserPassword, UserScore, KnowledgeLevelID, IsAdmin) values (USER_SEQ.NEXTVAL,'dummyuser',12345, 0, 1, 0);
+insert into ApplicationUser(ID, UserName, UserPassword, UserScore, KnowledgeLevelID, IsAdmin) values (USER_SEQ.NEXTVAL,'adminuser',54321, 0, 2, 1);
 
-insert into WordExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (1, 'cat', 'cica', 1, 1);
-insert into WordExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (2, 'dog', 'kutya', 1, 1);
+insert into WordExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (WORDEXERCISE_SEQ.NEXTVAL, 'cat', 'cica', 1, 1);
+insert into WordExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (WORDEXERCISE_SEQ.NEXTVAL, 'dog', 'kutya', 1, 1);
 
-insert into SentenceExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (1, 'Good morning', 'J? reggelt', 1, 1);
-insert into SentenceExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (2, 'How are you?', 'Hogy vagy?', 1, 1);
+insert into SentenceExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (SENTENCEEXERCISE_SEQ.NEXTVAL, 'Good morning', 'J? reggelt', 1, 1);
+insert into SentenceExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (SENTENCEEXERCISE_SEQ.NEXTVAL, 'How are you?', 'Hogy vagy?', 1, 1);

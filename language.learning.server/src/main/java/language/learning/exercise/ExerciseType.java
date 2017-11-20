@@ -2,6 +2,6 @@ package language.learning.exercise;
 
 public enum ExerciseType {
 
-	WORD, SENTENCE
+	WORD, SENTENCE, IMAGE
 	
 }

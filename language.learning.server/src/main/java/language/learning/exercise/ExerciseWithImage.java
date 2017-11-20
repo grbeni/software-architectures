@@ -1,18 +1,11 @@
 package language.learning.exercise;
 
-import java.awt.Image;
-
-import org.apache.log4j.Logger;
-
-import language.learning.logger.LoggerWrapper;
+import javafx.scene.image.Image;
 
 public class ExerciseWithImage extends Exercise {
-
-	private static final Logger log = (new LoggerWrapper(ExerciseWithImage.class.getName())).getLog();
 	
 	// Image depicting a word
-	private Image image;
-	
+	private Image image;	
 	
 	/**
 	 * Constructor with all parameter.	
@@ -20,13 +13,13 @@ public class ExerciseWithImage extends Exercise {
 	 * @param hungarian Hungarian word
 	 * @param image image
 	 */
-//	public ExerciseWithImage(String english, String hungarian, Image image) {
-//		super(english, hungarian);
-//		
-//		this.image = image;
-//		
-//		log.trace("ExerciseWithImage created");
-//	}
+	public ExerciseWithImage(String english, String hungarian, Image image, KnowledgeLevel knowledgeLevel) {
+		super(english, hungarian, knowledgeLevel);
+		this.exerciseType = ExerciseType.IMAGE;
+		this.image = image;
+		
+		log.trace("ExerciseWithImage created");
+	}
 	
 	
 	/**

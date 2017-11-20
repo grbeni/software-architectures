@@ -20,9 +20,9 @@ public class ExerciseManager implements IExerciseManager {
 	@Override
 	public boolean addExercise(Exercise exercise, User user) {
 		log.info("Exercise to be added: " + exercise.getEnglish() + " - " + exercise.getHungarian() + ", "
-				+ exercise.getExerciseLevel() + ", " + exercise.getExerciseType());
+				+ exercise.getKnowledgeLevel() + ", " + exercise.getExerciseType());
 
-		exercise.setExerciseLevel(KnowledgeLevel.valueOf(exercise.getExerciseLevel().toString().toUpperCase()));
+		exercise.setKnowledgeLevel(KnowledgeLevel.valueOf(exercise.getKnowledgeLevel().toString().toUpperCase()));
 
 		int result = 0;
 

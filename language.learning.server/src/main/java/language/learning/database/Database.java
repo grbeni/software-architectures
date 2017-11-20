@@ -297,7 +297,7 @@ public class Database implements IDatabase {
 			Exercise exercise = new Exercise();
 			exercise.setEnglish(resultSet.getString("ENGLISH"));
 			exercise.setHungarian(resultSet.getString("HUNGARIAN"));
-			exercise.setExerciseLevel(KnowledgeLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
+			exercise.setKnowledgeLevel(KnowledgeLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
 
 			exerciseList.add(exercise);
 		}
@@ -326,7 +326,7 @@ public class Database implements IDatabase {
 		insertStm.setString(1, exercise.getEnglish());
 		insertStm.setString(2, exercise.getHungarian());
 		insertStm.setInt(3, userID);
-		insertStm.setInt(4, exercise.getExerciseLevel().ordinal() + 1);
+		insertStm.setInt(4, exercise.getKnowledgeLevel().ordinal() + 1);
 
 		addCount = insertStm.executeUpdate();
 

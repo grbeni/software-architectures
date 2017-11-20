@@ -1,12 +1,13 @@
 package language.learning.exercise;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import language.learning.logger.LoggerWrapper;
 
 public class Exercise {
 
-	private static final Logger log = (new LoggerWrapper(Exercise.class.getName())).getLog();
+	protected static final Logger log = (new LoggerWrapper(Exercise.class.getName(), Level.INFO)).getLog();
 	
 	// Exercise type
 	protected ExerciseType exerciseType;
@@ -18,29 +19,40 @@ public class Exercise {
 	private String hungarian;
 	
 	// The level of the exercise
-	private KnowledgeLevel exerciseLevel;
+	private KnowledgeLevel knowledgeLevel;
 	
 
 	// Constructors
 	public Exercise() {
-		log.trace("Exercise created");
+		log.info("Exercise created");
 	}
 	
+	
+	public Exercise(String englishWord, String hungarianWord, KnowledgeLevel knowledgeLevel) {
+		log.info(exerciseType + " exercise created with word: " + english + " - " + hungarian);
+		
+		this.exerciseType = ExerciseType.SENTENCE;
+		this.english = englishWord;
+		this.hungarian = hungarianWord;
+		this.knowledgeLevel = knowledgeLevel;
+	}
+	
+	/**
+	 * Setter for exercise type.
+	 */
+	public void setExerciseType(ExerciseType exerciseType) {
+		log.info("Exercise type setter: " + exerciseType.toString());
+		this.exerciseType = exerciseType;
+	}
 	
 	/**
 	 * Getter for exercise type.
 	 * @return exercise level
 	 */
 	public ExerciseType getExerciseType() {
-		log.info("Exercise type getter: " + exerciseType);
+		log.info("Exercise type getter: " + exerciseType.toString());
 		
 		return exerciseType;
-	}
-	
-	public void setExerciseType(ExerciseType exerciseType) {
-		log.info("Exercise type set to: " + exerciseType);
-		
-		this.exerciseType = exerciseType;
 	}
 	
 	/**
@@ -48,7 +60,7 @@ public class Exercise {
 	 * @return English
 	 */
 	public String getEnglish() {
-		log.trace("English getter: " + english);
+		log.info("English getter: " + english);
 		
 		return english;
 	}
@@ -58,7 +70,7 @@ public class Exercise {
 	 * @param english
 	 */
 	public void setEnglish(String english) {
-		log.trace("English set to: " + english);
+		log.info("English set to: " + english);
 		
 		this.english = english;
 	}
@@ -68,7 +80,7 @@ public class Exercise {
 	 * @return Hungarian
 	 */
 	public String getHungarian() {
-		log.trace("Hungarian getter: " + hungarian);
+		log.info("Hungarian getter: " + hungarian);
 		
 		return hungarian;
 	}
@@ -78,28 +90,28 @@ public class Exercise {
 	 * @param hungarian
 	 */
 	public void setHungarian(String hungarian) {
-		log.trace("Hungarian set to: " + hungarian);
+		log.info("Hungarian set to: " + hungarian);
 		
 		this.hungarian = hungarian;
 	}
 
 	/**
-	 * Getter for exercise level.
+	 * Getter for knowledge level.
 	 * @return exercise level
 	 */
-	public KnowledgeLevel getExerciseLevel() {
-		log.trace("Exercise level getter: " + exerciseLevel.toString());
+	public KnowledgeLevel getKnowledgeLevel() {
+		log.info("Knowledge level getter: " + knowledgeLevel.toString());
 		
-		return exerciseLevel;
+		return knowledgeLevel;
 	}
 
 	/**
-	 * Setter for exercise level.
-	 * @param exerciseLevel
+	 * Setter for knowledge level.
+	 * @param knowledgeLevel
 	 */
-	public void setExerciseLevel(KnowledgeLevel exerciseLevel) {
-		log.trace("Exercise level set to: " + exerciseLevel.toString());
+	public void setKnowledgeLevel(KnowledgeLevel knowledgeLevel) {
+		log.info("Knowledge level set to: " + knowledgeLevel.toString());
 		
-		this.exerciseLevel = exerciseLevel;
+		this.knowledgeLevel = knowledgeLevel;
 	}
 }

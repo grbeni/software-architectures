@@ -2,6 +2,7 @@ package language.learning.server;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -14,6 +15,7 @@ import language.learning.database.IDatabase;
 import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseType;
 import language.learning.exercise.Exercises;
+import language.learning.exercise.FourWordsExercise;
 import language.learning.exercise.KnowledgeLevel;
 import language.learning.logger.LoggerWrapper;
 import language.learning.user.User;
@@ -50,7 +52,13 @@ public class Learning implements ILearning {
 			}
 		}
 
-		Exercises ex = getRandomNCountExercise(exerciseList, count);
+		Exercises ex = null;
+		if ("WORD".equals(type)) {
+			ex = getRandomNCountExerciseFourWords(exerciseList, count);
+		}
+		else {
+			ex = getRandomNCountExercise(exerciseList, count);
+		}		
 
 		return ex;
 	}
@@ -81,11 +89,23 @@ public class Learning implements ILearning {
 			}
 		}
 
-		Exercises ex = getRandomNCountExercise(exerciseList, count);
+		Exercises ex = null;
+		if ("WORD".equals(type)) {
+			ex = getRandomNCountExerciseFourWords(exerciseList, count);
+		}
+		else {
+			ex = getRandomNCountExercise(exerciseList, count);
+		}
 
 		return ex;
 	}
 	
+	/**
+	 * Chooses N exercise from ex randomly. 
+	 * @param ex
+	 * @param count N
+	 * @return
+	 */
 	private Exercises getRandomNCountExercise(List<Exercise> ex, int count) {
 		int range = ex.size();
 		
@@ -109,6 +129,55 @@ public class Learning implements ILearning {
 		return new Exercises(resultList);
 	}
 
+	private Exercises getRandomNCountExerciseFourWords(List<Exercise> ex, int count) {
+		int range = ex.size();
+		
+		if (range <= count) {
+			return new Exercises(Collections.emptyList());
+		}
+		
+		Set<Integer> indexSet = new HashSet<>();
+		
+		while (indexSet.size() < count) {
+			Random rand = new Random();
+			indexSet.add(rand.nextInt(range));			
+		}
+		
+		List<Exercise> resultList = new ArrayList<>();
+		
+		for (Integer index : indexSet) {
+			List<String> wrongChoices = getThreeStringFromListRandomly(ex, range, index);			
+			
+			FourWordsExercise fwEx = new FourWordsExercise(ex.get(index).getEnglish(),
+															ex.get(index).getHungarian(), 
+															wrongChoices, 
+															ex.get(index).getKnowledgeLevel());
+			resultList.add(fwEx);
+		}
+				
+		return new Exercises(resultList);
+	}
+	
+	private List<String> getThreeStringFromListRandomly(List<Exercise> ex, int range, int index) {
+		Set<Integer> indexSet = new HashSet<>();
+		
+		while (indexSet.size() < 3) {
+			Random rand = new Random();
+			int randomIndex = rand.nextInt(range);
+			if (randomIndex != index) {
+				indexSet.add(randomIndex);
+			}
+		}
+		
+		List<String> stringList = new ArrayList<>();
+		
+		for (Integer integer : indexSet) {
+			stringList.add(ex.get(integer).getHungarian());
+		}
+		
+		return stringList;
+	}
+	
 	@Override
 	public void updateUserScore(int score, User user) {
 		log.info("Update " + user.getUsername() + "'s score from: " + user.getScore() + " to: " + score);

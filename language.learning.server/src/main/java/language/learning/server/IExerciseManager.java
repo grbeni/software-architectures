@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import language.learning.exercise.Exercise;
 
 @Path("exercise")
-public interface IAddExercise {
+public interface IExerciseManager {
 	
 	@POST
 	@Path("add")

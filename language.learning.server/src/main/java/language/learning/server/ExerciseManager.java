@@ -9,9 +9,9 @@ import language.learning.exercise.ExerciseLevel;
 import language.learning.exercise.ExerciseType;
 import language.learning.logger.LoggerWrapper;
 
-public class AddExercise implements IAddExercise {
+public class ExerciseManager implements IExerciseManager {
 	
-	private static final Logger log = (new LoggerWrapper(AddExercise.class.getName())).getLog();
+	private static final Logger log = (new LoggerWrapper(ExerciseManager.class.getName())).getLog();
 
 	private IDatabase db = Database.getInstance();
 	
@@ -51,6 +51,8 @@ public class AddExercise implements IAddExercise {
 			log.info("Establishing connection was successful.");
 			
 			success = db.deleteExercise(exercise);
+			
+			db.disconnect();
 		}
 		else {
 			log.info("Establishing connection was not successful.");

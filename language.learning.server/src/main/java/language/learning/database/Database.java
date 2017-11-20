@@ -106,6 +106,7 @@ public class Database implements IDatabase {
 		connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
 		// Maybe Serializable is a bit extreme
 		connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		connection.setAutoCommit(true);
 	}
 
 	@Override
@@ -151,7 +152,7 @@ public class Database implements IDatabase {
 				if (resultSet.next()) {
 					user = new User();
 					user.setUserName(resultSet.getString("USERNAME"));
-					user.setPasswordHash(resultSet.getInt("USERPASSWORD"));
+					user.setPasswordHash(resultSet.getString("USERPASSWORD"));
 					user.setScore(resultSet.getInt("USERSCORE"));
 					user.setUserLevel(UserLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
 				}
@@ -164,6 +165,103 @@ public class Database implements IDatabase {
 	}
 
 	
+	@Override
+	public boolean addUser(User user) {
+		log.info("Add user: " + user.getUsername());
+		
+		int isAdmin = user.isAdmin() ? 1 : 0;
+		boolean success = false;
+		
+		String insertString = 
+				"INSERT INTO APPLICATIONUSER(ID, USERNAME, USERPASSWORD, USERSCORE, KNOWLEDGELEVELID, ISADMIN) "
+				+ "VALUES (USER_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";		
+		
+		try {
+			PreparedStatement preparedInsert = connection.prepareStatement(insertString);
+			preparedInsert.setString(1, user.getUsername());
+			preparedInsert.setString(2, user.getPasswordHash());
+			preparedInsert.setInt(3, user.getScore());
+			preparedInsert.setInt(4, user.getUserLevel().ordinal() + 1);
+			preparedInsert.setInt(5, isAdmin);
+			
+			if (preparedInsert.executeUpdate() > 0) {
+				success = true;
+			}
+			else {
+				success = false;
+			}			
+			
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+			success = false;
+		}
+		
+		return success;
+	}
+
+	@Override
+	public int deleteUser(String username) {
+		log.info("Delete user: " + username);
+		
+		int deletedCount = -1;
+		
+		String deleteString = "DELETE FROM APPLICATIONUSER WHERE USERNAME = ?";
+		
+		try {
+			PreparedStatement preparedDelete = connection.prepareStatement(deleteString);
+			preparedDelete.setString(1, username);
+			
+			deletedCount = preparedDelete.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+		}
+		
+		return deletedCount;
+	}
+	
+	@Override
+	public void updateUserScore(User user, int score) {
+		log.info("Update " + user.getUsername() + "'s score from: " + user.getScore() + " to: " + score);
+		
+		String updateString = "UPDATE APPLICATIONUSER SET USERSCORE = ? WHERE USERNAME = ? AND USERPASSWORD = ?";
+		
+		try {
+			PreparedStatement preparedUpdate = connection.prepareStatement(updateString);
+			preparedUpdate.setInt(1, score);
+			preparedUpdate.setString(2, user.getUsername());
+			preparedUpdate.setString(3, user.getPasswordHash());
+			
+			int modified = preparedUpdate.executeUpdate();
+			
+			log.info("Number of modified rows: " + modified);
+			
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+		}
+	}
+
+	@Override
+	public void updateUserLevel(User user, UserLevel level) {
+		log.info("Update " + user.getUsername() + "'s level from: " + user.getUserLevel() + " to: " + level);
+		
+		String updateString = "UPDATE APPLICATIONUSER SET KNOWLEDGELEVELID = ? WHERE USERNAME = ? AND USERPASSWORD = ?";
+		
+		try {
+			PreparedStatement preparedUpdate = connection.prepareStatement(updateString);
+			preparedUpdate.setInt(1, level.ordinal() + 1);
+			preparedUpdate.setString(2, user.getUsername());
+			preparedUpdate.setString(3, user.getPasswordHash());
+			
+			int modified = preparedUpdate.executeUpdate();
+			
+			log.info("Number of modified rows: " + modified);
+			
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+		}
+	}
 
 	@Override
 	public List<Exercise> getAllExercise(ExerciseType type) {
@@ -308,48 +406,7 @@ public class Database implements IDatabase {
 
 		return nextVal;
 	}
-	
-	@Override
-	public void updateUserScore(User user, int score) {
-		log.info("Update " + user.getUsername() + "'s score from: " + user.getScore() + " to: " + score);
 		
-		String updateString = "UPDATE APPLICATIONUSER SET USERSCORE = ? WHERE USERNAME = ? AND USERPASSWORD = ?";
-		
-		try {
-			PreparedStatement preparedUpdate = connection.prepareStatement(updateString);
-			preparedUpdate.setInt(1, score);
-			preparedUpdate.setString(2, user.getUsername());
-			preparedUpdate.setInt(3, user.getPasswordHash());
-			
-			int modified = preparedUpdate.executeUpdate();
-			
-			log.info("Number of modified rows: " + modified);
-			
-		} catch (SQLException e) {
-			log.error(e.getMessage());
-		}
-	}
-
-	@Override
-	public void updateUserLevel(User user, UserLevel level) {
-		log.info("Update " + user.getUsername() + "'s level from: " + user.getUserLevel() + " to: " + level);
-		
-		String updateString = "UPDATE APPLICATIONUSER SET KNOWLEDGELEVELID = ? WHERE USERNAME = ? AND USERPASSWORD = ?";
-		
-		try {
-			PreparedStatement preparedUpdate = connection.prepareStatement(updateString);
-			preparedUpdate.setInt(1, level.ordinal() + 1);
-			preparedUpdate.setString(2, user.getUsername());
-			preparedUpdate.setInt(3, user.getPasswordHash());
-			
-			int modified = preparedUpdate.executeUpdate();
-			
-			log.info("Number of modified rows: " + modified);
-			
-		} catch (SQLException e) {
-			log.error(e.getMessage());
-		}
-	}
 
 	@Override
 	public boolean deleteExercise(Exercise exercise) {
@@ -376,5 +433,6 @@ public class Database implements IDatabase {
 		// Deleted a row if deleted is greater than zero.
 		return deleted > 0;
 	}
+
 
 }

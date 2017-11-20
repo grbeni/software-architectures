@@ -12,13 +12,16 @@ public class User {
 	private String userName;
 	
 	// The hash value of the user's password.
-	private int passwordHash;
+	private String passwordHash;
 	
 	// The level of the user.
 	private UserLevel userLevel;
 	
 	// The score of the user.
-	private int score;	
+	private int score;
+	
+	// A user can be admin or not.
+	private boolean admin;
 	
 	
 	/**
@@ -26,7 +29,7 @@ public class User {
 	 * @return user name
 	 */
 	public String getUsername() {
-		log.trace("Get username: " + userName);
+		log.info("Get username: " + userName);
 		
 		return userName;
 	}
@@ -36,7 +39,7 @@ public class User {
 	 * @param userName
 	 */
 	public void setUserName(String userName) {
-		log.trace("Set username to: " + userName);
+		log.info("Set username to: " + userName);
 		
 		this.userName = userName;
 	}
@@ -45,8 +48,8 @@ public class User {
 	 * Getter for password hash.
 	 * @return hash value of password
 	 */
-	public int getPasswordHash() {
-		log.trace("Get password hash: " + passwordHash);
+	public String getPasswordHash() {
+		log.info("Get password hash: " + passwordHash);
 		
 		return passwordHash;
 	}
@@ -55,8 +58,8 @@ public class User {
 	 * Setter for password hash.
 	 * @param passwordHash
 	 */
-	public void setPasswordHash(int passwordHash) {
-		log.trace("Set password hash to: " + passwordHash);
+	public void setPasswordHash(String passwordHash) {
+		log.info("Set password hash to: " + passwordHash);
 		
 		this.passwordHash = passwordHash;
 	}
@@ -66,7 +69,7 @@ public class User {
 	 * @return the knowledge level of the user
 	 */
 	public UserLevel getUserLevel() {
-		log.trace("Get user level: " + userLevel);
+		log.info("Get user level: " + userLevel);
 		
 		return userLevel;
 	}
@@ -76,7 +79,7 @@ public class User {
 	 * @param userLevel
 	 */
 	public void setUserLevel(UserLevel userLevel) {
-		log.trace("Set user level to: " + userLevel);
+		log.info("Set user level to: " + userLevel);
 		
 		this.userLevel = userLevel;
 	}	
@@ -86,7 +89,7 @@ public class User {
 	 * @return the score of the user
 	 */
 	public int getScore() {
-		log.trace("Get score: " + score);
+		log.info("Get score: " + score);
 		
 		return score;
 	}
@@ -96,9 +99,28 @@ public class User {
 	 * @param score
 	 */
 	public void setScore(int score) {
-		log.trace("Set score: " + score);
+		log.info("Set score: " + score);
 		
 		this.score = score;
 	}
 	
+	/**
+	 * Getter for admin.
+	 * @return
+	 */
+	public boolean isAdmin() {
+		log.info("Get admin: " + admin);
+		
+		return admin;
+	}
+
+	/**
+	 * Setter for admin.
+	 * @param admin
+	 */
+	public void setAdmin(boolean admin) {
+		log.info("Set admin to: " + admin);
+		
+		this.admin = admin;
+	}
 }

@@ -30,6 +30,34 @@ public interface IDatabase {
 	public User getUser(String username);
 	
 	/**
+	 * Inserts a user into the database.
+	 * @param user the user to be inserted
+	 * @return whether the insertion was successful
+	 */
+	public boolean addUser(User user);
+	
+	/**
+	 * Deletes a user from the database by the given name.
+	 * @param username the name of the user to be deleted
+	 * @return whether the deletion was successful
+	 */
+	public int deleteUser(String username);
+	
+	/**
+	 * Method for updating a user's score.
+	 * @param user
+	 * @param score
+	 */
+	public void updateUserScore(User user, int score);
+	
+	/**
+	 * Method for updating a user's level.
+	 * @param user
+	 * @param level
+	 */
+	public void updateUserLevel(User user, UserLevel level);
+	
+	/**
 	 * Returns all exercise with the given type.
 	 * @param type
 	 * @return
@@ -51,21 +79,7 @@ public interface IDatabase {
 	 * @return the id of the inserted exercise
 	 */
 	public int addExercise(Exercise exercise, ExerciseType type);
-	
-	/**
-	 * Method for updating a user's score.
-	 * @param user
-	 * @param score
-	 */
-	public void updateUserScore(User user, int score);
-	
-	/**
-	 * Method for updating a user's level.
-	 * @param user
-	 * @param level
-	 */
-	public void updateUserLevel(User user, UserLevel level);
-	
+		
 	/**
 	 * Deletes the given exercise
 	 * @param english

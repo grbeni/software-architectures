@@ -2,7 +2,10 @@ package language.learning.server;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -47,7 +50,7 @@ public class Learning implements ILearning {
 			}
 		}
 
-		Exercises ex = new Exercises(exerciseList);
+		Exercises ex = getRandomNCountExercise(exerciseList, count);
 
 		return ex;
 	}
@@ -78,9 +81,32 @@ public class Learning implements ILearning {
 			}
 		}
 
-		Exercises ex = new Exercises(exerciseList);
+		Exercises ex = getRandomNCountExercise(exerciseList, count);
 
 		return ex;
+	}
+	
+	private Exercises getRandomNCountExercise(List<Exercise> ex, int count) {
+		int range = ex.size();
+		
+		if (range <= count) {
+			return new Exercises(ex);
+		}
+		
+		Set<Integer> indexSet = new HashSet<>();
+		
+		while (indexSet.size() < count) {
+			Random rand = new Random();
+			indexSet.add(rand.nextInt(range));			
+		}
+		
+		List<Exercise> resultList = new ArrayList<>();
+		
+		for (Integer index : indexSet) {
+			resultList.add(ex.get(index));
+		}
+		
+		return new Exercises(resultList);
 	}
 
 	@Override

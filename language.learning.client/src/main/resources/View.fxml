@@ -31,7 +31,7 @@
 
 <!-- All the GUI components -->
 <!-- Root (vertical box) layout -->
-<VBox fx:controller="language.learning.client.View" xmlns:fx="http://javafx.com/fxml/1"
+<VBox fx:controller="language.learning.client.Controller" xmlns:fx="http://javafx.com/fxml/1"
 	fx:id="rootLayout" alignment="CENTER" spacing="10" prefWidth="700"
 	prefHeight="600" minWidth="700" minHeight="600">
 

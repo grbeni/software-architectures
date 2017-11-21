@@ -22,7 +22,7 @@ public class Main extends Application {
 			final VBox viewRoot = (VBox) loader.load();
 
 			// Get controller object and initialize it
-			final View controller = loader.getController();
+			final Controller controller = loader.getController();
 			controller.initData(primaryStage);
 
 			// Set scene (and the title of the window) and display it

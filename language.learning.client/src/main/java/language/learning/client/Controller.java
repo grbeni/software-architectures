@@ -43,7 +43,7 @@ import language.learning.user.User;
  * The class responsible for the controlling of the view defined in the View.fxml file. 
  * @author Bence Graics
  */
-public class View {
+public class Controller {
 	
 	private static final String SALT = "software-architecture";
 	// Layouts
@@ -201,7 +201,7 @@ public class View {
 	// The object responsible for connecting to the server
 	private DataAccess model;
 	
-	public View() {
+	public Controller() {
 		model = new DataAccess();
 		tickImage = new Image("tick.png", 100, 100, false, false);
 		crossImage = new Image("cross.png", 100, 100, false, false);

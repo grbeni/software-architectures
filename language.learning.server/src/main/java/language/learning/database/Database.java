@@ -1,9 +1,5 @@
 package language.learning.database;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,12 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-
 import org.apache.log4j.Logger;
 
-import javafx.embed.swing.SwingFXUtils;
-//import javafx.scene.image.Image;
 import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseType;
 import language.learning.exercise.ExerciseWithImage;
@@ -253,9 +245,9 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public List<Exercise> getExercisesWithUserLevel(ExerciseType type, 
-			KnowledgeLevel level, boolean onlyAtLevel) throws SQLException {
-		
+	public List<Exercise> getExercisesWithUserLevel(ExerciseType type, KnowledgeLevel level, boolean onlyAtLevel)
+			throws SQLException {
+
 		log.info("Get " + type + " exercise with level: " + level + ", " + onlyAtLevel);
 
 		List<Exercise> exerciseList = new ArrayList<>();
@@ -297,6 +289,7 @@ public class Database implements IDatabase {
 
 	/**
 	 * Converts the result set to exercise list.
+	 * 
 	 * @param resultSet
 	 * @return
 	 * @throws SQLException
@@ -310,7 +303,7 @@ public class Database implements IDatabase {
 			exercise.setHungarian(resultSet.getString("HUNGARIAN"));
 			exercise.setKnowledgeLevel(KnowledgeLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
 			exercise.setExerciseType(tpye);
-			
+
 			exerciseList.add(exercise);
 		}
 		log.error("Returned exercises: " + exerciseList);
@@ -319,13 +312,13 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public int addExercise(Exercise exercise, User user) throws SQLException {
+	public int addExercise(Exercise exercise, String username) throws SQLException {
 		log.info("Add execise: " + exercise.getEnglish() + " - " + exercise.getHungarian());
 
 		int addCount = 0;
 
 		// Get id to a user
-		int userID = getUserIdByUserName(user.getUsername());
+		int userID = getUserIdByUserName(username);
 
 		String insertSql = "";
 		if (exercise.getExerciseType() == ExerciseType.WORD) {
@@ -344,49 +337,40 @@ public class Database implements IDatabase {
 
 		return addCount;
 	}
-	
+
 	@Override
-	public int addImageExercise(ExerciseWithImage exercise, User user) throws SQLException {
-		log.info("Insert exercise with image " + exercise.getEnglish());		
-		
+	public int addImageExercise(ExerciseWithImage exercise, String username) throws SQLException {
+		log.info("Insert exercise with image " + exercise.getEnglish());
+
 		int addCount = 0;
 
 		// Get id to a user
-		int userID = getUserIdByUserName(user.getUsername());
-		
+		int userID = getUserIdByUserName(username);
+
 		String insertSql = "INSERT INTO IMAGEEXERCISE VALUES(IMAGEEXERCISE_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
-		
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		try {
-			ImageIO.write(SwingFXUtils.fromFXImage(exercise.getImage(), null),"png", os);
-		} catch (IOException e) {
-			log.error(e.getMessage());
-		} 
-		InputStream fis = new ByteArrayInputStream(os.toByteArray());
-				
+
 		PreparedStatement insertStm = connection.prepareStatement(insertSql);
 		insertStm.setString(1, exercise.getEnglish());
 		insertStm.setString(2, exercise.getHungarian());
 		insertStm.setInt(3, userID);
-		insertStm.setInt(4, exercise.getKnowledgeLevel().ordinal() + 1);		
-		insertStm.setBinaryStream(5, fis);		
-		
+		insertStm.setInt(4, exercise.getKnowledgeLevel().ordinal() + 1);
+		insertStm.setBytes(5, exercise.getImage());
+
 		addCount = insertStm.executeUpdate();
 
 		return addCount;
 	}
 
 	@Override
-	public boolean deleteExercise(Exercise exercise) throws SQLException {
+	public boolean deleteExercise(Exercise exercise, String username) throws SQLException {
 		log.info("Delete " + exercise.getEnglish() + " - " + exercise.getHungarian());
 
-		if (hasAuthority()) {
-			
-		}
-		else {
+		if (hasAuthority(username, exercise.getEnglish())) {
+
+		} else {
 			return false;
 		}
-		
+
 		String deleteWord = "DELETE SENTENCEEXERCISE WHERE ENGLISH = ? AND HUNGARIAN = ?";
 		String deleteSentence = "DELETE WORDEXERCISE WHERE ENGLISH = ? AND HUNGARIAN = ?";
 		int deleted = 0;
@@ -395,30 +379,83 @@ public class Database implements IDatabase {
 		preparedDeleteWord.setString(1, exercise.getEnglish());
 		preparedDeleteWord.setString(2, exercise.getHungarian());
 		deleted = preparedDeleteWord.executeUpdate();
-		
+
 		PreparedStatement preparedDeleteSentence = connection.prepareStatement(deleteSentence);
 		preparedDeleteSentence.setString(1, exercise.getEnglish());
 		preparedDeleteSentence.setString(2, exercise.getHungarian());
-		deleted += preparedDeleteSentence.executeUpdate();		
+		deleted += preparedDeleteSentence.executeUpdate();
 
 		// Deleted a row if deleted is greater than zero.
 		return deleted > 0;
 	}
-	
-	private boolean hasAuthority() {
-		boolean authority = false;
-		
-		String queryWord = "SELECT * FROM WORDEXERCISE WHERE USERNAME = ?";
-		String querySentence = "SELECT * FROM SENTENCEEXERCISE WHERE USERNAME = ?";
-		String queryImage = "SELECT * FROM IMAGEEXERCISE WHERE USERNAME = ?";
-		
-		// TODO
-		
-		return authority;
+
+	private boolean hasAuthority(String username, String english) throws SQLException {
+
+		boolean isAdmin = false;
+		int id = -1;
+
+		String queryUser = "SELECT ID, ISADMIN FROM APPLICATIONUSER WHERE USERNAME = ?";
+		PreparedStatement selectUser = connection.prepareStatement(queryUser);
+		selectUser.setString(1, username);
+		ResultSet rs = selectUser.executeQuery();
+
+		if (rs != null) {
+			if (rs.next()) {
+				int admin = rs.getInt("ISADMIN");
+				isAdmin = admin == 1;
+				id = rs.getInt("ID");
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+
+		if (isAdmin) {
+			return true;
+		}
+
+		String queryWord = "SELECT * FROM WORDEXERCISE WHERE USERID = ? AND ENGLISH = ?";
+		String querySentence = "SELECT * FROM SENTENCEEXERCISE WHERE USERID = ? AND ENGLISH = ?";
+		String queryImage = "SELECT * FROM IMAGEEXERCISE WHERE USERID = ? AND ENGLISH = ?";
+
+		PreparedStatement selectWord = connection.prepareStatement(queryWord);
+		selectWord.setInt(1, id);
+		selectWord.setString(2, english);
+		ResultSet rsW = selectWord.executeQuery();
+
+		PreparedStatement selectSentence = connection.prepareStatement(querySentence);
+		selectSentence.setInt(1, id);
+		selectSentence.setString(2, english);
+		ResultSet rsS = selectSentence.executeQuery();
+
+		PreparedStatement selectImage = connection.prepareStatement(queryImage);
+		selectImage.setInt(1, id);
+		selectImage.setString(2, english);
+		ResultSet rsI = selectImage.executeQuery();
+
+		if (rsW != null) {
+			if (rsW.next()) {
+				return true;
+			}
+		}
+		if (rsS != null) {
+			if (rsS.next()) {
+				return true;
+			}
+		}
+		if (rsI != null) {
+			if (rsI.next()) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
 	 * Returns the corresponding id of the given user name.
+	 * 
 	 * @param username
 	 * @return
 	 * @throws SQLException
@@ -445,57 +482,42 @@ public class Database implements IDatabase {
 	@Override
 	public List<ExerciseWithImage> getExerciseWithImage(KnowledgeLevel level, boolean onlyAtLevel) throws SQLException {
 		log.info("Get exercises with image " + level);
-		
+
 		List<ExerciseWithImage> exerciseList = new ArrayList<>();
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT * FROM IMAGEEXERCISE WHERE KNOWLEDGELEVELID ");
-		
+
 		if (onlyAtLevel) {
 			sb.append("= ");
-		}
-		else {
+		} else {
 			sb.append("<= ");
 		}
-		
+
 		sb.append("?");
-		
+
 		String queryString = sb.toString();
 		log.info("Query string: " + queryString);
-		
+
 		PreparedStatement preparedQuery = connection.prepareStatement(queryString);
 		preparedQuery.setInt(1, level.ordinal() + 1);
-		
+
 		ResultSet resultSet = preparedQuery.executeQuery();
-		
+
 		if (resultSet != null) {
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				ExerciseWithImage ex = new ExerciseWithImage();
 				ex.setEnglish(resultSet.getString("ENGLISH"));
 				ex.setHungarian(resultSet.getString("HUNGARIAN"));
 				ex.setExerciseType(ExerciseType.IMAGE);
 				ex.setKnowledgeLevel(level);
-				//Image image = transformToImage(resultSet.getBinaryStream("IMAGE"));
-				//ex.setImage(image);
-				
+				ex.setImage(resultSet.getBytes("IMAGE"));
+
 				exerciseList.add(ex);
 			}
 		}
-		
+
 		return exerciseList;
 	}
-
-//	private Image transformToImage(InputStream stream) {
-//		
-//		BufferedImage img = null;
-//		
-//		try {
-//			img = ImageIO.read(stream);
-//		} catch (IOException e) {
-//			log.error(e.getMessage());
-//		}
-//				
-//		return SwingFXUtils.toFXImage(img, null);
-//	}
 
 }

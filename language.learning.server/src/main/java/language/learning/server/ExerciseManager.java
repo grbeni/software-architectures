@@ -10,7 +10,6 @@ import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.KnowledgeLevel;
 import language.learning.logger.LoggerWrapper;
-import language.learning.user.User;
 
 public class ExerciseManager implements IExerciseManager {
 
@@ -19,7 +18,7 @@ public class ExerciseManager implements IExerciseManager {
 	private IDatabase db = Database.getInstance();
 
 	@Override
-	public boolean addExercise(Exercise exercise, User user) {
+	public boolean addExercise(String username, Exercise exercise) {
 		log.info("Exercise to be added: " + exercise.getEnglish() + " - " + exercise.getHungarian() + ", "
 				+ exercise.getKnowledgeLevel() + ", " + exercise.getExerciseType());
 
@@ -31,7 +30,7 @@ public class ExerciseManager implements IExerciseManager {
 			if (db.connect()) {
 				log.info("Establishing connection was successful.");
 
-				result = db.addExercise(exercise, user);
+				result = db.addExercise(exercise, username);
 
 				db.disconnect();
 			} else {
@@ -52,7 +51,7 @@ public class ExerciseManager implements IExerciseManager {
 	}
 	
 	@Override
-	public boolean addExercise(ExerciseWithImage exercise, User user) {
+	public boolean addExercise(String username, ExerciseWithImage exercise) {
 		log.info("Add exercise with image: " + exercise.getEnglish());
 		
 		int addCount = 0;
@@ -60,7 +59,7 @@ public class ExerciseManager implements IExerciseManager {
 		try {
 			if (db.connect()) {
 				
-				addCount = db.addImageExercise(exercise, user);
+				addCount = db.addImageExercise(exercise, username);
 				
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -77,7 +76,7 @@ public class ExerciseManager implements IExerciseManager {
 	}
 
 	@Override
-	public boolean deleteExercise(Exercise exercise, User user) {
+	public boolean deleteExercise(String username, Exercise exercise) {
 		log.info("Exercise to be deleted: " + exercise.getEnglish() + " - " + exercise.getHungarian());
 
 		boolean success = false;
@@ -86,7 +85,7 @@ public class ExerciseManager implements IExerciseManager {
 			if (db.connect()) {
 				log.info("Establishing connection was successful.");
 
-				success = db.deleteExercise(exercise);
+				success = db.deleteExercise(exercise, username);
 
 				db.disconnect();
 			} else {
@@ -103,12 +102,6 @@ public class ExerciseManager implements IExerciseManager {
 		}
 
 		return success;
-	}
-
-	@Override
-	public boolean updateExerciseWithImage() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

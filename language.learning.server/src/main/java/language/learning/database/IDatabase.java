@@ -83,7 +83,7 @@ public interface IDatabase {
 	 * @param exercise
 	 * @return the id of the inserted exercise
 	 */
-	public int addExercise(Exercise exercise, User user) throws SQLException;
+	public int addExercise(Exercise exercise, String username) throws SQLException;
 	
 	/**
 	 * Method for inserting image exercise into database.
@@ -92,7 +92,7 @@ public interface IDatabase {
 	 * @return
 	 * @throws SQLException
 	 */
-	public int addImageExercise(ExerciseWithImage exercise, User user) throws SQLException;
+	public int addImageExercise(ExerciseWithImage exercise, String username) throws SQLException;
 		
 	/**
 	 * Deletes the given exercise
@@ -100,7 +100,7 @@ public interface IDatabase {
 	 * @param hungarian
 	 * @return whether the deletion was successful
 	 */
-	public boolean deleteExercise(Exercise exercise) throws SQLException;
+	public boolean deleteExercise(Exercise exercise, String username) throws SQLException;
 	
 	
 }

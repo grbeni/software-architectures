@@ -7,6 +7,7 @@ import javax.ws.rs.client.WebTarget;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import language.learning.exercise.Exercise;
+import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.FourWordsExercises;
 import language.learning.exercise.ImageExercises;
 import language.learning.exercise.SentenceExercises;
@@ -78,6 +79,12 @@ public class DataAccess implements IExerciseManager, ILearning, IUserManager {
 		IExerciseManager exerciseManager = createClient(IExerciseManager.class);
 		return exerciseManager.addExercise(exercise, user);
 	}
+	
+	@Override
+	public boolean addExercise(ExerciseWithImage exercise, User user) {
+		IExerciseManager exerciseManager = createClient(IExerciseManager.class);
+		return exerciseManager.addExercise(exercise, user);
+	}
 
 	@Override
 	public boolean deleteExercise(Exercise exercise, User user) {
@@ -101,5 +108,7 @@ public class DataAccess implements IExerciseManager, ILearning, IUserManager {
 		// Get a typed interface:
 		return rtarget.proxy(clazz);
 	}
+
+	
 
 }

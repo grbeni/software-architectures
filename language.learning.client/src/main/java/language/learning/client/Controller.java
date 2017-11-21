@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javafx.embed.swing.SwingFXUtils;
+
 import javax.imageio.ImageIO;
 
 import javafx.event.ActionEvent;
@@ -172,7 +174,9 @@ public class Controller {
 	private ImageView imageView;
 	@FXML
 	private ImageView correctAnswerView;	
-
+	@FXML
+	private ImageView imageTester;	
+	
 	@FXML
 	private CheckBox isAdminCheckBox;
 	
@@ -181,6 +185,9 @@ public class Controller {
 	
 	// Alert window
 	private Alert alertWindow = new Alert(AlertType.ERROR);
+	
+	// Opened image
+	private Image openedImage;
 	
 	// Constants
 	private final int EXPERIENCE_RATIO = 10;
@@ -591,13 +598,25 @@ public class Controller {
 		}
 		String englishPhrase = addEnglishPhraseField.getText();
 		String hungarianPhrase = addHungarianPhraseField.getText();
-		ExerciseType exerciseType = (!englishPhrase.contains(" ") && !hungarianPhrase.contains(" ")) ?
+		boolean result = false;
+		if (openedImage != null) {
+			// Creating the exercise object
+			ExerciseWithImage createdExercise = new ExerciseWithImage(englishPhrase, hungarianPhrase, openedImage, knowledgeLevelSelector.getSelectionModel().getSelectedItem());
+			createdExercise.setExerciseType(ExerciseType.IMAGE);
+			// Sending it to the server
+			result = model.addExercise(createdExercise, loggedInUser);
+			openedImage = null;
+		}
+		else {
+			ExerciseType exerciseType = (!englishPhrase.contains(" ") && !hungarianPhrase.contains(" ")) ?
 				ExerciseType.WORD : ExerciseType.SENTENCE;
-		// Creating the exercise object
-		Exercise createdExercise = new Exercise(englishPhrase, hungarianPhrase, knowledgeLevelSelector.getSelectionModel().getSelectedItem());
-		createdExercise.setExerciseType(exerciseType);
-		// Sending it to the server
-		boolean result = model.addExercise(createdExercise, loggedInUser);
+			// Creating the exercise object
+			Exercise createdExercise = new Exercise(englishPhrase, hungarianPhrase, knowledgeLevelSelector.getSelectionModel().getSelectedItem());
+			createdExercise.setExerciseType(exerciseType);
+			// Sending it to the server
+			result = model.addExercise(createdExercise, loggedInUser);
+		}
+		
 		if (result) {
 			logMsg("Exercise added.");
 		}
@@ -608,9 +627,9 @@ public class Controller {
 	
 	@FXML
 	private void fileChooserEventHandler() {
-//		if (!isLoggedIn()) {
-//			return;
-//		}
+		if (!isLoggedIn()) {
+			return;
+		}
 		final FileChooser fileChooser = new FileChooser();
 		File file = fileChooser.showOpenDialog(stage);
 		System.out.println(file.getName());
@@ -620,6 +639,7 @@ public class Controller {
 		BufferedImage image = null;
 		try {
 			image = ImageIO.read(file);
+			openedImage = SwingFXUtils.toFXImage(image, null);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

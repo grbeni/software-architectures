@@ -228,6 +228,7 @@
 							<ComboBox fx:id="knowledgeLevelSelector"/>
 							<Button fx:id="fileChooser" text="Choose Image" prefWidth="120"	onAction="#fileChooserEventHandler" />	
 						</HBox>
+						<ImageView fx:id="imageTester" />
 					</VBox>
 					<VBox spacing="10">
 						<Label text="Delete exercise:" style="-fx-font-size: 1.1em; " />	

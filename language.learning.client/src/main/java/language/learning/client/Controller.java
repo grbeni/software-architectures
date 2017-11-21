@@ -598,7 +598,6 @@ public class Controller {
 		}
 		String englishPhrase = addEnglishPhraseField.getText();
 		String hungarianPhrase = addHungarianPhraseField.getText();
-		boolean result = false;
 		if (openedImage != null) {
 			// Creating the exercise object
 			ExerciseWithImage createdExercise = new ExerciseWithImage(englishPhrase, hungarianPhrase, openedImage, knowledgeLevelSelector.getSelectionModel().getSelectedItem());
@@ -616,13 +615,6 @@ public class Controller {
 			// Sending it to the server
 			model.addExercise(loggedInUser.getUsername(), createdExercise);
 		}
-		
-		if (result) {
-			logMsg("Exercise added.");
-		}
-		else {
-			logMsg("Error during creation.");
-		}
 	}
 	
 	@FXML
@@ -637,13 +629,7 @@ public class Controller {
 		// Creating the exercise object
 		Exercise createdExercise = new Exercise(deleteEnglishPhraseField.getText(), deleteHungarianPhraseField.getText(), KnowledgeLevel.BEGINNER);
 		// Sending it to the server
-		boolean result = model.deleteExercise(loggedInUser.getUsername(), createdExercise);
-		if (result) {
-			logMsg("Exercise deleted.");
-		}
-		else {
-			logMsg("Error during deletion.");
-		}
+		model.deleteExercise(loggedInUser.getUsername(), createdExercise);
 	}
 	
 	@FXML

@@ -197,10 +197,10 @@ public class View {
 	private final Image crossImage;
 	
 	// The object responsible for connecting to the server
-	private ModelMock model;
+	private DataAccess model;
 	
 	public View() {
-		model = new ModelMock();
+		model = new DataAccess();
 		tickImage = new Image("tick.png", 100, 100, false, false);
 		crossImage = new Image("cross.png", 100, 100, false, false);
 	}
@@ -337,10 +337,13 @@ public class View {
 		
 		Exercises wordExercises = model.getExercisesWithUserLevel(ExerciseType.WORD.toString(),
 				loggedInUser.getUserLevel().toString(), false, 4);
+		System.out.println("Word exercises: " + wordExercises);
 		Exercises sentenceExercises = model.getExercisesWithUserLevel(ExerciseType.SENTENCE.toString(),
 				loggedInUser.getUserLevel().toString(), false, 4);
+		System.out.println("Sentence exercises: " + sentenceExercises);
 		Exercises imageExercises = model.getExercisesWithUserLevel(ExerciseType.IMAGE.toString(),
 				loggedInUser.getUserLevel().toString(), false, 2);
+		System.out.println("Image exercises: " + imageExercises);
 		
 		List<Exercise> exercises = new ArrayList<>(wordExercises.getExercises());
 		exercises.addAll(sentenceExercises.getExercises());
@@ -348,6 +351,7 @@ public class View {
 		if (exercises.size() < EXERCISE_COUNT) {
 			alert("Not enough exercises: " + exercises.size());
 		}
+		System.out.println(exercises);
 		Collections.shuffle(exercises);		
 		return new Exercises(exercises);
 	}

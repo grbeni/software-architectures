@@ -1,11 +1,23 @@
 package language.learning.exercise;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 import javafx.scene.image.Image;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType
 public class ExerciseWithImage extends Exercise {
 	
 	// Image depicting a word
+	@XmlElement
 	private Image image;	
+	
+	public ExerciseWithImage() {}
 	
 	/**
 	 * Constructor with all parameter.	
@@ -30,5 +42,15 @@ public class ExerciseWithImage extends Exercise {
 		log.trace("Image getter");		
 		
 		return image;
+	}
+	
+	/**
+	 * Setter for image.
+	 * @return image
+	 */
+	public void setImage(Image image) {
+		log.trace("Image setter");		
+		
+		this.image = image;
 	}
 }

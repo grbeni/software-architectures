@@ -60,9 +60,9 @@
 				<Insets left="25.0" top="10.0" />
 			</padding>
 			<!-- User info label -->
-			<Label fx:id="userInfoLabel" text="User name, level, experience" prefWidth="303" prefHeight="17" />	
+			<Label fx:id="userInfoLabel" text="User name, level, experience" prefWidth="310" prefHeight="17" />	
 			<!-- Disconnect button -->
-			<Button fx:id="disconnectButton" text="Disconnect" onAction="#disconnectEventHandler" />	
+			<Button fx:id="disconnectButton" text="Disconnect" prefWidth="80" onAction="#disconnectEventHandler" />	
 		</HBox>
 	</VBox>
 

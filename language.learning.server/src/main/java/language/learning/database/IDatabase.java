@@ -5,6 +5,7 @@ import java.util.List;
 
 import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseType;
+import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.KnowledgeLevel;
 import language.learning.user.User;
 
@@ -75,12 +76,23 @@ public interface IDatabase {
 													KnowledgeLevel level, 
 													boolean onlyAtLevel) throws SQLException;
 	
+	public List<ExerciseWithImage> getExerciseWithImage(KnowledgeLevel level, boolean onlyAtLevel) throws SQLException;
+	
 	/**
 	 * Method for inserting new exercise into database.
 	 * @param exercise
 	 * @return the id of the inserted exercise
 	 */
 	public int addExercise(Exercise exercise, User user) throws SQLException;
+	
+	/**
+	 * Method for inserting image exercise into database.
+	 * @param exercise
+	 * @param user
+	 * @return
+	 * @throws SQLException
+	 */
+	public int addImageExercise(ExerciseWithImage exercise, User user) throws SQLException;
 		
 	/**
 	 * Deletes the given exercise

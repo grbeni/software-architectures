@@ -1,5 +1,10 @@
 package language.learning.database;
 
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,10 +13,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 import org.apache.log4j.Logger;
 
 import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseType;
+import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.KnowledgeLevel;
 import language.learning.logger.LoggerWrapper;
 import language.learning.user.User;
@@ -333,6 +341,37 @@ public class Database implements IDatabase {
 
 		return addCount;
 	}
+	
+	@Override
+	public int addImageExercise(ExerciseWithImage exercise, User user) throws SQLException {
+		log.info("Insert exercise with image " + exercise.getEnglish());		
+		
+		int addCount = 0;
+
+		// Get id to a user
+		int userID = getUserIdByUserName(user.getUsername());
+		
+		String insertSql = "INSERT INTO IMAGEEXERCISE VALUES(IMAGEEXERCISE_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
+		
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		try {
+			ImageIO.write((RenderedImage) exercise.getImage(),"png", os);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		} 
+		InputStream fis = new ByteArrayInputStream(os.toByteArray());
+				
+		PreparedStatement insertStm = connection.prepareStatement(insertSql);
+		insertStm.setString(1, exercise.getEnglish());
+		insertStm.setString(2, exercise.getHungarian());
+		insertStm.setInt(3, userID);
+		insertStm.setInt(4, exercise.getKnowledgeLevel().ordinal() + 1);		
+		insertStm.setBinaryStream(5, fis);		
+		
+		addCount = insertStm.executeUpdate();
+
+		return addCount;
+	}
 
 	@Override
 	public boolean deleteExercise(Exercise exercise) throws SQLException {
@@ -380,5 +419,13 @@ public class Database implements IDatabase {
 
 		return id;
 	}
+
+	@Override
+	public List<ExerciseWithImage> getExerciseWithImage(KnowledgeLevel level, boolean onlyAtLevel) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 }

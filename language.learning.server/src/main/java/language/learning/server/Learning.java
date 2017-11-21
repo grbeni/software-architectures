@@ -14,8 +14,11 @@ import language.learning.database.Database;
 import language.learning.database.IDatabase;
 import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseType;
+import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.SentenceExercises;
 import language.learning.exercise.FourWordsExercise;
+import language.learning.exercise.FourWordsExercises;
+import language.learning.exercise.ImageExercises;
 import language.learning.exercise.KnowledgeLevel;
 import language.learning.logger.LoggerWrapper;
 import language.learning.user.User;
@@ -52,27 +55,21 @@ public class Learning implements ILearning {
 			}
 		}
 
-		SentenceExercises ex = null;
-		if ("WORD".equals(type)) {
-			ex = getRandomNCountExerciseFourWords(exerciseList, count);
-		}
-		else {
-			ex = getRandomNCountExercise(exerciseList, count);
-		}		
-
+		SentenceExercises ex = getRandomNCountExercise(exerciseList, count);
+				
 		return ex;
 	}
-
+	
 	@Override
-	public SentenceExercises getExercisesWithUserLevel(String type, String userLevel, boolean equals, int count) {
-		log.info("Get " + type + " exercises: " + userLevel + ", " + equals);
+	public SentenceExercises getSentenceExercices(String userLevel, boolean equals, int count) {
+		log.info("Get sentence exercises: " + userLevel + ", " + equals);
 
 		List<Exercise> exerciseList = new ArrayList<>();
 
 		try {
 			if (db.connect()) {
 				log.info("Establishing connection was successful.");
-				exerciseList = db.getExercisesWithUserLevel(ExerciseType.valueOf(type.toUpperCase()),
+				exerciseList = db.getExercisesWithUserLevel(ExerciseType.SENTENCE,
 						KnowledgeLevel.valueOf(userLevel.toUpperCase()), equals);
 
 				db.disconnect();
@@ -89,16 +86,101 @@ public class Learning implements ILearning {
 			}
 		}
 
-		SentenceExercises ex = null;
-		// TODO FourWords Exercise használata
-		if ("WORD".equals(type)) {
-			ex = getRandomNCountExerciseFourWords(exerciseList, count);
-		}
-		else {
-			ex = getRandomNCountExercise(exerciseList, count);
-		}
+		SentenceExercises ex = getRandomNCountExercise(exerciseList, count);		
 
 		return ex;
+	}
+
+	@Override
+	public FourWordsExercises getWordExercices(String userLevel, boolean equals, int count) {
+		log.info("Get word exercises: " + userLevel + ", " + equals);
+
+		List<Exercise> exerciseList = new ArrayList<>();
+
+		try {
+			if (db.connect()) {
+				log.info("Establishing connection was successful.");
+				exerciseList = db.getExercisesWithUserLevel(ExerciseType.WORD,
+						KnowledgeLevel.valueOf(userLevel.toUpperCase()), equals);
+
+				db.disconnect();
+			} else {
+				log.warn("Establishing connection was not successful.");
+			}
+		} catch (SQLException | ClassNotFoundException e) {
+			log.error(e.getMessage());
+		} finally {
+			try {
+				db.disconnect();
+			} catch (SQLException e) {
+				log.error(e.getMessage());
+			}
+		}
+
+		FourWordsExercises ex = getRandomNCountExerciseFourWords(exerciseList, count);
+
+		return ex;
+	}
+
+	// TODO
+	@Override
+	public ImageExercises getImageExercices(String userLevel, boolean equals, int count) {
+		log.info("Get image exercises: " + userLevel + ", " + equals);
+
+		List<ExerciseWithImage> exerciseList = new ArrayList<>();
+
+		try {
+			if (db.connect()) {
+				log.info("Establishing connection was successful.");
+				exerciseList = db.getExerciseWithImage(KnowledgeLevel.valueOf(userLevel.toUpperCase()), 
+														equals);
+
+				db.disconnect();
+			} else {
+				log.warn("Establishing connection was not successful.");
+			}
+		} catch (SQLException | ClassNotFoundException e) {
+			log.error(e.getMessage());
+		} finally {
+			try {
+				db.disconnect();
+			} catch (SQLException e) {
+				log.error(e.getMessage());
+			}
+		}
+
+		ImageExercises ex = getRandomNCountImageExercise(exerciseList, count);
+		
+		return ex;
+	}
+	
+	/**
+	 * Chooses N exercise from ex randomly. 
+	 * @param ex
+	 * @param count N
+	 * @return
+	 */
+	private ImageExercises getRandomNCountImageExercise(List<ExerciseWithImage> ex, int count) {
+		int range = ex.size();
+		
+		if (range <= count) {
+			return new ImageExercises(ex);
+		}
+		
+		Set<Integer> indexSet = new HashSet<>();
+		
+		while (indexSet.size() < count) {
+			Random rand = new Random();
+			indexSet.add(rand.nextInt(range));			
+		}
+		
+		List<ExerciseWithImage> resultList = new ArrayList<>();
+		
+		for (Integer index : indexSet) {
+			resultList.add(ex.get(index));
+		}
+		
+		return new ImageExercises(resultList);
 	}
 	
 	/**
@@ -130,11 +212,11 @@ public class Learning implements ILearning {
 		return new SentenceExercises(resultList);
 	}
 
-	private SentenceExercises getRandomNCountExerciseFourWords(List<Exercise> ex, int count) {
+	private FourWordsExercises getRandomNCountExerciseFourWords(List<Exercise> ex, int count) {
 		int range = ex.size();
 		
 		if (range <= count) {
-			return new SentenceExercises(Collections.emptyList());
+			return new FourWordsExercises(Collections.emptyList());
 		}
 		
 		Set<Integer> indexSet = new HashSet<>();
@@ -144,7 +226,7 @@ public class Learning implements ILearning {
 			indexSet.add(rand.nextInt(range));			
 		}
 		
-		List<Exercise> resultList = new ArrayList<>();
+		List<FourWordsExercise> resultList = new ArrayList<>();
 		
 		for (Integer index : indexSet) {
 			List<String> wrongChoices = getThreeStringFromListRandomly(ex, range, index);			
@@ -160,7 +242,7 @@ public class Learning implements ILearning {
 			resultList.add(fwEx);
 		}
 				
-		return new SentenceExercises(resultList);
+		return new FourWordsExercises(resultList);
 	}
 	
 	private List<String> getThreeStringFromListRandomly(List<Exercise> ex, int range, int index) {
@@ -234,5 +316,7 @@ public class Learning implements ILearning {
 			}
 		}
 	}
+
+
 
 }

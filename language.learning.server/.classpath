@@ -22,9 +22,6 @@
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
-		<accessrules>
-			<accessrule kind="accessible" pattern="javafx/**"/>
-		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/verboczy/Desktop/bme/2.felev/szoftverarchitekturak/hf/software-architectures/ojdbc7.jar"/>
 	<classpathentry kind="output" path="target/classes"/>

@@ -301,7 +301,7 @@ public class Database implements IDatabase {
 
 			exerciseList.add(exercise);
 		}
-		log.error("no next");
+		log.error("Returned exercises: " + exerciseList);
 
 		return exerciseList;
 	}

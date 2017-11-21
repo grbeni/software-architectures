@@ -1,28 +1,38 @@
 package language.learning.user;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 import org.apache.log4j.Logger;
 
 import language.learning.exercise.KnowledgeLevel;
 import language.learning.logger.LoggerWrapper;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType
 public class User {
 	
 	private static final Logger log = (new LoggerWrapper(User.class.getName())).getLog();
 
 	// The user name of the user.
+	@XmlElement
 	private String userName;
-	
 	// The hash value of the user's password.
+	@XmlElement
 	private String passwordHash;
-	
 	// The level of the user.
+	@XmlElement
 	private KnowledgeLevel userLevel;
-	
 	// The score of the user.
+	@XmlElement
 	private int score;
-	
 	// A user can be admin or not.
-	private boolean admin;
+	@XmlElement
+	private boolean admin;	
 	
 	
 	/**

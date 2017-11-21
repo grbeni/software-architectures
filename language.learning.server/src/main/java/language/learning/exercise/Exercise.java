@@ -1,27 +1,39 @@
 package language.learning.exercise;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import language.learning.logger.LoggerWrapper;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType
 public class Exercise {
 
 	protected static final Logger log = (new LoggerWrapper(Exercise.class.getName(), Level.INFO)).getLog();
 	
 	// Exercise type
+	@XmlElement
 	protected ExerciseType exerciseType;
 	
 	// The word in English
+	@XmlElement
 	private String english;
 		
 	// The word in Hungarian
+	@XmlElement
 	private String hungarian;
 	
 	// The level of the exercise
+	@XmlElement
 	private KnowledgeLevel knowledgeLevel;
 	
-
 	// Constructors
 	public Exercise() {
 		log.info("Exercise created");
@@ -37,6 +49,13 @@ public class Exercise {
 		this.knowledgeLevel = knowledgeLevel;
 	}
 	
+	@Override
+	public String toString() {
+		return "Exercise [exerciseType=" + exerciseType + ", english=" + english + ", hungarian=" + hungarian
+				+ ", knowledgeLevel=" + knowledgeLevel + "]";
+	}
+
+
 	/**
 	 * Setter for exercise type.
 	 */

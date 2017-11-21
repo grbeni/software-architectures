@@ -90,6 +90,7 @@ public class Learning implements ILearning {
 		}
 
 		Exercises ex = null;
+		// TODO FourWords Exercise használata
 		if ("WORD".equals(type)) {
 			ex = getRandomNCountExerciseFourWords(exerciseList, count);
 		}

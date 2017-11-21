@@ -149,6 +149,10 @@ public class Learning implements ILearning {
 		for (Integer index : indexSet) {
 			List<String> wrongChoices = getThreeStringFromListRandomly(ex, range, index);			
 			
+			for (String string : wrongChoices) {
+				System.err.println("wc: " + string);
+			}
+			
 			FourWordsExercise fwEx = new FourWordsExercise(ex.get(index).getEnglish(),
 															ex.get(index).getHungarian(), 
 															wrongChoices, 
@@ -174,6 +178,8 @@ public class Learning implements ILearning {
 		
 		for (Integer integer : indexSet) {
 			stringList.add(ex.get(integer).getHungarian());
+			
+			System.err.println("adding: " + ex.get(integer) + " - " + integer);
 		}
 		
 		return stringList;

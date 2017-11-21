@@ -235,7 +235,7 @@ public class Database implements IDatabase {
 		ResultSet resultSet = preparedStm.executeQuery();
 
 		if (resultSet != null) {
-			exerciseList = resultSetToExerciseList(resultSet);
+			exerciseList = resultSetToExerciseList(resultSet, type);
 		}
 
 		return exerciseList;
@@ -278,7 +278,7 @@ public class Database implements IDatabase {
 
 		if (resultSet != null) {
 			log.error("not null");
-			exerciseList = resultSetToExerciseList(resultSet);
+			exerciseList = resultSetToExerciseList(resultSet, type);
 		}
 
 		return exerciseList;
@@ -290,7 +290,7 @@ public class Database implements IDatabase {
 	 * @return
 	 * @throws SQLException
 	 */
-	private List<Exercise> resultSetToExerciseList(ResultSet resultSet) throws SQLException {
+	private List<Exercise> resultSetToExerciseList(ResultSet resultSet, ExerciseType tpye) throws SQLException {
 		List<Exercise> exerciseList = new ArrayList<>();
 
 		while (resultSet.next()) {
@@ -298,7 +298,8 @@ public class Database implements IDatabase {
 			exercise.setEnglish(resultSet.getString("ENGLISH"));
 			exercise.setHungarian(resultSet.getString("HUNGARIAN"));
 			exercise.setKnowledgeLevel(KnowledgeLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
-
+			exercise.setExerciseType(tpye);
+			
 			exerciseList.add(exercise);
 		}
 		log.error("Returned exercises: " + exerciseList);

@@ -103,6 +103,4 @@ public class DataAccess implements IExerciseManager, ILearning, IUserManager {
 		return rtarget.proxy(clazz);
 	}
 
-	
-
 }

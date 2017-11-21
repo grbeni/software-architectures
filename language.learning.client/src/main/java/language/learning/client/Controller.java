@@ -626,46 +626,6 @@ public class Controller {
 	}
 	
 	@FXML
-	private void fileChooserEventHandler() {
-//		if (!isLoggedIn()) {
-//			return;
-//		}
-		final FileChooser fileChooser = new FileChooser();
-		File file = fileChooser.showOpenDialog(stage);
-		System.out.println(file.getName());
-		if (!file.getName().toLowerCase().endsWith(".png")) {
-			alert("Only png images are accepted.");
-		}
-		BufferedImage image = null;
-		try {
-			image = ImageIO.read(file);
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			ImageIO.write(image, "png", bos);
-			openedImage = bos.toByteArray();
-//			ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
-//			BufferedImage deserializedImage = ImageIO.read(bis);
-			
-//			openedImage = SwingFXUtils.toFXImage(deserializedImage, null);
-//			imageTester.setImage(openedImage);
-//			System.out.println(deserializedImage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-//		System.out.println(image);
-	}
-	
-	private Image byteArrayToImage(byte[] byteArray) {
-		try {
-			ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
-			BufferedImage deserializedImage = ImageIO.read(bis);
-			return SwingFXUtils.toFXImage(deserializedImage, null);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	@FXML
 	private void deleteExerciseEventHandler() {
 		if (!isLoggedIn()) {
 			return;
@@ -732,6 +692,46 @@ public class Controller {
 			return false;
 		}
 		return true;
+	}	
+	
+	@FXML
+	private void fileChooserEventHandler() {
+//		if (!isLoggedIn()) {
+//			return;
+//		}
+		final FileChooser fileChooser = new FileChooser();
+		File file = fileChooser.showOpenDialog(stage);
+		System.out.println(file.getName());
+		if (!file.getName().toLowerCase().endsWith(".png")) {
+			alert("Only png images are accepted.");
+		}
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(file);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ImageIO.write(image, "png", bos);
+			openedImage = bos.toByteArray();
+//			ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
+//			BufferedImage deserializedImage = ImageIO.read(bis);
+			
+//			openedImage = SwingFXUtils.toFXImage(deserializedImage, null);
+//			imageTester.setImage(openedImage);
+//			System.out.println(deserializedImage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		System.out.println(image);
+	}
+	
+	private Image byteArrayToImage(byte[] byteArray) {
+		try {
+			ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
+			BufferedImage deserializedImage = ImageIO.read(bis);
+			return SwingFXUtils.toFXImage(deserializedImage, null);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**

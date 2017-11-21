@@ -36,8 +36,8 @@ public class User {
 	
 	public User() {}
 	
-	public User(String userName, String passwordHash, KnowledgeLevel userLevel, int score, boolean admin) {
-		this.username = userName;
+	public User(String username, String passwordHash, KnowledgeLevel userLevel, int score, boolean admin) {
+		this.username = username;
 		this.passwordHash = passwordHash;
 		this.userLevel = userLevel;
 		this.score = score;
@@ -56,12 +56,12 @@ public class User {
 	
 	/**
 	 * Setter for user name.
-	 * @param userName
+	 * @param username
 	 */
-	public void setUsername(String userName) {
-		log.info("Set username to: " + userName);
+	public void setUsername(String username) {
+		log.info("Set username to: " + username);
 		
-		this.username = userName;
+		this.username = username;
 	}
 	
 	/**

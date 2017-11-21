@@ -633,7 +633,7 @@ public class Controller {
 		final FileChooser fileChooser = new FileChooser();
 		File file = fileChooser.showOpenDialog(stage);
 		System.out.println(file.getName());
-		if (!file.getName().endsWith(".png")) {
+		if (!file.getName().toLowerCase().endsWith(".png")) {
 			alert("Only png images are accepted.");
 		}
 		BufferedImage image = null;

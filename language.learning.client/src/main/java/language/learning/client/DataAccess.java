@@ -75,27 +75,21 @@ public class DataAccess implements IExerciseManager, ILearning, IUserManager {
 	}
 
 	@Override
-	public boolean addExercise(Exercise exercise, User user) {
+	public boolean addExercise(String username, Exercise exercise) {
 		IExerciseManager exerciseManager = createClient(IExerciseManager.class);
-		return exerciseManager.addExercise(exercise, user);
+		return exerciseManager.addExercise(username, exercise);
 	}
 	
 	@Override
-	public boolean addExercise(ExerciseWithImage exercise, User user) {
+	public boolean addExercise(String username, ExerciseWithImage exercise) {
 		IExerciseManager exerciseManager = createClient(IExerciseManager.class);
-		return exerciseManager.addExercise(exercise, user);
+		return exerciseManager.addExercise(username, exercise);
 	}
 
 	@Override
-	public boolean deleteExercise(Exercise exercise, User user) {
+	public boolean deleteExercise(String username,Exercise exercise) {
 		IExerciseManager exerciseManager = createClient(IExerciseManager.class);
-		return exerciseManager.deleteExercise(exercise, user);
-	}
-
-	@Override
-	public boolean updateExerciseWithImage() {
-		IExerciseManager exerciseManager = createClient(IExerciseManager.class);
-		return exerciseManager.updateExerciseWithImage();
+		return exerciseManager.deleteExercise(username, exercise);
 	}
 
 	private <T> T createClient(Class<T> clazz) {
@@ -103,9 +97,9 @@ public class DataAccess implements IExerciseManager, ILearning, IUserManager {
 		Client client = ClientBuilder.newClient();
 		// The base URL of the service:
 		WebTarget target = client.target("http://localhost:8080/language.learning.server/api");
-		// Cast it to ResteasyWebTarget:
+		// Casting it to ResteasyWebTarget:
 		ResteasyWebTarget rtarget = (ResteasyWebTarget) target;
-		// Get a typed interface:
+		// Getting a typed interface:
 		return rtarget.proxy(clazz);
 	}
 

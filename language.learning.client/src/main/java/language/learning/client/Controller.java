@@ -1,6 +1,8 @@
 package language.learning.client;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -12,10 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javafx.embed.swing.SwingFXUtils;
-
 import javax.imageio.ImageIO;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -34,15 +35,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseType;
 import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.FourWordsExercise;
 import language.learning.exercise.FourWordsExercises;
-import language.learning.exercise.ImageExercises;
 import language.learning.exercise.KnowledgeLevel;
 import language.learning.exercise.SentenceExercises;
 import language.learning.user.User;
@@ -187,7 +187,7 @@ public class Controller {
 	private Alert alertWindow = new Alert(AlertType.ERROR);
 	
 	// Opened image
-	private Image openedImage;
+	private byte[] openedImage;
 	
 	// Constants
 	private final int EXPERIENCE_RATIO = 10;
@@ -473,7 +473,7 @@ public class Controller {
 			case IMAGE:
 				setLearningBoxesInvisible();
 				ExerciseWithImage exerciseWithImage = (ExerciseWithImage) actualExercise;
-				imageView.setImage(exerciseWithImage.getImage());
+				imageView.setImage(byteArrayToImage(exerciseWithImage.getImage()));
 				imageRecognitionBox.setVisible(true);
 			break;
 		}
@@ -604,7 +604,7 @@ public class Controller {
 			ExerciseWithImage createdExercise = new ExerciseWithImage(englishPhrase, hungarianPhrase, openedImage, knowledgeLevelSelector.getSelectionModel().getSelectedItem());
 			createdExercise.setExerciseType(ExerciseType.IMAGE);
 			// Sending it to the server
-			result = model.addExercise(createdExercise, loggedInUser);
+			result = model.addExercise(loggedInUser.getUsername(), createdExercise);
 			openedImage = null;
 		}
 		else {
@@ -614,7 +614,7 @@ public class Controller {
 			Exercise createdExercise = new Exercise(englishPhrase, hungarianPhrase, knowledgeLevelSelector.getSelectionModel().getSelectedItem());
 			createdExercise.setExerciseType(exerciseType);
 			// Sending it to the server
-			result = model.addExercise(createdExercise, loggedInUser);
+			result = model.addExercise(loggedInUser.getUsername(), createdExercise);
 		}
 		
 		if (result) {
@@ -627,9 +627,9 @@ public class Controller {
 	
 	@FXML
 	private void fileChooserEventHandler() {
-		if (!isLoggedIn()) {
-			return;
-		}
+//		if (!isLoggedIn()) {
+//			return;
+//		}
 		final FileChooser fileChooser = new FileChooser();
 		File file = fileChooser.showOpenDialog(stage);
 		System.out.println(file.getName());
@@ -639,11 +639,30 @@ public class Controller {
 		BufferedImage image = null;
 		try {
 			image = ImageIO.read(file);
-			openedImage = SwingFXUtils.toFXImage(image, null);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ImageIO.write(image, "png", bos);
+			openedImage = bos.toByteArray();
+//			ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
+//			BufferedImage deserializedImage = ImageIO.read(bis);
+			
+//			openedImage = SwingFXUtils.toFXImage(deserializedImage, null);
+//			imageTester.setImage(openedImage);
+//			System.out.println(deserializedImage);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(image);
+//		System.out.println(image);
+	}
+	
+	private Image byteArrayToImage(byte[] byteArray) {
+		try {
+			ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
+			BufferedImage deserializedImage = ImageIO.read(bis);
+			return SwingFXUtils.toFXImage(deserializedImage, null);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	@FXML
@@ -651,14 +670,14 @@ public class Controller {
 		if (!isLoggedIn()) {
 			return;
 		}
-		if (addEnglishPhraseField.getText().equals("") || addHungarianPhraseField.getText().equals("")) {
+		if (deleteEnglishPhraseField.getText().equals("") || deleteHungarianPhraseField.getText().equals("")) {
 			alert("Both text fields need to be filled!");
 			return;
 		}
 		// Creating the exercise object
 		Exercise createdExercise = new Exercise(deleteEnglishPhraseField.getText(), deleteHungarianPhraseField.getText(), KnowledgeLevel.BEGINNER);
 		// Sending it to the server
-		boolean result = model.deleteExercise(createdExercise, loggedInUser);
+		boolean result = model.deleteExercise(loggedInUser.getUsername(), createdExercise);
 		if (result) {
 			logMsg("Exercise deleted.");
 		}
@@ -682,7 +701,7 @@ public class Controller {
 		boolean result = model.addUser(createdUser);
 		System.out.println(isAdminCheckBox.isSelected());
 		if (result) {
-			logMsg("User " + deleteUserField.getText() + " deleted.");
+			logMsg("User " + deleteUserField.getText() + " added.");
 		}
 		else {
 			logMsg("Error during creation.");

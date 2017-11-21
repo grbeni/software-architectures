@@ -14,7 +14,7 @@ import language.learning.database.Database;
 import language.learning.database.IDatabase;
 import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseType;
-import language.learning.exercise.Exercises;
+import language.learning.exercise.SentenceExercises;
 import language.learning.exercise.FourWordsExercise;
 import language.learning.exercise.KnowledgeLevel;
 import language.learning.logger.LoggerWrapper;
@@ -27,7 +27,7 @@ public class Learning implements ILearning {
 	private IDatabase db = Database.getInstance();
 
 	@Override
-	public Exercises getExercises(String type, int count) {
+	public SentenceExercises getExercises(String type, int count) {
 		log.info("Get all exercise with type: " + type);
 
 		List<Exercise> exerciseList = new ArrayList<>();
@@ -52,7 +52,7 @@ public class Learning implements ILearning {
 			}
 		}
 
-		Exercises ex = null;
+		SentenceExercises ex = null;
 		if ("WORD".equals(type)) {
 			ex = getRandomNCountExerciseFourWords(exerciseList, count);
 		}
@@ -64,7 +64,7 @@ public class Learning implements ILearning {
 	}
 
 	@Override
-	public Exercises getExercisesWithUserLevel(String type, String userLevel, boolean equals, int count) {
+	public SentenceExercises getExercisesWithUserLevel(String type, String userLevel, boolean equals, int count) {
 		log.info("Get " + type + " exercises: " + userLevel + ", " + equals);
 
 		List<Exercise> exerciseList = new ArrayList<>();
@@ -89,7 +89,7 @@ public class Learning implements ILearning {
 			}
 		}
 
-		Exercises ex = null;
+		SentenceExercises ex = null;
 		// TODO FourWords Exercise használata
 		if ("WORD".equals(type)) {
 			ex = getRandomNCountExerciseFourWords(exerciseList, count);
@@ -107,11 +107,11 @@ public class Learning implements ILearning {
 	 * @param count N
 	 * @return
 	 */
-	private Exercises getRandomNCountExercise(List<Exercise> ex, int count) {
+	private SentenceExercises getRandomNCountExercise(List<Exercise> ex, int count) {
 		int range = ex.size();
 		
 		if (range <= count) {
-			return new Exercises(ex);
+			return new SentenceExercises(ex);
 		}
 		
 		Set<Integer> indexSet = new HashSet<>();
@@ -127,14 +127,14 @@ public class Learning implements ILearning {
 			resultList.add(ex.get(index));
 		}
 		
-		return new Exercises(resultList);
+		return new SentenceExercises(resultList);
 	}
 
-	private Exercises getRandomNCountExerciseFourWords(List<Exercise> ex, int count) {
+	private SentenceExercises getRandomNCountExerciseFourWords(List<Exercise> ex, int count) {
 		int range = ex.size();
 		
 		if (range <= count) {
-			return new Exercises(Collections.emptyList());
+			return new SentenceExercises(Collections.emptyList());
 		}
 		
 		Set<Integer> indexSet = new HashSet<>();
@@ -160,7 +160,7 @@ public class Learning implements ILearning {
 			resultList.add(fwEx);
 		}
 				
-		return new Exercises(resultList);
+		return new SentenceExercises(resultList);
 	}
 	
 	private List<String> getThreeStringFromListRandomly(List<Exercise> ex, int range, int index) {

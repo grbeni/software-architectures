@@ -15,15 +15,15 @@ import language.learning.logger.LoggerWrapper;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType
-public class Exercises {
+public class SentenceExercises {
 	
-	private static final Logger log = (new LoggerWrapper(Exercises.class.getName())).getLog();
+	private static final Logger log = (new LoggerWrapper(SentenceExercises.class.getName())).getLog();
 	
 	// List containing exercises
 	@XmlElement
 	private List<Exercise> exercises;	
 
-	public Exercises() {}
+	public SentenceExercises() {}
 	
 	@Override
 	public String toString() {
@@ -34,7 +34,7 @@ public class Exercises {
 	 * Constructor with parameter.
 	 * @param exercises list of exercises
 	 */
-	public Exercises(List<Exercise> exercises) {
+	public SentenceExercises(List<Exercise> exercises) {
 		log.trace("Exercises created with exercises.");
 		
 		this.exercises = exercises;

@@ -8,7 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import language.learning.exercise.Exercises;
+import language.learning.exercise.SentenceExercises;
 import language.learning.user.User;
 
 @Path("learn")
@@ -21,7 +21,7 @@ public interface ILearning {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	Exercises getExercises(@QueryParam("type") String type, @QueryParam("count") int count);
+	SentenceExercises getExercises(@QueryParam("type") String type, @QueryParam("count") int count);
 	
 	
 	/**
@@ -36,7 +36,7 @@ public interface ILearning {
 	@GET
 	@Path("level")
 	@Produces(MediaType.APPLICATION_JSON)
-	Exercises getExercisesWithUserLevel(@QueryParam("type") String type, 
+	SentenceExercises getExercisesWithUserLevel(@QueryParam("type") String type, 
 										@QueryParam("level") String userLevel, 
 										@QueryParam("equals") boolean equals, 
 										@QueryParam("count") int count);

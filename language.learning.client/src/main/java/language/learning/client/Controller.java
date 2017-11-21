@@ -43,6 +43,7 @@ import language.learning.exercise.ExerciseType;
 import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.FourWordsExercise;
 import language.learning.exercise.FourWordsExercises;
+import language.learning.exercise.ImageExercises;
 import language.learning.exercise.KnowledgeLevel;
 import language.learning.exercise.SentenceExercises;
 import language.learning.user.User;
@@ -359,12 +360,12 @@ public class Controller {
 		System.out.println("Word exercises: " + wordExercises);
 		SentenceExercises sentenceExercises = model.getSentenceExercises(loggedInUser.getUserLevel().toString(), false, 4);
 		System.out.println("Sentence exercises: " + sentenceExercises);
-//		ImageExercises imageExercises = model.getImageExercises(loggedInUser.getUserLevel().toString(), false, 2);
-//		System.out.println("Image exercises: " + imageExercises);
+		ImageExercises imageExercises = model.getImageExercises(loggedInUser.getUserLevel().toString(), false, 1);
+		System.out.println("Image exercises: " + imageExercises);
 		
 		List<Exercise> exercises = new ArrayList<>(wordExercises.getExercises());
 		exercises.addAll(sentenceExercises.getExercises());
-//		exercises.addAll(imageExercises.getExercises());
+		exercises.addAll(imageExercises.getExercises());
 		if (exercises.size() < EXERCISE_COUNT) {
 			alert("Not enough exercises: " + exercises.size());
 		}

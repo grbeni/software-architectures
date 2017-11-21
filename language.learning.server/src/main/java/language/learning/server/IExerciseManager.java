@@ -26,6 +26,6 @@ public interface IExerciseManager {
 	@DELETE
 	@Path("delete")
 	@Consumes(MediaType.APPLICATION_JSON)
-	boolean deleteExercise(@QueryParam("username") String username, Exercise exercise);
+	void deleteExercise(@QueryParam("username") String username, Exercise exercise);
 	
 }

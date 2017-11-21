@@ -71,7 +71,7 @@ public class ExerciseManager implements IExerciseManager {
 	}
 
 	@Override
-	public boolean deleteExercise(String username, Exercise exercise) {
+	public void deleteExercise(String username, Exercise exercise) {
 		log.info("Exercise to be deleted: " + exercise.getEnglish() + " - " + exercise.getHungarian());
 
 		boolean success = false;
@@ -96,7 +96,6 @@ public class ExerciseManager implements IExerciseManager {
 			}
 		}
 
-		return success;
 	}
 
 }

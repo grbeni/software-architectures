@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name="image")
 public class ExerciseWithImage extends Exercise {
 	
-	// Image depicting a word
+	// A JavaFX Image represented as a byte array
 	@XmlElement
 	private byte[] image;	
 	

@@ -262,27 +262,22 @@ public class Controller {
 			alert("You are logged in!");
 			return;
 		}
-		//Log container
-		List<String> log = new ArrayList<String>();
 		loggedInUser = model.logIn(userNameField.getText());
 		if (loggedInUser == null) {
 			alert("Wrong user name!");
 			return;
 		}
 		// Checking the password
-//		if (!loggedInUser.getPasswordHash().equals(hashPassword(passwordField.getText(), SALT))) {
-//			alert("Wrong password!");
-//			return;
-//		}
+		if (!loggedInUser.getPasswordHash().equals(hashPassword(passwordField.getText(), SALT))) {
+			alert("Wrong password!");
+			return;
+		}
 		// Connection succeeded
 		if (loggedInUser != null) {
 			connectionStateLabel.setText("Connection created");
 			connectionStateLabel.setTextFill(Color.web("#009900"));
 		}
 		printUserData();
-		
-		// Write log to the GUI
-		logList(log);
 	}
 	
 	private void printUserData() {
@@ -315,17 +310,12 @@ public class Controller {
 		if (!startLearningButton.isVisible()) {
 			alert("You cannot disconnect during a lesson!");
 		}
-		// Log container
-		List<String> log = new ArrayList<String>();
 		// Disconnecting the user
 		loggedInUser = null;
 		
 		connectionStateLabel.setText("Disconnected");
 		connectionStateLabel.setTextFill(Color.web("#ee0000"));
 		userInfoLabel.setText("");
-		
-		// Write log to the GUI
-		logList(log);
 	}
 	
 	/**
@@ -333,8 +323,6 @@ public class Controller {
 	 */
 	@FXML
 	private void startLearningEventHandler(ActionEvent event) {
-		//Log container
-		List<String> log = new ArrayList<String>();
 		if (loggedInUser == null) {
 			alert("You are not logged in!");
 			return;
@@ -348,28 +336,24 @@ public class Controller {
 		startLearningButton.setVisible(false);
 		nextCoachingEventHandler(event); // So the default values are not shown 
 		coachingBox.setVisible(true);
-		
-		// Write log to the GUI
-		logList(log);
 	}
 	
 	private List<Exercise> retrieveExercises() {
 		assert 10 == this.EXERCISE_COUNT;
-		
-		FourWordsExercises wordExercises = model.getWordExercises(loggedInUser.getUserLevel().toString(), false, 4);
-		System.out.println("Word exercises: " + wordExercises);
-		SentenceExercises sentenceExercises = model.getSentenceExercises(loggedInUser.getUserLevel().toString(), false, 4);
-		System.out.println("Sentence exercises: " + sentenceExercises);
-		ImageExercises imageExercises = model.getImageExercises(loggedInUser.getUserLevel().toString(), false, 1);
-		System.out.println("Image exercises: " + imageExercises);
-		
+		// Retrieving the exercises
+		FourWordsExercises wordExercises = model.getWordExercises(
+				loggedInUser.getUserLevel().toString(), false, 4);
+		SentenceExercises sentenceExercises = model.getSentenceExercises(
+				loggedInUser.getUserLevel().toString(), false, 4);
+		ImageExercises imageExercises = model.getImageExercises(
+				loggedInUser.getUserLevel().toString(), false, 2);
+		// Merging the exercises into a single list
 		List<Exercise> exercises = new ArrayList<>(wordExercises.getExercises());
 		exercises.addAll(sentenceExercises.getExercises());
 		exercises.addAll(imageExercises.getExercises());
 		if (exercises.size() < EXERCISE_COUNT) {
 			alert("Not enough exercises: " + exercises.size());
 		}
-		System.out.println(exercises);
 		Collections.shuffle(exercises);		
 		return exercises;
 	}
@@ -423,7 +407,6 @@ public class Controller {
 		imageView.setImage(null);
 		// New exercise
 		displayAnswers();
-
 	}
 
 	private void checkAnswer(String givenAnswer, String correctAnswer) {
@@ -439,16 +422,17 @@ public class Controller {
 	}
 	
 	private void finishExercises() {
+		// Setting the right view
 		fourWordsBox.setVisible(false);
 		translationBox.setVisible(false);
 		imageRecognitionBox.setVisible(false);
 		summaryBox.setVisible(true);
-			
+		// Setting the labels
 		correctAnswersLabel.setText("Correct answers: " + correctAnswerCount);
 		int gainedExperience = correctAnswerCount * EXPERIENCE_RATIO;
 		loggedInUser.setScore(loggedInUser.getScore() + gainedExperience);
 		experienceGainedLabel.setText("Experience gained: " + gainedExperience);
-		
+		// Resetting the answer counters
 		answerCount = 0;
 		correctAnswerCount = 0;		
 	}
@@ -616,6 +600,7 @@ public class Controller {
 			// Sending it to the server
 			model.addExercise(loggedInUser.getUsername(), createdExercise);
 		}
+		logMsg("Exercise " + englishPhrase + " - " + hungarianPhrase + " added.");
 	}
 	
 	@FXML
@@ -631,6 +616,7 @@ public class Controller {
 		Exercise createdExercise = new Exercise(deleteEnglishPhraseField.getText(), deleteHungarianPhraseField.getText(), KnowledgeLevel.BEGINNER);
 		// Sending it to the server
 		model.deleteExercise(loggedInUser.getUsername(), createdExercise);
+		logMsg("Exercise " + deleteEnglishPhraseField.getText() + " - " + deleteHungarianPhraseField.getText() + " deleted.");
 	}
 	
 	@FXML
@@ -683,9 +669,9 @@ public class Controller {
 	
 	@FXML
 	private void fileChooserEventHandler() {
-//		if (!isLoggedIn()) {
-//			return;
-//		}
+		if (!isLoggedIn()) {
+			return;
+		}
 		final FileChooser fileChooser = new FileChooser();
 		File file = fileChooser.showOpenDialog(stage);
 		System.out.println(file.getName());
@@ -698,18 +684,16 @@ public class Controller {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ImageIO.write(image, "png", bos);
 			openedImage = bos.toByteArray();
-//			ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
-//			BufferedImage deserializedImage = ImageIO.read(bis);
-			
-//			openedImage = SwingFXUtils.toFXImage(deserializedImage, null);
-//			imageTester.setImage(openedImage);
-//			System.out.println(deserializedImage);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logMsg("Error during image reading.");
 		}
-//		System.out.println(image);
 	}
 	
+	/**
+	 * Transforms a given byte array to JavaFX Image.
+	 * @param byteArray
+	 * @return
+	 */
 	private Image byteArrayToImage(byte[] byteArray) {
 		try {
 			ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
@@ -742,11 +726,17 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Pops up an alert window with the given message.
+	 */
 	protected void alert(String message) {
 		alertWindow.setContentText(message);
 		alertWindow.show();
 	}
 	
+	/**
+	 * Creates a hash from a String password.
+	 */
 	protected String hashPassword(String passwordToHash, String salt) {
 		String hash = null;
 	    try {

@@ -23,9 +23,7 @@ public class ImageExercises {
 	@XmlElement
 	private List<ExerciseWithImage> exercises;
 
-	public ImageExercises() {}
-
-	
+	public ImageExercises() {}	
 
 	/**
 	 * Constructor with parameter.

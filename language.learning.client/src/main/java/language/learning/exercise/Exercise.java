@@ -55,13 +55,12 @@ public class Exercise {
 				+ ", knowledgeLevel=" + knowledgeLevel + "]";
 	}
 
-
 	/**
 	 * Setter for exercise type.
 	 */
 	public void setExerciseType(ExerciseType exerciseType) {
-		System.out.println("ISNULL? " + exerciseType);
-//		log.info("Exercise type setter: " + exerciseType.toString());
+		log.info("Exercise type setter: " + exerciseType.toString());
+		
 		this.exerciseType = exerciseType;
 	}
 	

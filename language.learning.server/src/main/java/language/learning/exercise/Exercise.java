@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -13,7 +13,7 @@ import language.learning.logger.LoggerWrapper;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType
+@XmlSeeAlso({ExerciseWithImage.class, FourWordsExercise.class})
 public class Exercise {
 
 	protected static final Logger log = (new LoggerWrapper(Exercise.class.getName(), Level.INFO)).getLog();
@@ -60,7 +60,8 @@ public class Exercise {
 	 * Setter for exercise type.
 	 */
 	public void setExerciseType(ExerciseType exerciseType) {
-		log.info("Exercise type setter: " + exerciseType.toString());
+		System.out.println("ISNULL? " + exerciseType);
+//		log.info("Exercise type setter: " + exerciseType.toString());
 		this.exerciseType = exerciseType;
 	}
 	

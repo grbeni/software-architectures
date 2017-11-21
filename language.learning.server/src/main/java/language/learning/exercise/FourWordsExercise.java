@@ -8,9 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType
+@XmlType(name="fourWords")
 public class FourWordsExercise extends Exercise {
 
 	// List containing the wrong choices for the particular exercise

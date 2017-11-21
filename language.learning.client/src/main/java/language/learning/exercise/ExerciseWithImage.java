@@ -8,9 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import javafx.scene.image.Image;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType
+@XmlType(name="image")
 public class ExerciseWithImage extends Exercise {
 	
 	// Image depicting a word

@@ -468,6 +468,7 @@ public class Database implements IDatabase {
 		String queryString = "SELECT ID FROM APPLICATIONUSER WHERE USERNAME = ?";
 
 		PreparedStatement preparedQuery = connection.prepareStatement(queryString);
+		preparedQuery.setString(1, username);
 		ResultSet rs = preparedQuery.executeQuery();
 
 		if (rs != null) {

@@ -18,7 +18,7 @@ public class ExerciseManager implements IExerciseManager {
 	private IDatabase db = Database.getInstance();
 
 	@Override
-	public boolean addExercise(String username, Exercise exercise) {
+	public void addExercise(String username, Exercise exercise) {
 		log.info("Exercise to be added: " + exercise.getEnglish() + " - " + exercise.getHungarian() + ", "
 				+ exercise.getKnowledgeLevel() + ", " + exercise.getExerciseType());
 
@@ -45,13 +45,10 @@ public class ExerciseManager implements IExerciseManager {
 				log.error(e.getMessage());
 			}
 		}
-
-		// result > 0 means the insertion was successful
-		return (result > 0);
 	}
 	
 	@Override
-	public boolean addExercise(String username, ExerciseWithImage exercise) {
+	public void addExercise(String username, ExerciseWithImage exercise) {
 		log.info("Add exercise with image: " + exercise.getEnglish());
 		
 		int addCount = 0;
@@ -71,8 +68,6 @@ public class ExerciseManager implements IExerciseManager {
 				log.error(e.getMessage());
 			}
 		}
-				
-		return addCount > 0;
 	}
 
 	@Override

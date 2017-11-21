@@ -604,7 +604,7 @@ public class Controller {
 			ExerciseWithImage createdExercise = new ExerciseWithImage(englishPhrase, hungarianPhrase, openedImage, knowledgeLevelSelector.getSelectionModel().getSelectedItem());
 			createdExercise.setExerciseType(ExerciseType.IMAGE);
 			// Sending it to the server
-			result = model.addExercise(loggedInUser.getUsername(), createdExercise);
+			model.addExercise(loggedInUser.getUsername(), createdExercise);
 			openedImage = null;
 		}
 		else {
@@ -614,7 +614,7 @@ public class Controller {
 			Exercise createdExercise = new Exercise(englishPhrase, hungarianPhrase, knowledgeLevelSelector.getSelectionModel().getSelectedItem());
 			createdExercise.setExerciseType(exerciseType);
 			// Sending it to the server
-			result = model.addExercise(loggedInUser.getUsername(), createdExercise);
+			model.addExercise(loggedInUser.getUsername(), createdExercise);
 		}
 		
 		if (result) {

@@ -75,21 +75,21 @@ public class DataAccess implements IExerciseManager, ILearning, IUserManager {
 	}
 
 	@Override
-	public boolean addExercise(String username, Exercise exercise) {
+	public void addExercise(String username, Exercise exercise) {
 		IExerciseManager exerciseManager = createClient(IExerciseManager.class);
-		return exerciseManager.addExercise(username, exercise);
+		exerciseManager.addExercise(username, exercise);
 	}
 	
 	@Override
-	public boolean addExercise(String username, ExerciseWithImage exercise) {
+	public void addExercise(String username, ExerciseWithImage exercise) {
 		IExerciseManager exerciseManager = createClient(IExerciseManager.class);
-		return exerciseManager.addExercise(username, exercise);
+		exerciseManager.addExercise(username, exercise);
 	}
 
 	@Override
-	public boolean deleteExercise(String username,Exercise exercise) {
+	public void deleteExercise(String username,Exercise exercise) {
 		IExerciseManager exerciseManager = createClient(IExerciseManager.class);
-		return exerciseManager.deleteExercise(username, exercise);
+		exerciseManager.deleteExercise(username, exercise);
 	}
 
 	private <T> T createClient(Class<T> clazz) {

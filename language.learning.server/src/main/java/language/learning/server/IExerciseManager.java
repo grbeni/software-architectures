@@ -16,12 +16,12 @@ public interface IExerciseManager {
 	@POST
 	@Path("add")
 	@Consumes(MediaType.APPLICATION_JSON)
-	boolean addExercise(@QueryParam("username") String username, Exercise exercise);
+	void addExercise(@QueryParam("username") String username, Exercise exercise);
 	
 	@POST
 	@Path("image")
 	@Consumes(MediaType.APPLICATION_JSON)
-	boolean addExercise(@QueryParam("username") String username, ExerciseWithImage exercise);
+	void addExercise(@QueryParam("username") String username, ExerciseWithImage exercise);
 	
 	@DELETE
 	@Path("delete")

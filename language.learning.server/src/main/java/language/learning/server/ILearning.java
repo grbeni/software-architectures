@@ -8,6 +8,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import language.learning.exercise.FourWordsExercise;
+import language.learning.exercise.FourWordsExercises;
+import language.learning.exercise.ImageExercises;
 import language.learning.exercise.SentenceExercises;
 import language.learning.user.User;
 
@@ -34,13 +37,25 @@ public interface ILearning {
 	 * @return
 	 */
 	@GET
-	@Path("level")
+	@Path("sentence")
 	@Produces(MediaType.APPLICATION_JSON)
-	SentenceExercises getExercisesWithUserLevel(@QueryParam("type") String type, 
-										@QueryParam("level") String userLevel, 
+	SentenceExercises getSentenceExercices(@QueryParam("level") String userLevel, 
 										@QueryParam("equals") boolean equals, 
 										@QueryParam("count") int count);
 	
+	@GET
+	@Path("word")
+	@Produces(MediaType.APPLICATION_JSON)
+	FourWordsExercises getWordExercices(@QueryParam("level") String userLevel, 
+										@QueryParam("equals") boolean equals, 
+										@QueryParam("count") int count);
+	
+	@GET
+	@Path("image")
+	@Produces(MediaType.APPLICATION_JSON)
+	ImageExercises getImageExercices(@QueryParam("level") String userLevel, 
+										@QueryParam("equals") boolean equals, 
+										@QueryParam("count") int count);
 	
 	/**
 	 * Updates the score of the given user to the given score.

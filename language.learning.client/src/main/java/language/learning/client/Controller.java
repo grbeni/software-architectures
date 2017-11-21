@@ -408,7 +408,7 @@ public class Controller {
 	}
 
 	private void checkAnswer(String givenAnswer, String correctAnswer) {
-		if (givenAnswer.equals(correctAnswer)) {
+		if (givenAnswer.toLowerCase().equals(correctAnswer.toLowerCase())) {
 			++correctAnswerCount;
 			correctAnswerLabel.setText("Correct answer!");
 			correctAnswerView.setImage(tickImage);

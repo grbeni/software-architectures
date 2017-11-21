@@ -20,8 +20,84 @@ public class DataAccess implements IExerciseManager, ILearning, IUserManager {
 	private IExerciseManager exerciseManager;
 	private ILearning learning;
 	private IUserManager userManager;
-	
+
 	public DataAccess() {
+
+	}
+
+	@Override
+	public User logIn(String username) {
+		userManager = createClient(IUserManager.class);
+		return userManager.logIn(username);
+	}
+
+	@Override
+	public boolean addUser(User user) {
+		userManager = createClient(IUserManager.class);
+		return userManager.addUser(user);
+	}
+
+	@Override
+	public boolean deleteUser(String username) {
+		userManager = createClient(IUserManager.class);
+		return userManager.deleteUser(username);
+	}
+
+	@Override
+	public SentenceExercises getExercises(String type, int count) {
+		learning = createClient(ILearning.class);
+		return learning.getExercises(type, count);
+	}
+
+	@Override
+	public SentenceExercises getSentenceExercises(String userLevel, boolean equals, int count) {
+		learning = createClient(ILearning.class);
+		return learning.getSentenceExercises(userLevel, equals, count);
+	}
+
+	@Override
+	public FourWordsExercises getWordExercises(String userLevel, boolean equals, int count) {
+		learning = createClient(ILearning.class);
+		return learning.getWordExercises(userLevel, equals, count);
+	}
+
+	@Override
+	public ImageExercises getImageExercises(String userLevel, boolean equals, int count) {
+		learning = createClient(ILearning.class);
+		return learning.getImageExercises(userLevel, equals, count);
+	}
+
+	@Override
+	public void updateUserScore(int score, User user) {
+		learning = createClient(ILearning.class);
+		learning.updateUserScore(score, user);
+	}
+
+	@Override
+	public void updateUserLevel(String userLevel, User user) {
+		learning = createClient(ILearning.class);
+		learning.updateUserLevel(userLevel, user);
+	}
+
+	@Override
+	public boolean addExercise(Exercise exercise, User user) {
+		exerciseManager = createClient(IExerciseManager.class);
+		return exerciseManager.addExercise(exercise, user);
+	}
+
+	@Override
+	public boolean deleteExercise(Exercise exercise, User user) {
+		exerciseManager = createClient(IExerciseManager.class);
+		return exerciseManager.deleteExercise(exercise, user);
+	}
+
+	@Override
+	public boolean updateExerciseWithImage() {
+		exerciseManager = createClient(IExerciseManager.class);
+		return exerciseManager.updateExerciseWithImage();
+	}
+
+	private <T> T createClient(Class<T> clazz) {
 		// Creating a new RESTeasy client through the JAX-RS API:
 		Client client = ClientBuilder.newClient();
 		// The base URL of the service:
@@ -29,69 +105,7 @@ public class DataAccess implements IExerciseManager, ILearning, IUserManager {
 		// Cast it to ResteasyWebTarget:
 		ResteasyWebTarget rtarget = (ResteasyWebTarget) target;
 		// Get a typed interface:
-		exerciseManager = rtarget.proxy(IExerciseManager.class);
-		learning = rtarget.proxy(ILearning.class);
-		userManager = rtarget.proxy(IUserManager.class);
-	}
-
-	@Override
-	public User logIn(String username) {
-		return userManager.logIn(username);
-	}
-
-	@Override
-	public boolean addUser(User user) {
-		return userManager.addUser(user);
-	}
-
-	@Override
-	public boolean deleteUser(String username) {
-		return userManager.deleteUser(username);
-	}
-
-	@Override
-	public SentenceExercises getExercises(String type, int count) {
-		return learning.getExercises(type, count);
-	}
-	
-	@Override
-	public SentenceExercises getSentenceExercises(String userLevel, boolean equals, int count) {
-		return learning.getSentenceExercises(userLevel, equals, count);
-	}
-
-	@Override
-	public FourWordsExercises getWordExercises(String userLevel, boolean equals, int count) {
-		return learning.getWordExercises(userLevel, equals, count);
-	}
-
-	@Override
-	public ImageExercises getImageExercises(String userLevel, boolean equals, int count) {
-		return learning.getImageExercises(userLevel, equals, count);
-	}
-
-	@Override
-	public void updateUserScore(int score, User user) {
-		learning.updateUserScore(score, user);
-	}
-
-	@Override
-	public void updateUserLevel(String userLevel, User user) {
-		learning.updateUserLevel(userLevel, user);
-	}
-
-	@Override
-	public boolean addExercise(Exercise exercise, User user) {
-		return exerciseManager.addExercise(exercise, user);
-	}
-
-	@Override
-	public boolean deleteExercise(Exercise exercise, User user) {
-		return exerciseManager.deleteExercise(exercise, user);
-	}
-
-	@Override
-	public boolean updateExerciseWithImage() {
-		return exerciseManager.updateExerciseWithImage();
+		return rtarget.proxy(clazz);
 	}
 
 }

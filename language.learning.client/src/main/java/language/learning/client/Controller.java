@@ -396,7 +396,7 @@ public class Controller {
 		}
 		exerciseCountLabel.setText("Finished exercises: " + answerCount + "/" + EXERCISE_COUNT);		
 		
-		if (answerCount >= 10) {
+		if (exercises.isEmpty()) {
 			finishExercises();
 			return;
 		}

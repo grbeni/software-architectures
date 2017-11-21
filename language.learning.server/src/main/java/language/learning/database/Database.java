@@ -1,6 +1,6 @@
 package language.learning.database;
 
-import java.awt.image.RenderedImage;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,6 +17,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 
+import javafx.embed.swing.SwingFXUtils;
+//import javafx.scene.image.Image;
 import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseType;
 import language.learning.exercise.ExerciseWithImage;
@@ -355,7 +357,7 @@ public class Database implements IDatabase {
 		
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
-			ImageIO.write((RenderedImage) exercise.getImage(),"png", os);
+			ImageIO.write(SwingFXUtils.fromFXImage(exercise.getImage(), null),"png", os);
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		} 
@@ -422,10 +424,58 @@ public class Database implements IDatabase {
 
 	@Override
 	public List<ExerciseWithImage> getExerciseWithImage(KnowledgeLevel level, boolean onlyAtLevel) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("Get exercises with image " + level);
+		
+		List<ExerciseWithImage> exerciseList = new ArrayList<>();
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT * FROM IMAGEEXERCISE WHERE KNOWLEDGELEVELID ");
+		
+		if (onlyAtLevel) {
+			sb.append("= ");
+		}
+		else {
+			sb.append("<= ");
+		}
+		
+		sb.append("?");
+		
+		String queryString = sb.toString();
+		log.info("Query string: " + queryString);
+		
+		PreparedStatement preparedQuery = connection.prepareStatement(queryString);
+		preparedQuery.setInt(1, level.ordinal() + 1);
+		
+		ResultSet resultSet = preparedQuery.executeQuery();
+		
+		if (resultSet != null) {
+			while(resultSet.next()) {
+				ExerciseWithImage ex = new ExerciseWithImage();
+				ex.setEnglish(resultSet.getString("ENGLISH"));
+				ex.setHungarian(resultSet.getString("HUNGARIAN"));
+				ex.setExerciseType(ExerciseType.IMAGE);
+				ex.setKnowledgeLevel(level);
+				//Image image = transformToImage(resultSet.getBinaryStream("IMAGE"));
+				//ex.setImage(image);
+				
+				exerciseList.add(ex);
+			}
+		}
+		
+		return exerciseList;
 	}
 
-
+//	private Image transformToImage(InputStream stream) {
+//		
+//		BufferedImage img = null;
+//		
+//		try {
+//			img = ImageIO.read(stream);
+//		} catch (IOException e) {
+//			log.error(e.getMessage());
+//		}
+//				
+//		return SwingFXUtils.toFXImage(img, null);
+//	}
 
 }

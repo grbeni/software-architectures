@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import language.learning.database.Database;
 import language.learning.database.IDatabase;
 import language.learning.exercise.Exercise;
+import language.learning.exercise.ExerciseWithImage;
 import language.learning.exercise.KnowledgeLevel;
 import language.learning.logger.LoggerWrapper;
 import language.learning.user.User;
@@ -48,6 +49,31 @@ public class ExerciseManager implements IExerciseManager {
 
 		// result > 0 means the insertion was successful
 		return (result > 0);
+	}
+	
+	@Override
+	public boolean addExercise(ExerciseWithImage exercise, User user) {
+		log.info("Add exercise with image: " + exercise.getEnglish());
+		
+		int addCount = 0;
+		
+		try {
+			if (db.connect()) {
+				
+				addCount = db.addImageExercise(exercise, user);
+				
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			log.error(e.getMessage());
+		} finally {
+			try {
+				db.disconnect();
+			} catch (SQLException e) {
+				log.error(e.getMessage());
+			}
+		}
+				
+		return addCount > 0;
 	}
 
 	@Override

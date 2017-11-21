@@ -656,7 +656,7 @@ public class Controller {
 			return;
 		}
 		// Creating the exercise object
-		Exercise createdExercise = new Exercise(deleteEnglishPhraseField.getText(), deleteHungarianPhraseField.getText(), null);
+		Exercise createdExercise = new Exercise(deleteEnglishPhraseField.getText(), deleteHungarianPhraseField.getText(), KnowledgeLevel.BEGINNER);
 		// Sending it to the server
 		boolean result = model.deleteExercise(createdExercise, loggedInUser);
 		if (result) {

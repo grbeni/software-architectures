@@ -341,12 +341,12 @@ public class Controller {
 		System.out.println("Word exercises: " + wordExercises);
 		FourWordsExercises sentenceExercises = model.getWordExercises(loggedInUser.getUserLevel().toString(), false, 4);
 		System.out.println("Sentence exercises: " + sentenceExercises);
-		ImageExercises imageExercises = model.getImageExercises(loggedInUser.getUserLevel().toString(), false, 2);
-		System.out.println("Image exercises: " + imageExercises);
+//		ImageExercises imageExercises = model.getImageExercises(loggedInUser.getUserLevel().toString(), false, 2);
+//		System.out.println("Image exercises: " + imageExercises);
 		
 		List<Exercise> exercises = new ArrayList<>(wordExercises.getExercises());
 		exercises.addAll(sentenceExercises.getExercises());
-		exercises.addAll(imageExercises.getExercises());
+//		exercises.addAll(imageExercises.getExercises());
 		if (exercises.size() < EXERCISE_COUNT) {
 			alert("Not enough exercises: " + exercises.size());
 		}

@@ -7,7 +7,9 @@ import javax.ws.rs.client.WebTarget;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import language.learning.exercise.Exercise;
-import language.learning.exercise.Exercises;
+import language.learning.exercise.FourWordsExercises;
+import language.learning.exercise.ImageExercises;
+import language.learning.exercise.SentenceExercises;
 import language.learning.server.IExerciseManager;
 import language.learning.server.ILearning;
 import language.learning.server.IUserManager;
@@ -48,13 +50,23 @@ public class DataAccess implements IExerciseManager, ILearning, IUserManager {
 	}
 
 	@Override
-	public Exercises getExercises(String type, int count) {
+	public SentenceExercises getExercises(String type, int count) {
 		return learning.getExercises(type, count);
+	}
+	
+	@Override
+	public SentenceExercises getSentenceExercises(String userLevel, boolean equals, int count) {
+		return learning.getSentenceExercises(userLevel, equals, count);
 	}
 
 	@Override
-	public Exercises getExercisesWithUserLevel(String type, String userLevel, boolean equals, int count) {
-		return learning.getExercisesWithUserLevel(type, userLevel, equals, count);
+	public FourWordsExercises getWordExercises(String userLevel, boolean equals, int count) {
+		return learning.getWordExercises(userLevel, equals, count);
+	}
+
+	@Override
+	public ImageExercises getImageExercises(String userLevel, boolean equals, int count) {
+		return learning.getImageExercises(userLevel, equals, count);
 	}
 
 	@Override

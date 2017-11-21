@@ -32,9 +32,11 @@ import javafx.stage.WindowEvent;
 import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseType;
 import language.learning.exercise.ExerciseWithImage;
-import language.learning.exercise.Exercises;
 import language.learning.exercise.FourWordsExercise;
+import language.learning.exercise.FourWordsExercises;
+import language.learning.exercise.ImageExercises;
 import language.learning.exercise.KnowledgeLevel;
+import language.learning.exercise.SentenceExercises;
 import language.learning.user.User;
 
 /**
@@ -319,8 +321,8 @@ public class View {
 			return;
 		}		
 		// Get coaching tasks
-		Exercises retrievedExercises = retrieveExercises();
-		exercises = new ArrayList<Exercise>(retrievedExercises.getExercises());
+		List<Exercise> retrievedExercises = retrieveExercises();
+		exercises = new ArrayList<Exercise>(retrievedExercises);
 		coachingExercises = new ArrayList<Exercise>(exercises);
 		
 		// Change the window
@@ -332,17 +334,14 @@ public class View {
 		logList(log);
 	}
 	
-	private Exercises retrieveExercises() {
+	private List<Exercise> retrieveExercises() {
 		assert 10 == this.EXERCISE_COUNT;
 		
-		Exercises wordExercises = model.getExercisesWithUserLevel(ExerciseType.WORD.toString(),
-				loggedInUser.getUserLevel().toString(), false, 4);
+		FourWordsExercises wordExercises = model.getWordExercises(loggedInUser.getUserLevel().toString(), false, 4);
 		System.out.println("Word exercises: " + wordExercises);
-		Exercises sentenceExercises = model.getExercisesWithUserLevel(ExerciseType.SENTENCE.toString(),
-				loggedInUser.getUserLevel().toString(), false, 4);
+		FourWordsExercises sentenceExercises = model.getWordExercises(loggedInUser.getUserLevel().toString(), false, 4);
 		System.out.println("Sentence exercises: " + sentenceExercises);
-		Exercises imageExercises = model.getExercisesWithUserLevel(ExerciseType.IMAGE.toString(),
-				loggedInUser.getUserLevel().toString(), false, 2);
+		ImageExercises imageExercises = model.getImageExercises(loggedInUser.getUserLevel().toString(), false, 2);
 		System.out.println("Image exercises: " + imageExercises);
 		
 		List<Exercise> exercises = new ArrayList<>(wordExercises.getExercises());
@@ -353,7 +352,7 @@ public class View {
 		}
 		System.out.println(exercises);
 		Collections.shuffle(exercises);		
-		return new Exercises(exercises);
+		return exercises;
 	}
 	
 	/**

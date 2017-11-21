@@ -1,6 +1,5 @@
 package language.learning.database;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -144,6 +143,8 @@ public class Database implements IDatabase {
 				user.setUsername(resultSet.getString("USERNAME"));
 				user.setPasswordHash(resultSet.getString("USERPASSWORD"));
 				user.setScore(resultSet.getInt("USERSCORE"));
+				int isadmin = resultSet.getInt("ISADMIN");
+				user.setAdmin(isadmin == 1);
 				user.setUserLevel(KnowledgeLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);
 			}
 
@@ -379,6 +380,13 @@ public class Database implements IDatabase {
 	public boolean deleteExercise(Exercise exercise) throws SQLException {
 		log.info("Delete " + exercise.getEnglish() + " - " + exercise.getHungarian());
 
+		if (hasAuthority()) {
+			
+		}
+		else {
+			return false;
+		}
+		
 		String deleteWord = "DELETE SENTENCEEXERCISE WHERE ENGLISH = ? AND HUNGARIAN = ?";
 		String deleteSentence = "DELETE WORDEXERCISE WHERE ENGLISH = ? AND HUNGARIAN = ?";
 		int deleted = 0;
@@ -395,6 +403,18 @@ public class Database implements IDatabase {
 
 		// Deleted a row if deleted is greater than zero.
 		return deleted > 0;
+	}
+	
+	private boolean hasAuthority() {
+		boolean authority = false;
+		
+		String queryWord = "SELECT * FROM WORDEXERCISE WHERE USERNAME = ?";
+		String querySentence = "SELECT * FROM SENTENCEEXERCISE WHERE USERNAME = ?";
+		String queryImage = "SELECT * FROM IMAGEEXERCISE WHERE USERNAME = ?";
+		
+		// TODO
+		
+		return authority;
 	}
 
 	/**

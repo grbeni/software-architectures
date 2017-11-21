@@ -1,5 +1,8 @@
 package language.learning.client;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,6 +11,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.imageio.ImageIO;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -28,6 +33,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 import language.learning.exercise.Exercise;
 import language.learning.exercise.ExerciseType;
@@ -44,6 +50,8 @@ import language.learning.user.User;
  * @author Bence Graics
  */
 public class Controller {
+	
+	private Stage stage;
 	
 	private static final String SALT = "software-architecture";
 	// Layouts
@@ -127,6 +135,8 @@ public class Controller {
 	private Button addUserButton;
 	@FXML
 	private Button deleteUserButton;
+	@FXML
+	private Button fileChooser;
 
 	// Labels
 	@FXML
@@ -227,6 +237,7 @@ public class Controller {
 	 */
 	public void initData(Stage stage) {
 		// Set 'onClose' event handler of the container
+		this.stage = stage;
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent winEvent) {
 				System.out.println("Exiting...");				
@@ -593,6 +604,26 @@ public class Controller {
 		else {
 			logMsg("Error during creation.");
 		}
+	}
+	
+	@FXML
+	private void fileChooserEventHandler() {
+//		if (!isLoggedIn()) {
+//			return;
+//		}
+		final FileChooser fileChooser = new FileChooser();
+		File file = fileChooser.showOpenDialog(stage);
+		System.out.println(file.getName());
+		if (!file.getName().endsWith(".png")) {
+			alert("Only png images are accepted.");
+		}
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println(image);
 	}
 	
 	@FXML

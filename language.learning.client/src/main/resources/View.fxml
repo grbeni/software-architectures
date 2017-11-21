@@ -75,9 +75,10 @@
 				<!-- A single stack pane with multiple panes: only one is visible in accordance with the current task -->
 					<StackPane>					
 						<!-- Start learning button -->
-						<Button fx:id="startLearningButton" text="Start Learning" prefWidth="180" prefHeight="40"
-							visible="true" style="-fx-font-size: 1.5em; " onAction="#startLearningEventHandler" />					
-						
+						<VBox alignment="CENTER">
+							<Button fx:id="startLearningButton" text="Start Learning" prefWidth="180" prefHeight="40"
+								visible="true" style="-fx-font-size: 1.5em; " onAction="#startLearningEventHandler" />					
+						</VBox>
 						<!-- Coaching state -->
 						<VBox fx:id="coachingBox" visible="false">		
 							<Label text="Memorize the following word pairs!" style="-fx-font-size: 1.3em; " >
@@ -223,7 +224,10 @@
 							<Button fx:id="addExerciseButton" text="Add Exercise" prefWidth="120" 
 								onAction="#addExerciseEventHandler" />	
 						</HBox>
-						<ComboBox fx:id="knowledgeLevelSelector"/>
+						<HBox spacing="10">	
+							<ComboBox fx:id="knowledgeLevelSelector"/>
+							<Button fx:id="fileChooser" text="Choose Image" prefWidth="120"	onAction="#fileChooserEventHandler" />	
+						</HBox>
 					</VBox>
 					<VBox spacing="10">
 						<Label text="Delete exercise:" style="-fx-font-size: 1.1em; " />	

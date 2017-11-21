@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 // Application class
 // This class includes the entry point of the application
-public class AppMain extends Application {
+public class Main extends Application {
 	/**
 	 * Displays GUI window.
 	 *

@@ -59,7 +59,7 @@ public class UserManager implements IUserManager {
 
 				if (user == null) {
 					user = new User();
-					user.setUserName(newUser.getUsername());
+					user.setUsername(newUser.getUsername());
 					user.setPasswordHash(newUser.getPasswordHash());
 					user.setScore(0);
 					user.setUserLevel(KnowledgeLevel.BEGINNER);

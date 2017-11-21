@@ -139,7 +139,7 @@ public class Database implements IDatabase {
 
 			if (resultSet.next()) {
 				user = new User();
-				user.setUserName(resultSet.getString("USERNAME"));
+				user.setUsername(resultSet.getString("USERNAME"));
 				user.setPasswordHash(resultSet.getString("USERPASSWORD"));
 				user.setScore(resultSet.getInt("USERSCORE"));
 				user.setUserLevel(KnowledgeLevel.values()[resultSet.getInt("KNOWLEDGELEVELID") - 1]);

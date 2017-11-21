@@ -61,7 +61,7 @@ public class Learning implements ILearning {
 	}
 	
 	@Override
-	public SentenceExercises getSentenceExercices(String userLevel, boolean equals, int count) {
+	public SentenceExercises getSentenceExercises(String userLevel, boolean equals, int count) {
 		log.info("Get sentence exercises: " + userLevel + ", " + equals);
 
 		List<Exercise> exerciseList = new ArrayList<>();
@@ -92,7 +92,7 @@ public class Learning implements ILearning {
 	}
 
 	@Override
-	public FourWordsExercises getWordExercices(String userLevel, boolean equals, int count) {
+	public FourWordsExercises getWordExercises(String userLevel, boolean equals, int count) {
 		log.info("Get word exercises: " + userLevel + ", " + equals);
 
 		List<Exercise> exerciseList = new ArrayList<>();
@@ -124,7 +124,7 @@ public class Learning implements ILearning {
 
 	// TODO
 	@Override
-	public ImageExercises getImageExercices(String userLevel, boolean equals, int count) {
+	public ImageExercises getImageExercises(String userLevel, boolean equals, int count) {
 		log.info("Get image exercises: " + userLevel + ", " + equals);
 
 		List<ExerciseWithImage> exerciseList = new ArrayList<>();
@@ -316,6 +316,8 @@ public class Learning implements ILearning {
 			}
 		}
 	}
+
+
 
 
 

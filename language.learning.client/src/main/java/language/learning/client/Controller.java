@@ -339,7 +339,7 @@ public class Controller {
 		
 		FourWordsExercises wordExercises = model.getWordExercises(loggedInUser.getUserLevel().toString(), false, 4);
 		System.out.println("Word exercises: " + wordExercises);
-		FourWordsExercises sentenceExercises = model.getWordExercises(loggedInUser.getUserLevel().toString(), false, 4);
+		SentenceExercises sentenceExercises = model.getSentenceExercises(loggedInUser.getUserLevel().toString(), false, 4);
 		System.out.println("Sentence exercises: " + sentenceExercises);
 //		ImageExercises imageExercises = model.getImageExercises(loggedInUser.getUserLevel().toString(), false, 2);
 //		System.out.println("Image exercises: " + imageExercises);

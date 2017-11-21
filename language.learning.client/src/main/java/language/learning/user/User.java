@@ -20,7 +20,7 @@ public class User {
 
 	// The user name of the user.
 	@XmlElement
-	private String userName;
+	private String username;
 	// The hash value of the user's password.
 	@XmlElement
 	private String passwordHash;
@@ -37,7 +37,7 @@ public class User {
 	public User() {}
 	
 	public User(String userName, String passwordHash, KnowledgeLevel userLevel, int score, boolean admin) {
-		this.userName = userName;
+		this.username = userName;
 		this.passwordHash = passwordHash;
 		this.userLevel = userLevel;
 		this.score = score;
@@ -49,19 +49,19 @@ public class User {
 	 * @return user name
 	 */
 	public String getUsername() {
-		log.info("Get username: " + userName);
+		log.info("Get username: " + username);
 		
-		return userName;
+		return username;
 	}
 	
 	/**
 	 * Setter for user name.
 	 * @param userName
 	 */
-	public void setUserName(String userName) {
+	public void setUsername(String userName) {
 		log.info("Set username to: " + userName);
 		
-		this.userName = userName;
+		this.username = userName;
 	}
 	
 	/**

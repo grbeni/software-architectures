@@ -34,6 +34,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -62,6 +65,8 @@ public class Controller {
 	// Layouts
 	@FXML
 	private VBox rootLayout;
+	@FXML
+	private VBox startButtonBox;
 	@FXML
 	private HBox connectionLayout;
 	@FXML
@@ -224,6 +229,7 @@ public class Controller {
 	private final Image beginner;
 	private final Image intermediate;
 	private final Image expert;
+	private final Image learning;
 	
 	// The object responsible for connecting to the server
 	private ServiceAccess model;
@@ -235,6 +241,7 @@ public class Controller {
 		beginner = new Image("beginner.jpg");
 		intermediate = new Image("intermediate.jpg");
 		expert = new Image("expert.jpg");
+		learning = new Image("learning.jpg");
 	}
 
 	/**
@@ -242,12 +249,12 @@ public class Controller {
 	 */
 	@FXML
 	public void initialize() {
-		// Set display status
-//		connectionStateLabel.setTextFill(Color.web("#ee0000"));
 		// Fill the knowledge level selector
 		knowledgeLevelSelector.getItems().setAll(KnowledgeLevel.BEGINNER,
 				KnowledgeLevel.INTERMEDIATE, KnowledgeLevel.EXPERT);
 		knowledgeLevelSelector.getSelectionModel().selectFirst();
+		startButtonBox.setBackground(new Background(new BackgroundImage(
+				learning, BackgroundRepeat.SPACE, BackgroundRepeat.SPACE, null, null)));
 	}
 
 	/**
@@ -298,7 +305,7 @@ public class Controller {
 		levelUp();
 		usernameLabel.setText(loggedInUser.getUsername());
 		userInfoLabel.setText("Level: " + toFirstUpper(loggedInUser.getUserLevel().toString()) + 
-				"\tScore:" + loggedInUser.getScore());
+				"\tScore: " + loggedInUser.getScore());
 		// Changing the login view
 		connectionLayout.setVisible(false);
 		connectionInfoLayout.setVisible(true);

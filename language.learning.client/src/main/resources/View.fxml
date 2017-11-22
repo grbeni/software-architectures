@@ -57,7 +57,7 @@
 		<HBox fx:id="connectionInfoLayout" alignment="CENTER_LEFT" visible="false" spacing="10">
 			<!-- User info label -->
 			<Label fx:id="usernameLabel" prefWidth="150" prefHeight="17" 
-				style="-fx-font-weight: bold; -fx-font-size: 1.4em;" />
+				style="-fx-font-weight: bold; -fx-font-size: 1.42em;" />
 
 			<Label fx:id="userInfoLabel" prefWidth="300" prefHeight="17"
 			 style="-fx-font-size: 1.3em; " />	
@@ -76,9 +76,9 @@
 				<!-- A single stack pane with multiple panes: only one is visible in accordance with the current task -->
 					<StackPane>					
 						<!-- Start learning button -->
-						<VBox alignment="CENTER">
-							<Button fx:id="startLearningButton" text="Start Learning" prefWidth="180" prefHeight="40"
-								visible="true" style="-fx-font-size: 1.5em; " onAction="#startLearningEventHandler" />					
+						<VBox fx:id="startButtonBox" alignment="CENTER"  prefHeight="600" maxHeight="Infinity">
+							<Button fx:id="startLearningButton" text="Start Learning!" prefWidth="180" prefHeight="60"
+								visible="true" style="-fx-font-size: 1.6em; " onAction="#startLearningEventHandler"/>					
 						</VBox>
 						<!-- Coaching state -->
 						<VBox fx:id="coachingBox" visible="false">		
@@ -197,7 +197,7 @@
 						</VBox>
 					</StackPane>
 					<!-- Info about the exercises -->
-					<HBox fx:id="exercisesInfoBox" alignment="CENTER_LEFT" spacing="10">	
+					<HBox fx:id="exercisesInfoBox" alignment="BOTTOM_LEFT" spacing="10">	
 						<padding>
 							<Insets top="10.0" />
 						</padding>

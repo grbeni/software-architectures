@@ -63,6 +63,8 @@ public class Controller {
 	@FXML
 	private HBox connectionLayout;
 	@FXML
+	private HBox connectionInfoLayout;
+	@FXML
 	private VBox coachingBox;
 	@FXML
 	private VBox fourWordsBox;
@@ -217,10 +219,10 @@ public class Controller {
 	private final Image crossImage;
 	
 	// The object responsible for connecting to the server
-	private DataAccess model;
+	private ServiceAccess model;
 	
 	public Controller() {
-		model = new DataAccess();
+		model = new ServiceAccess();
 		tickImage = new Image("tick.png", 100, 100, false, false);
 		crossImage = new Image("cross.png", 100, 100, false, false);
 	}
@@ -285,6 +287,9 @@ public class Controller {
 		levelUp();
 		userInfoLabel.setText(loggedInUser.getUsername() + " Experience: " + loggedInUser.getScore()
 			+ " Level: " + loggedInUser.getUserLevel());
+		// Changing the login view
+		connectionLayout.setVisible(false);
+		connectionInfoLayout.setVisible(true);
 	}
 	
 	private void levelUp() {
@@ -313,6 +318,9 @@ public class Controller {
 		}
 		// Disconnecting the user
 		loggedInUser = null;
+		// Changing the login view
+		connectionLayout.setVisible(true);
+		connectionInfoLayout.setVisible(false);
 		
 		connectionStateLabel.setText("Disconnected");
 		connectionStateLabel.setTextFill(Color.web("#ee0000"));

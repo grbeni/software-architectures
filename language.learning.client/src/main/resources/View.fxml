@@ -41,7 +41,7 @@
 	</padding>
 
 	<!-- Connection panel -->
-	<VBox>
+	<StackPane alignment="CENTER" >
 		<HBox fx:id="connectionLayout" alignment="CENTER" spacing="10">	
 			<!-- Username field -->
 			<TextField fx:id="userNameField" maxWidth="200" maxHeight="27" minWidth="100"
@@ -55,7 +55,7 @@
 			<Label fx:id="connectionStateLabel" minWidth="200" minHeight="17" text="Connection: disconnected"
 				prefWidth="200" prefHeight="17" />
 		</HBox>
-		<HBox fx:id="connectionInfoLayout" alignment="CENTER_LEFT" spacing="10">	
+		<HBox fx:id="connectionInfoLayout" alignment="CENTER_LEFT" visible="false" spacing="10">	
 			<padding>
 				<Insets left="25.0" top="10.0" />
 			</padding>
@@ -64,7 +64,7 @@
 			<!-- Disconnect button -->
 			<Button fx:id="disconnectButton" text="Disconnect" prefWidth="95" onAction="#disconnectEventHandler" />	
 		</HBox>
-	</VBox>
+	</StackPane>
 
 	<!-- Tabbed panel -->
 	<TabPane>

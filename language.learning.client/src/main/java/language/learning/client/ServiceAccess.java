@@ -16,9 +16,9 @@ import language.learning.server.ILearning;
 import language.learning.server.IUserManager;
 import language.learning.user.User;
 
-public class DataAccess implements IExerciseManager, ILearning, IUserManager {
+public class ServiceAccess implements IExerciseManager, ILearning, IUserManager {
 
-	public DataAccess() {}
+	public ServiceAccess() {}
 
 	@Override
 	public User logIn(String username) {

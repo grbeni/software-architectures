@@ -270,6 +270,7 @@ public class Controller {
 		// Checking the password
 		if (!loggedInUser.getPasswordHash().equals(hashPassword(passwordField.getText(), SALT))) {
 			alert("Wrong password!");
+			loggedInUser = null;
 			return;
 		}
 		// Connection succeeded

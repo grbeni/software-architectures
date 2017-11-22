@@ -366,17 +366,16 @@ public class Controller {
 	 */
 	@FXML
 	private void disconnectEventHandler(ActionEvent event) {
-		if (!startLearningButton.isVisible()) {
+		if (!startButtonBox.isVisible()) {
 			alert("You cannot disconnect during a lesson!");
+			return;
 		}
 		// Disconnecting the user
 		loggedInUser = null;
 		// Changing the login view
 		connectionLayout.setVisible(true);
 		connectionInfoLayout.setVisible(false);
-		
-//		connectionStateLabel.setText("Disconnected");
-//		connectionStateLabel.setTextFill(Color.web("#ee0000"));
+
 		userInfoLabel.setText("");
 	}
 	
@@ -395,7 +394,7 @@ public class Controller {
 		coachingExercises = new ArrayList<Exercise>(exercises);
 		
 		// Change the window
-		startLearningButton.setVisible(false);
+		startButtonBox.setVisible(false);
 		nextCoachingEventHandler(event); // So the default values are not shown 
 		coachingBox.setVisible(true);
 	}
@@ -631,7 +630,7 @@ public class Controller {
 		// Resetting the view
 		summaryBox.setVisible(false);
 		exercisesInfoBox.setVisible(false);
-		startLearningButton.setVisible(true);
+		startButtonBox.setVisible(true);
 		// Refreshing the labels
 		printUserData();
 		// Sending the data to the server

@@ -103,4 +103,10 @@ public class ServiceAccess implements IExerciseManager, ILearning, IUserManager 
 		return rtarget.proxy(clazz);
 	}
 
+	@Override
+	public SentenceExercises listExercises() {
+		IExerciseManager exerciseManager = createClient(IExerciseManager.class);
+		return exerciseManager.listExercises();
+	}
+
 }

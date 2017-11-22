@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,7 +18,6 @@ import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 
-import javafx.scene.control.cell.MapValueFactory;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -30,10 +30,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -144,6 +145,8 @@ public class Controller {
 	private Button addExerciseButton;
 	@FXML
 	private Button deleteExerciseButton;
+	@FXML
+	private Button listExercisesButton;
 	@FXML
 	private Button addUserButton;
 	@FXML
@@ -685,6 +688,21 @@ public class Controller {
 		// Sending it to the server
 		model.deleteExercise(loggedInUser.getUsername(), createdExercise);
 		logMsg("Exercise " + deleteEnglishPhraseField.getText() + " - " + deleteHungarianPhraseField.getText() + " deleted.");
+	}
+	
+	@FXML
+	private void listExercisesEventHandler() {
+		if (!isLoggedIn()) {
+			return;
+		}
+		table.getColumns().clear();
+		SentenceExercises allExercises = model.listExercises();
+		for (Exercise exercise : allExercises.getExercises()) {
+			Map<String, String> row = new HashMap<String, String>();
+			row.put(columnTitles[0], exercise.getEnglish());
+			row.put(columnTitles[1], exercise.getHungarian());
+			table.getColumns().add(row);
+		}
 	}
 	
 	@FXML

@@ -252,12 +252,12 @@
 						<HBox>
 							<Label text="Exercises:" style="-fx-font-size: 1.1em; ">
 								<padding>
-									<Insets bottom="10" left="0" right="0" />
+									<Insets bottom="15" left="0" right="0" top="5" />
 								</padding>	
 							</Label>
 							<Pane HBox.hgrow="ALWAYS" />
-							<!-- Connect button -->			
-							<Button fx:id="listExercisesButton" text="List Exercises" prefWidth="100" onAction="#listExercisesEventHandler" />
+							<!-- List button -->			
+							<Button fx:id="listExercisesButton" text="List Exercises" prefWidth="120" onAction="#listExercisesEventHandler" />
 						</HBox>
 						<ScrollPane fitToWidth="true">		
 							<!-- Log text area -->
@@ -301,7 +301,7 @@
 					<!-- Log -->
 					<VBox>
 						<padding>
-							<Insets bottom="0" left="0" right="0" top="90.0" />
+							<Insets bottom="0" left="0" right="0" top="10.0" />
 						</padding>
 						<Label text="Log:" style="-fx-font-size: 1.1em; ">
 							<padding>

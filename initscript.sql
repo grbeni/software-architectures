@@ -1,5 +1,6 @@
 drop sequence WORDEXERCISE_SEQ;
 drop sequence SENTENCEEXERCISE_SEQ;
+drop sequence IMAGEEXERCISE_SEQ;
 drop sequence USER_SEQ;
 
 create sequence WORDEXERCISE_SEQ
@@ -8,11 +9,15 @@ start with 1 increment by 1;
 create sequence SENTENCEEXERCISE_SEQ
 start with 1 increment by 1;
 
+create sequence IMAGEEXERCISE_SEQ
+start with 1 increment by 1;
+
 create sequence USER_SEQ
 start with 1 increment by 1;
 
 drop table WordExercise;
 drop table SentenceExercise;
+drop table ImageExercise;
 drop table ApplicationUser;
 drop table KnowledgeLevel;
 
@@ -37,7 +42,7 @@ create table WordExercise
   ID int primary key,
   English nvarchar2(30) not null,
   Hungarian nvarchar2(30) not null,
-  UserID int references ApplicationUser(ID),
+  UserID int,
   KnowledgeLevelID int references KnowledgeLevel(ID) not null
 );
 
@@ -46,16 +51,26 @@ create table SentenceExercise
   ID int primary key,
   English nvarchar2(200) not null,
   Hungarian nvarchar2(200) not null,
-  UserID int references ApplicationUser(ID),
+  UserID int,
   KnowledgeLevelID int references KnowledgeLevel(ID) not null
+);
+
+create table ImageExercise
+(
+	ID int primary key,
+	English nvarchar2(30) not null,
+	Hungarian nvarchar2(30) not null,
+	UserID int,
+	KnowledgeLevelID int references KnowledgeLevel(ID) not null,
+	Image BLOB
 );
 
 insert into KnowledgeLevel(ID, LevelName) values (1, 'EASY');
 insert into KnowledgeLevel(ID, LevelName) values (2, 'MEDIUM');
 insert into KnowledgeLevel(ID, LevelName) values (3, 'HARD');
 
-insert into ApplicationUser(ID, UserName, UserPassword, UserScore, KnowledgeLevelID, IsAdmin) values (USER_SEQ.NEXTVAL,'dummyuser',12345, 0, 1, 0);
-insert into ApplicationUser(ID, UserName, UserPassword, UserScore, KnowledgeLevelID, IsAdmin) values (USER_SEQ.NEXTVAL,'adminuser',54321, 0, 2, 1);
+insert into ApplicationUser(ID, UserName, UserPassword, UserScore, KnowledgeLevelID, IsAdmin) values (USER_SEQ.NEXTVAL,'admin', '941c9f263a2f992dd54f82e1e0f355b87311abef40627097a65210c22133f7b8b82590553f546d149ff1ca8ce322d52918230df321c75bc8cb5fc7d0a4aeb091', 0, 1, 0);
+insert into ApplicationUser(ID, UserName, UserPassword, UserScore, KnowledgeLevelID, IsAdmin) values (USER_SEQ.NEXTVAL,'user', 'd1a5ad3c0f79224f991f010a7f5ca2414505ab568149456f483c3a53fdc549f573d8ee74d2fc9d2ed466d2792130594fdc6064c91f47724c1baa8bfad7c00732', 0, 2, 1);
 
 -- word easy
 insert into WordExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (WORDEXERCISE_SEQ.NEXTVAL, 'cat', 'cica', 1, 1);
@@ -96,3 +111,6 @@ insert into SentenceExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) v
 insert into SentenceExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (SENTENCEEXERCISE_SEQ.NEXTVAL, 'The car was stolen yesterday.', 'Az autó el lett lopva tegnap.', 1, 3);
 insert into SentenceExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (SENTENCEEXERCISE_SEQ.NEXTVAL, 'The suspect was sentenced to death.', 'A gyanúsítottat halálra ítélték.', 1, 3);
 insert into SentenceExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (SENTENCEEXERCISE_SEQ.NEXTVAL, 'Lucy is going to be a dancer when she grows up.', 'Lucy táncos lesz, ha felnő.', 1, 3);
+
+-- important
+commit;

@@ -11,13 +11,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 
-import com.sun.activation.viewers.ImageViewer;
-
+import javafx.scene.control.cell.MapValueFactory;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -32,6 +32,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -39,7 +41,6 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -195,6 +196,9 @@ public class Controller {
 	@FXML
 	private ComboBox<KnowledgeLevel> knowledgeLevelSelector;
 	
+	@FXML 
+	private TableView table;
+	
 	// Alert window
 	private Alert alertWindow = new Alert(AlertType.ERROR);
 	
@@ -218,6 +222,9 @@ public class Controller {
 	private List<Exercise> coachingExercises;
 	// The exercise that is being solved by the user
 	private Exercise actualExercise;
+	
+	// Titles and map keys of table columns search
+	private	String columnTitles[] = new String[] { "English", "Hungarian" };
 	
 	// The button references in case of the four word exercise
 	private Button correctAnswer; // This should be pressed by the user
@@ -255,6 +262,17 @@ public class Controller {
 		knowledgeLevelSelector.getSelectionModel().selectFirst();
 		startButtonBox.setBackground(new Background(new BackgroundImage(
 				learning, BackgroundRepeat.SPACE, BackgroundRepeat.SPACE, null, null)));
+		// Create table (search table) columns
+		for (int i = 0; i < columnTitles.length; i++) {
+			// Create table column
+			TableColumn<Map, String> column = new TableColumn<>(columnTitles[i]);
+			// Set map factory
+			column.setCellValueFactory(new MapValueFactory(columnTitles[i]));
+			// Set width of table column
+			column.prefWidthProperty().bind(table.widthProperty().divide(columnTitles.length));
+			// Add column to the table
+			table.getColumns().add(column);
+		}
 	}
 
 	/**

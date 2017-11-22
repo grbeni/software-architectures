@@ -24,17 +24,15 @@ public class ExerciseManager implements IExerciseManager {
 
 		exercise.setKnowledgeLevel(KnowledgeLevel.valueOf(exercise.getKnowledgeLevel().toString().toUpperCase()));
 
-		int result = 0;
-
 		try {
 			if (db.connect()) {
 				log.info("Establishing connection was successful.");
 
-				result = db.addExercise(exercise, username);
-
-				db.disconnect();
+				int resultCount = db.addExercise(exercise, username);
+				
+				log.info("Added " + resultCount + " exercise(s).");
 			} else {
-				log.info("Establishing connection was not successful.");
+				log.warn("Establishing connection was not successful.");
 			}
 		} catch (SQLException | ClassNotFoundException e) {
 			log.error(e.getMessage());
@@ -51,13 +49,16 @@ public class ExerciseManager implements IExerciseManager {
 	public void addExercise(String username, ExerciseWithImage exercise) {
 		log.info("Add exercise with image: " + exercise.getEnglish());
 		
-		int addCount = 0;
-		
 		try {
 			if (db.connect()) {
+				log.info("Establishing connection was successful.");
 				
-				addCount = db.addImageExercise(exercise, username);
+				int addCount = db.addImageExercise(exercise, username);
 				
+				log.info("Added " + addCount + " exercise(s).");				
+			}
+			else {
+				log.warn("Establishing connection was not successful.");
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			log.error(e.getMessage());
@@ -74,17 +75,14 @@ public class ExerciseManager implements IExerciseManager {
 	public void deleteExercise(String username, Exercise exercise) {
 		log.info("Exercise to be deleted: " + exercise.getEnglish() + " - " + exercise.getHungarian());
 
-		boolean success = false;
-
 		try {
 			if (db.connect()) {
 				log.info("Establishing connection was successful.");
 
-				success = db.deleteExercise(exercise, username);
+				db.deleteExercise(exercise, username);
 
-				db.disconnect();
 			} else {
-				log.info("Establishing connection was not successful.");
+				log.warn("Establishing connection was not successful.");
 			}
 		} catch (SQLException | ClassNotFoundException e) {
 			log.error(e.getMessage());

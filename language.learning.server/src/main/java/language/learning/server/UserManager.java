@@ -27,7 +27,7 @@ public class UserManager implements IUserManager {
 				log.info("Establishing connection was successful.");
 
 				user = db.getUser(username);
-				db.disconnect();
+				
 			} else {
 				log.error("Establishing connection was not successful.");
 			}
@@ -68,7 +68,6 @@ public class UserManager implements IUserManager {
 					success = db.addUser(user);
 				}
 
-				db.disconnect();
 			} else {
 				log.error("Establishing connection was not successful.");
 				success = false;
@@ -99,7 +98,6 @@ public class UserManager implements IUserManager {
 				// Success is when 0 or 1 row is deleted.
 				success = (db.deleteUser(username) >= 0);
 
-				db.disconnect();
 			} else {
 				log.error("Establishing connection was not successful.");
 				success = false;

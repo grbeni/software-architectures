@@ -119,14 +119,13 @@ public class Database implements IDatabase {
 
 		User user = null;
 
-		ResultSet resultSet = null;
+		String queryUser = "SELECT * FROM APPLICATIONUSER WHERE USERNAME = ?";
+
 		PreparedStatement preparedStatement = null;
-
-		String queryUser = "SELECT * " + "FROM APPLICATIONUSER " + "WHERE USERNAME = ?";
-
 		preparedStatement = connection.prepareStatement(queryUser);
 		preparedStatement.setString(1, username);
-		resultSet = preparedStatement.executeQuery();
+
+		ResultSet resultSet = preparedStatement.executeQuery();
 
 		if (resultSet != null) {
 
@@ -389,11 +388,19 @@ public class Database implements IDatabase {
 		return deleted > 0;
 	}
 
+	/**
+	 * Method which tells if a user has authority to delete an exercise.
+	 * @param username
+	 * @param english
+	 * @return
+	 * @throws SQLException
+	 */
 	private boolean hasAuthority(String username, String english) throws SQLException {
 
 		boolean isAdmin = false;
 		int id = -1;
 
+		// Get user information
 		String queryUser = "SELECT ID, ISADMIN FROM APPLICATIONUSER WHERE USERNAME = ?";
 		PreparedStatement selectUser = connection.prepareStatement(queryUser);
 		selectUser.setString(1, username);
@@ -411,10 +418,12 @@ public class Database implements IDatabase {
 			return false;
 		}
 
+		// Admin has authority
 		if (isAdmin) {
 			return true;
 		}
 
+		// Look for the exercise in exercise tables
 		String queryWord = "SELECT * FROM WORDEXERCISE WHERE USERID = ? AND ENGLISH = ?";
 		String querySentence = "SELECT * FROM SENTENCEEXERCISE WHERE USERID = ? AND ENGLISH = ?";
 		String queryImage = "SELECT * FROM IMAGEEXERCISE WHERE USERID = ? AND ENGLISH = ?";
@@ -434,6 +443,7 @@ public class Database implements IDatabase {
 		selectImage.setString(2, english);
 		ResultSet rsI = selectImage.executeQuery();
 
+		// If the user created the exercise, than she has authority to delete.
 		if (rsW != null) {
 			if (rsW.next()) {
 				return true;

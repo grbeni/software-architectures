@@ -41,7 +41,6 @@ public class Learning implements ILearning {
 
 				exerciseList = db.getAllExercise(ExerciseType.valueOf(type.toUpperCase()));
 
-				db.disconnect();
 			} else {
 				log.warn("Establishing connection was not successful.");
 			}
@@ -69,10 +68,10 @@ public class Learning implements ILearning {
 		try {
 			if (db.connect()) {
 				log.info("Establishing connection was successful.");
+				
 				exerciseList = db.getExercisesWithUserLevel(ExerciseType.SENTENCE,
 						KnowledgeLevel.valueOf(userLevel.toUpperCase()), equals);
 
-				db.disconnect();
 			} else {
 				log.warn("Establishing connection was not successful.");
 			}
@@ -103,7 +102,6 @@ public class Learning implements ILearning {
 				exerciseList = db.getExercisesWithUserLevel(ExerciseType.WORD,
 						KnowledgeLevel.valueOf(userLevel.toUpperCase()), equals);
 
-				db.disconnect();
 			} else {
 				log.warn("Establishing connection was not successful.");
 			}
@@ -122,7 +120,6 @@ public class Learning implements ILearning {
 		return ex;
 	}
 
-	// TODO
 	@Override
 	public ImageExercises getImageExercises(String userLevel, boolean equals, int count) {
 		log.info("Get image exercises: " + userLevel + ", " + equals);
@@ -135,7 +132,6 @@ public class Learning implements ILearning {
 				exerciseList = db.getExerciseWithImage(KnowledgeLevel.valueOf(userLevel.toUpperCase()), 
 														equals);
 
-				db.disconnect();
 			} else {
 				log.warn("Establishing connection was not successful.");
 			}
@@ -230,11 +226,7 @@ public class Learning implements ILearning {
 		
 		for (Integer index : indexSet) {
 			List<String> wrongChoices = getThreeStringFromListRandomly(ex, range, index);			
-			
-			for (String string : wrongChoices) {
-				System.err.println("wc: " + string);
-			}
-			
+						
 			FourWordsExercise fwEx = new FourWordsExercise(ex.get(index).getEnglish(),
 															ex.get(index).getHungarian(), 
 															wrongChoices, 
@@ -260,8 +252,6 @@ public class Learning implements ILearning {
 		
 		for (Integer integer : indexSet) {
 			stringList.add(ex.get(integer).getHungarian());
-			
-			System.err.println("adding: " + ex.get(integer) + " - " + integer);
 		}
 		
 		return stringList;
@@ -277,7 +267,6 @@ public class Learning implements ILearning {
 
 				db.updateUserScore(user, score);
 
-				db.disconnect();
 			} else {
 				log.warn("Establishing connection was not successful.");
 			}
@@ -302,7 +291,6 @@ public class Learning implements ILearning {
 
 				db.updateUserLevel(user, KnowledgeLevel.valueOf(userLevel.toUpperCase()));
 
-				db.disconnect();
 			} else {
 				log.warn("Establishing connection was not successful.");
 			}

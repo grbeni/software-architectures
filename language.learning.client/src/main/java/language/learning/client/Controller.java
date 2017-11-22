@@ -687,13 +687,13 @@ public class Controller {
 		if (!isLoggedIn()) {
 			return;
 		}
-		table.getColumns().clear();
+		table.getItems().clear();
 		SentenceExercises allExercises = model.listExercises();
 		for (Exercise exercise : allExercises.getExercises()) {
 			Map<String, String> row = new HashMap<String, String>();
 			row.put(columnTitles[0], exercise.getEnglish());
 			row.put(columnTitles[1], exercise.getHungarian());
-			table.getColumns().add(row);
+			table.getItems().add(row);
 		}
 	}
 	

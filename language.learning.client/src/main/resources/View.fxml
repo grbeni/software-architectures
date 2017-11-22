@@ -259,11 +259,9 @@
 							<!-- List button -->			
 							<Button fx:id="listExercisesButton" text="List Exercises" prefWidth="120" onAction="#listExercisesEventHandler" />
 						</HBox>
-						<ScrollPane fitToWidth="true">		
-							<!-- Log text area -->
-							<TableView fx:id="table" editable="false" VBox.vgrow="ALWAYS"
-								HBox.hgrow="ALWAYS" />
-						</ScrollPane>
+						<!-- Log text area -->
+						<TableView fx:id="table" editable="false" VBox.vgrow="ALWAYS"
+							HBox.hgrow="ALWAYS" />
 					</VBox>
 				</VBox>
 			</Tab>
@@ -310,7 +308,7 @@
 						</Label>
 						<ScrollPane fitToWidth="true">		
 							<!-- Log text area -->
-							<TextArea fx:id="logTextArea2" editable="false"
+							<TextArea fx:id="logTextArea" editable="false"
 								prefRowCount="20" prefColumnCount="20" VBox.vgrow="ALWAYS"
 								HBox.hgrow="ALWAYS" />
 						</ScrollPane>

@@ -117,6 +117,8 @@ public class Learning implements ILearning {
 
 		FourWordsExercises ex = getRandomNCountExerciseFourWords(exerciseList, count);
 
+		log.error("4w list: " + ex);
+		
 		return ex;
 	}
 

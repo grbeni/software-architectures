@@ -340,6 +340,7 @@ public class Controller {
 	
 	private List<Exercise> retrieveExercises() {
 		assert 10 == this.EXERCISE_COUNT;
+
 		// Retrieving the exercises
 		FourWordsExercises wordExercises = model.getWordExercises(
 				loggedInUser.getUserLevel().toString(), false, 4);

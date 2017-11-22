@@ -114,9 +114,7 @@ public class Controller {
 	
 	// Logs
 	@FXML
-	private TextArea logTextArea1;
-	@FXML
-	private TextArea logTextArea2;
+	private TextArea logTextArea;
 	
 	// Buttons
 	@FXML
@@ -155,8 +153,6 @@ public class Controller {
 	private Button fileChooser;
 
 	// Labels
-//	@FXML
-//	private Label connectionStateLabel;
 	@FXML
 	private Label userInfoLabel;	
 	@FXML
@@ -298,27 +294,23 @@ public class Controller {
 	 */
 	@FXML
 	private void connectEventHandler(ActionEvent event) {
-//		if (loggedInUser != null) {
-//			alert("You are logged in!");
-//			return;
-//		}
-//		loggedInUser = model.logIn(userNameField.getText());
-//		if (loggedInUser == null) {
-//			alert("Wrong user name!");
-//			return;
-//		}
-//		// Checking the password
-//		if (!loggedInUser.getPasswordHash().equals(hashPassword(passwordField.getText(), SALT))) {
-//			alert("Wrong password!");
-//			loggedInUser = null;
-//			return;
-//		}
-		loggedInUser = new User("Bence", "", KnowledgeLevel.EXPERT, 100, false);
-		// Connection succeeded
 		if (loggedInUser != null) {
-//			connectionStateLabel.setText("Connection created");
-//			connectionStateLabel.setTextFill(Color.web("#009900"));
+			alert("You are logged in!");
+			return;
 		}
+		loggedInUser = model.logIn(userNameField.getText());
+		if (loggedInUser == null) {
+			alert("Wrong user name!");
+			return;
+		}
+		// Checking the password
+		if (!loggedInUser.getPasswordHash().equals(hashPassword(passwordField.getText(), SALT))) {
+			alert("Wrong password!");
+			loggedInUser = null;
+			return;
+		}
+//		loggedInUser = new User("Bence", "", KnowledgeLevel.EXPERT, 100, false);
+		// Connection succeeded
 		printUserData();
 	}
 	
@@ -795,8 +787,7 @@ public class Controller {
 	 * Appends the message (with a line break added) to the logs.
 	 */
 	protected void logMsg(String message) {
-		logTextArea1.appendText(message + "\n");
-		logTextArea2.appendText(message + "\n");
+		logTextArea.appendText(message + "\n");
 	}
 	
 	/**

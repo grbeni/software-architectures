@@ -69,8 +69,8 @@ insert into KnowledgeLevel(ID, LevelName) values (1, 'EASY');
 insert into KnowledgeLevel(ID, LevelName) values (2, 'MEDIUM');
 insert into KnowledgeLevel(ID, LevelName) values (3, 'HARD');
 
-insert into ApplicationUser(ID, UserName, UserPassword, UserScore, KnowledgeLevelID, IsAdmin) values (USER_SEQ.NEXTVAL,'admin', '941c9f263a2f992dd54f82e1e0f355b87311abef40627097a65210c22133f7b8b82590553f546d149ff1ca8ce322d52918230df321c75bc8cb5fc7d0a4aeb091', 0, 1, 0);
-insert into ApplicationUser(ID, UserName, UserPassword, UserScore, KnowledgeLevelID, IsAdmin) values (USER_SEQ.NEXTVAL,'user', 'd1a5ad3c0f79224f991f010a7f5ca2414505ab568149456f483c3a53fdc549f573d8ee74d2fc9d2ed466d2792130594fdc6064c91f47724c1baa8bfad7c00732', 0, 2, 1);
+insert into ApplicationUser(ID, UserName, UserPassword, UserScore, KnowledgeLevelID, IsAdmin) values (USER_SEQ.NEXTVAL,'admin', '941c9f263a2f992dd54f82e1e0f355b87311abef40627097a65210c22133f7b8b82590553f546d149ff1ca8ce322d52918230df321c75bc8cb5fc7d0a4aeb091', 0, 1, 1);
+insert into ApplicationUser(ID, UserName, UserPassword, UserScore, KnowledgeLevelID, IsAdmin) values (USER_SEQ.NEXTVAL,'user', 'd1a5ad3c0f79224f991f010a7f5ca2414505ab568149456f483c3a53fdc549f573d8ee74d2fc9d2ed466d2792130594fdc6064c91f47724c1baa8bfad7c00732', 0, 2, 0);
 
 -- word easy
 insert into WordExercise(ID, English, Hungarian, UserID, KnowledgeLevelID) values (WORDEXERCISE_SEQ.NEXTVAL, 'cat', 'cica', 1, 1);

@@ -58,6 +58,8 @@ public interface IDatabase {
 	 */
 	public void updateUserLevel(User user, KnowledgeLevel level) throws SQLException;
 	
+	public List<Exercise> getExercises() throws SQLException;
+	
 	/**
 	 * Returns all exercise with the given type.
 	 * @param type

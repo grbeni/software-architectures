@@ -218,6 +218,64 @@ public class Database implements IDatabase {
 		log.info("Number of modified rows: " + modified);
 	}
 
+	
+	@Override
+	public List<Exercise> getExercises() throws SQLException {
+		log.info("Get all exercise");
+		
+		List<Exercise> exerciseList = new ArrayList<>();
+		
+		String selectWord = "SELECT * FROM WORDEXERCISE";
+		String selectSentence = "SELECT * FROM SENTENCEEXERCISE";
+		String selectImage = "SELECT * FROM IMAGEEXERCISE";
+		
+		PreparedStatement wordQuery = connection.prepareStatement(selectWord);
+		PreparedStatement sentenceQuery = connection.prepareStatement(selectSentence);
+		PreparedStatement imageQuery = connection.prepareStatement(selectImage);
+		
+		ResultSet rsW = wordQuery.executeQuery();
+		ResultSet rsS = sentenceQuery.executeQuery();
+		ResultSet rsI = imageQuery.executeQuery();
+		
+		if (rsW != null) {
+			while (rsW.next()) {
+				Exercise ex = new Exercise();
+				ex.setEnglish(rsW.getString("ENGLISH"));
+				ex.setHungarian(rsW.getString("HUNGARIAN"));
+				ex.setKnowledgeLevel(KnowledgeLevel.values()[rsW.getInt("KNOWLEDGELEVELID") - 1]);
+				ex.setExerciseType(ExerciseType.WORD);
+				
+				exerciseList.add(ex);
+			}
+		}
+		
+		if (rsS != null) {
+			while (rsS.next()) {
+				Exercise ex = new Exercise();
+				ex.setEnglish(rsS.getString("ENGLISH"));
+				ex.setHungarian(rsS.getString("HUNGARIAN"));
+				ex.setKnowledgeLevel(KnowledgeLevel.values()[rsS.getInt("KNOWLEDGELEVELID") - 1]);
+				ex.setExerciseType(ExerciseType.SENTENCE);
+				
+				exerciseList.add(ex);
+			}
+		}
+		
+		if (rsI != null) {
+			while (rsI.next()) {
+				Exercise ex = new Exercise();
+				ex.setEnglish(rsI.getString("ENGLISH"));
+				ex.setHungarian(rsI.getString("HUNGARIAN"));
+				ex.setKnowledgeLevel(KnowledgeLevel.values()[rsI.getInt("KNOWLEDGELEVELID") - 1]);
+				ex.setExerciseType(ExerciseType.IMAGE);
+				
+				exerciseList.add(ex);
+			}
+		}
+		
+		return exerciseList;
+	}
+	
 	@Override
 	public List<Exercise> getAllExercise(ExerciseType type) throws SQLException {
 		log.info("Get all exercise with type: " + type);

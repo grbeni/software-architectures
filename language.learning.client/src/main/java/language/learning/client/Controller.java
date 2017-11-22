@@ -16,6 +16,8 @@ import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 
+import com.sun.activation.viewers.ImageViewer;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -144,10 +146,12 @@ public class Controller {
 	private Button fileChooser;
 
 	// Labels
+//	@FXML
+//	private Label connectionStateLabel;
 	@FXML
-	private Label connectionStateLabel;
+	private Label userInfoLabel;	
 	@FXML
-	private Label userInfoLabel;
+	private Label usernameLabel;
 	@FXML
 	private Label englishWordLabel;
 	@FXML
@@ -217,6 +221,9 @@ public class Controller {
 	// Images for the correct and wrong answers
 	private final Image tickImage;
 	private final Image crossImage;
+	private final Image beginner;
+	private final Image intermediate;
+	private final Image expert;
 	
 	// The object responsible for connecting to the server
 	private ServiceAccess model;
@@ -225,6 +232,9 @@ public class Controller {
 		model = new ServiceAccess();
 		tickImage = new Image("tick.png", 100, 100, false, false);
 		crossImage = new Image("cross.png", 100, 100, false, false);
+		beginner = new Image("beginner.jpg");
+		intermediate = new Image("intermediate.jpg");
+		expert = new Image("expert.jpg");
 	}
 
 	/**
@@ -233,7 +243,7 @@ public class Controller {
 	@FXML
 	public void initialize() {
 		// Set display status
-		connectionStateLabel.setTextFill(Color.web("#ee0000"));
+//		connectionStateLabel.setTextFill(Color.web("#ee0000"));
 		// Fill the knowledge level selector
 		knowledgeLevelSelector.getItems().setAll(KnowledgeLevel.BEGINNER,
 				KnowledgeLevel.INTERMEDIATE, KnowledgeLevel.EXPERT);
@@ -260,36 +270,59 @@ public class Controller {
 	 */
 	@FXML
 	private void connectEventHandler(ActionEvent event) {
-		if (loggedInUser != null) {
-			alert("You are logged in!");
-			return;
-		}
-		loggedInUser = model.logIn(userNameField.getText());
-		if (loggedInUser == null) {
-			alert("Wrong user name!");
-			return;
-		}
-		// Checking the password
-		if (!loggedInUser.getPasswordHash().equals(hashPassword(passwordField.getText(), SALT))) {
-			alert("Wrong password!");
-			loggedInUser = null;
-			return;
-		}
+//		if (loggedInUser != null) {
+//			alert("You are logged in!");
+//			return;
+//		}
+//		loggedInUser = model.logIn(userNameField.getText());
+//		if (loggedInUser == null) {
+//			alert("Wrong user name!");
+//			return;
+//		}
+//		// Checking the password
+//		if (!loggedInUser.getPasswordHash().equals(hashPassword(passwordField.getText(), SALT))) {
+//			alert("Wrong password!");
+//			loggedInUser = null;
+//			return;
+//		}
+		loggedInUser = new User("Bence", "", KnowledgeLevel.EXPERT, 100, false);
 		// Connection succeeded
 		if (loggedInUser != null) {
-			connectionStateLabel.setText("Connection created");
-			connectionStateLabel.setTextFill(Color.web("#009900"));
+//			connectionStateLabel.setText("Connection created");
+//			connectionStateLabel.setTextFill(Color.web("#009900"));
 		}
 		printUserData();
 	}
 	
 	private void printUserData() {
 		levelUp();
-		userInfoLabel.setText(loggedInUser.getUsername() + " Experience: " + loggedInUser.getScore()
-			+ " Level: " + loggedInUser.getUserLevel());
+		usernameLabel.setText(loggedInUser.getUsername());
+		userInfoLabel.setText("Level: " + toFirstUpper(loggedInUser.getUserLevel().toString()) + 
+				"\tScore:" + loggedInUser.getScore());
 		// Changing the login view
 		connectionLayout.setVisible(false);
 		connectionInfoLayout.setVisible(true);
+		// Setting the icon for the label
+		setIcon();
+	}
+	
+	private void setIcon() {
+		ImageView labelIcon = new ImageView();
+		labelIcon.setPreserveRatio(true);
+		switch (loggedInUser.getUserLevel()) {
+		case BEGINNER:
+			labelIcon.setImage(beginner);
+		break;
+		case INTERMEDIATE:
+			labelIcon.setImage(intermediate);
+			break;
+		case EXPERT:
+			labelIcon.setImage(expert);
+			break;
+		}
+		labelIcon.setPreserveRatio(true);
+		labelIcon.setFitWidth(70);
+		usernameLabel.setGraphic(labelIcon);	
 	}
 	
 	private void levelUp() {
@@ -322,8 +355,8 @@ public class Controller {
 		connectionLayout.setVisible(true);
 		connectionInfoLayout.setVisible(false);
 		
-		connectionStateLabel.setText("Disconnected");
-		connectionStateLabel.setTextFill(Color.web("#ee0000"));
+//		connectionStateLabel.setText("Disconnected");
+//		connectionStateLabel.setTextFill(Color.web("#ee0000"));
 		userInfoLabel.setText("");
 	}
 	
@@ -767,4 +800,11 @@ public class Controller {
 	    return hash;
 	}
 
+	private String toFirstUpper(String string) {
+		if (string.length() < 1) {
+			return string;
+		}
+		return string.substring(0, 1).toUpperCase() + string.toLowerCase().substring(1);
+	}
+	
 }

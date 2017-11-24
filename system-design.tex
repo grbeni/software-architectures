@@ -29,14 +29,15 @@
     \label{sec:architektúra}
     Jelen fejezet bemutatja az elkészített szótanuló alkalmazás architektúráját, azaz hogy \textit{1)} a rendszer milyen komponensekből épül fel, \textit{2)} az egyes komponenseknek milyen lényeges elemei vannak, \textit{3)} a komponensek hogyan kapcsolódnak egymáshoz.
     
-    Az általunk tervezett rendszer egy adatközpontú alkalmazás, amely kliens-szerver architektúrát követ. A szerver tárolja a szükséges adatokat, például a felhasználók adatait és az egyes leckékhez tartozó adatokat (szavakat és képeket). A kliens feladata, hogy a felhasználó kérésére fogyasztható formában tárja a felhasználó elé ezen adatokat, és kezelje az esetleges interakciókat. Az adatok (az objektum-orientáltság szabályai szerint) objektumokban (DTO) kerülnek továbbításra és feldolgozásra. A szerver és a kliens kommunikációját jól meghatározott interfészek teszik lehetővé.
+    Az általunk tervezett rendszer egy adatközpontú alkalmazás, amely \emph{kliens-szerver} architektúrát követ. A szerver tárolja a szükséges adatokat, például a felhasználók adatait és az egyes leckékhez tartozó adatokat (szavakat és képeket). A kliens feladata, hogy a felhasználó kérésére fogyasztható formában tárja a felhasználó elé ezen adatokat, és kezelje az esetleges interakciókat. Az adatok (az objektum-orientáltság szabályai szerint) objektumokban (DTO) kerülnek továbbításra és feldolgozásra. A szerver és a kliens kommunikációját jól meghatározott interfészek teszik lehetővé.
     
     \subsection{Objektumok}
     
     \subsection{Interfészek}
+    \label{sec:interfészek}
     
     \subsection{A szerver}
-    A szerver architektúrája négy fő részre bontható. Ezek az alábbiak:
+    A szerver rétegelt architektúrája négy fő részre bontható. Ezek az alábbiak:
     \begin{itemize}
     	\item szolgáltatás hozzáférési réteg (Rest API),
     	\item üzleti logika réteg,
@@ -55,7 +56,7 @@
     \end{figure}
     
     \subsubsection{Szolgáltatás hozzáférési réteg}
-    Az a réteg egy REST API-nak felel meg, amelyen keresztül http kérésekkel és erre adott http válaszokkal lehet igénybe venni a szerver szolgáltatását. Az előző \textit{Interfészek} fejezet ezt írta le részletesen, ezért itt nem kerül megismétlésre.
+    Az a réteg egy REST API-nak felel meg, amelyen keresztül http kérésekkel és erre adott http válaszokkal lehet igénybe venni a szerver szolgáltatását (lásd \ref{sec:interfészek}.~fejezet).
     
     \textbf{Megjelenés a kódban:} \textit{language.learning.server} package-ben található interfészek: 
     \begin{itemize}
@@ -64,10 +65,10 @@
     	\item IUserManager
     \end{itemize}
     
-    A fejlesztés során lehetőség volt a program kliens nélküli tesztelésére, hiszen elég http kéréseket küldeni neki. Erre a \textit{Postman} nevezetű programot használtuk.
+    A fejlesztés során lehetőség volt a program kliens nélküli tesztelésére, hiszen elég http kéréseket küldeni neki. Erre a \textit{Postman}\footnote{https://www.getpostman.com/} nevezetű programot használtuk.
     
     \subsubsection{Üzleti logika réteg}
-    Ez a réteg tulajdonképpen a szolgáltatás interfészek konkrét megvalósításaiból áll. Feladata adatelérési réteg megfelelő metódusainak meghívása, és az eredmény az interfészben definiált formára hozása. Erre jó példa, hogy véletlenszerűen kell visszaadnia a szervernek N darab feladatot, ahol N-t a kliens kérése határozza meg. Ez a feladat tipikusan üzleti logika hatáskörébe tartozik.
+    Ez a réteg a szolgáltatás interfészek konkrét megvalósításaiból áll. Feladata adatelérési réteg megfelelő metódusainak meghívása, és az eredmény az interfészben definiált formára hozása. Erre jó példa, hogy véletlenszerűen kell visszaadnia a szervernek N darab feladatot, ahol N-t a kliens kérése határozza meg. Ez a feladat tipikusan üzleti logika hatáskörébe tartozik.
     
     \textbf{Megjelenés a kódban:} \textit{language.learning.server} package-ben található osztályok: 
     \begin{itemize}
@@ -81,15 +82,15 @@
     
     \textbf{Megjelenés a kódban:} \textit{language.learning.database} package-ben IDatabase interfész, és ennek a megvalósítása a Database osztály.
     
-    Az adatbázis elérésére az Oracle jdbc drivere került felhasználásra, ezt a kódban a Database osztályban meg is kell adni.
+    Az adatbázis elérésére az Oracle JDBC 7-es verziójú drivere került felhasználásra, ezt a kódban a Database osztályban meg is kell adni.
     
     \subsubsection{Adatbázis réteg}
-    Feladata az adatok perzisztens tárolása. A használt adatbázis az Oracle Database11g Express Edition. Azért erre esett a választás, mert ingyenes, és mivel korábbi tapasztalataink az Oracle adatbázisokhoz voltak köthetők, ezért mindenféleképpen Oracle terméket szerettünk volna használni. Bár vannak újabb verziók is, de azokat nem sikerült telepíteni, ezért maradt a 11g verzió.
+    Feladata az adatok perzisztens tárolása. A használt adatbázis az Oracle Database 11g Express Edition\footnote{http://www.oracle.com/technetwork/database/database-technologies/express-edition/overview/index.html}. Azért erre esett a választás, mert ingyenes, és mivel korábbi ismereteink és tapasztalataink az Oracle adatbázisokhoz voltak köthetők, ezért mindenféleképpen Oracle terméket szerettünk volna használni. Bár vannak újabb verziók is, a 11g verzió stabilnak és elterjedtnek mondható, ezért döntöttünk emellett.
     
-    Megjelenés a kódban: nem írtunk hozzá komponenst, viszont a függőségek között megjelenik az ojdbc7.jar, ami szintén ingyenesen letölthető az Oracle honlapjáról. Érdekesség, hogy a projektünk Maven projekt, így a pom.xml-be megadott függőségek automatikusan letöltődnek, viszont az Oracle nem teszi ki publikus repository-ba az ojdbc driver-t, ezért manuálisan kell letölteni és beállítani a függőségeket.
+   \textbf{ Megjelenés a kódban:} nem írtunk hozzá komponenst, viszont a függőségek között megjelenik az ojdbc7.jar, ami szintén ingyenesen letölthető az Oracle honlapjáról\footnote{http://www.oracle.com/technetwork/apps-tech/jdbc-112010-090769.html}. Érdekesség, hogy a projektünk Maven projekt, így a pom.xml-be megadott függőségek automatikusan letöltődnek, viszont az Oracle nem teszi ki publikus repository-ba az ojdbc driver-t, ezért manuálisan kell letölteni és beállítani a függőségeket.
     
     \subsection{Adatbázis terv}
-    Ezen fejezetben bemutatásra kerülnek az adatbázisban elmentett entitások. Az adatbázis (nem teljesen szabványos) egyed-kapcsolat diagramja látható \aref{fig:er_diag}. ábrán.
+    Ezen fejezetben bemutatásra kerülnek az adatbázisban elmentett \emph{entitások}. Az adatbázis egyed-kapcsolat diagramja látható \aref{fig:er_diag}. ábrán.
     
     \begin{figure}[htbp]
     	\center
@@ -100,8 +101,8 @@
     	\label{fig:er_diag}
     \end{figure}
     
-    \subsubsection{WORDEXERCISE}
-    A szó feladatokhoz szükséges adatok tárolására alkalmas. Egy szópárt tárol, ami egyébként könnyedén kibővíthető új nyelvekkel. Továbbá tárolja, hogy milyen nehézségű a feladat, és azt is, hogy melyik felhasználó hozta létre.
+    \subsubsection{Word Exercise}
+    Ez az entitás a szó feladatokhoz szükséges adatok tárolására alkalmas. Egy angol-magyar szópárt tárol, de az entitás könnyen kibővíthető lehetne további, más nyelvű szavakkal. Továbbá tárolja, hogy milyen nehézségű a feladat, és azt is, hogy melyik felhasználó hozta létre.
     
     Az id értékének generálására a \textit{WORDEXERCISE\_SEQ} szekvencia szolgál.
     
@@ -120,8 +121,8 @@
     	\end{tabular}
     \end{table}
     
-    \subsubsection{SENTENCEEXERCISE}
-    Nagyon hasonlít a \textit{WORDEXERCISE}-ra, de ez alkalmas hosszabb karakterlánc párok eltárolására is, tehát nem csak szavakat, hanem hosszabb mondatokat is tudunk tárolni benne. Elképzelhetőnek tartom, hogy össze lehetne vonni a \textit{WORDEXERCISE} és \textit{SENTENCEEXERCISE} táblákat, de akkor szükség lenne a típus bevezetésére, továbbá így érthetőbb miképp válnak külön a feladattípusok.
+    \subsubsection{Sentence Exercise}
+    Nagyon hasonlít a \textit{Word Exercise}-ra, de ez alkalmas hosszabb karakterlánc párok eltárolására is, tehát nem csak szavakat, hanem hosszabb mondatokat is tudunk tárolni benne. Elképzelhető, hogy össze lehetne vonni a \textit{Word Exercise} és \textit{Sentence Exercise} táblákat, de akkor az új entitásban szükség lenne további attribútumok bevezetésére (pl.:~feladat típus), továbbá ez a struktúra egyértelműen tükrözi, hogy miképp válnak külön a feladattípusok.
     
     Az id értékének generálására a \textit{SENTENCEEXERCISE\_SEQ} szekvencia szolgál.
     
@@ -140,8 +141,8 @@
     	\end{tabular}
     \end{table}
     
-    \subsubsection{IMAGEEXERCISE}
-    Annyiban különbözik a \textit{WORDEXERCISE}-tól, hogy képes képek tárolására. Az id értékének generálására az \textit{IMAGEEXERCISE\_SEQ} szekvencia szolgál.
+    \subsubsection{Image Exercise}
+    Annyiban különbözik a \textit{Word Exercise}-tól, hogy képes képek tárolására. Az id értékének generálására az \textit{IMAGEEXERCISE\_SEQ} szekvencia szolgál.
     
     \begin{table}[!h]
     	\centering
@@ -159,8 +160,8 @@
     	\end{tabular}
     \end{table}
     
-    \subsubsection{APPLICATIONUSER}
-    A felhasználó adatait tárolja. Az egyértelmű felhasználónév, jelszón kívül még a pontszámát, a tudásszintjét és azt, hogy rendelkezik-e adminisztrátori jogosultsággal.
+    \subsubsection{Application User}
+    A felhasználó adatait tartalmazza. Az egyértelmű felhasználónév, jelszón páron kívül tárolja még a pontszámát, a tudásszintjét és azt, hogy rendelkezik-e adminisztrátori jogosultsággal.
     
     Az id értékének generálására a \textit{USER\_SEQ} szekvencia szolgál.
     
@@ -180,7 +181,7 @@
     	\end{tabular}
     \end{table}
     
-    \subsubsection{KNOWLEDGELEVEL}
+    \subsubsection{Knowledge Level}
     A különböző tudásszinteket tárolja. Mivel ezt a felhasználók nem tudják befolyásolni és kevés típus van, ezért nem szükséges szekvencia az id értékének generálására.
     
     \begin{table}[!h]
@@ -205,19 +206,19 @@
     \end{enumerate}
 
 	A kliens egy réteges felépítést követ, minden réteghez egy fent meghatározott feladat társul. A kliens felépítését \aref{fig:client-arch}.~ábra mutatja be.
-	       \begin{figure}[htbp]
+	       \begin{figure}[h!]
 	       	\center
-	       	\resizebox{60mm}{!}{
+	       	\resizebox{50mm}{!}{
 	       		\includegraphics{figures/client-arch.pdf}
 	       	}
 	       	\caption{A kliens architektúrája.}
 	       	\label{fig:client-arch}
 	       \end{figure}
 	
-	Amint látható, a kliens egy tisztán rétegelt architektúrát valósít meg. A megjelenítési réteg csak az üzleti logikai réteg  nyújtotta szolgáltatásokat használja fel, az üzleti logikai réteg pedig csak a szolgáltatás hozzáférési rétegre támaszkodik. Az alkalmazásban egy réteget egy osztály valósít meg. A következő szekciók részletesebben bemutatják az egyes rétegek megvalósítását.
+	Amint látható, a kliens egy tisztán rétegelt architektúrát valósít meg. A megjelenítési réteg csak az üzleti logikai réteg  nyújtotta szolgáltatásokat használja fel, az üzleti logikai réteg pedig csak a szolgáltatás hozzáférési rétegre támaszkodik. Az alkalmazásban egy réteget egy-egy osztály/fájl valósít meg. A következő szekciók részletesebben bemutatják az egyes rétegek megvalósítását.
      
-     \subsubsection{Megjelenítési réteg: View osztály}
-     A View osztály felelős a grafikus felhasználói felület megvalósításáért. A grafikus felület a JavaFX FXML technológia felhasználásával került definiálásra. Ennek segítségével a felületen található vezérlőket deklaratív jelleggel lehet definiálni az XML szintaktikának megfelelően: vezérlő hierarchiákat lehet létrehozni, illetve az egyes vezérlők tulajdonságait lehet definiálni (méret, szín, elrendezési algoritmus). A következő kódrészlet a bejelentkezéshez szükséges vezérlők definiálását mutatja be.
+     \subsubsection{Megjelenítési réteg: View fájl}
+     A View fájl felelős a grafikus felhasználói felület megvalósításáért. A grafikus felület a JavaFX FXML\footnote{https://docs.oracle.com/javafx/2/get\_started/fxml\_tutorial.htm} technológia felhasználásával került definiálásra. Ennek segítségével a felületen található vezérlőket deklaratív jelleggel lehet definiálni az XML szintaktikának megfelelően: vezérlő hierarchiákat lehet létrehozni, illetve az egyes vezérlők tulajdonságait lehet definiálni (méret, szín, elrendezési algoritmus). A következő kódrészlet a bejelentkezéshez szükséges vezérlők definiálását mutatja be.
      
 \begin{lstlisting}[
 basicstyle=\small, %or \small or \footnotesize etc.
@@ -241,7 +242,7 @@ minWidth="100" minHeight="28" prefWidth="200" prefHeight="27"
      A grafikus felület egy \emph{egyablakos} megközelítést követ; az egyes funkciók különböző \emph{füleken} keresztül érhetők el. A következőkben bemutatjuk a legfontosabb képernyőket, amelyek az alkalmazás jelentősebb funkcionalitásaihoz tartoznak.
      
      A program indulása utána a következő képernyő fogad (lásd \ref{fig:connect}.~ábra).     
-     \begin{figure}[htbp]
+     \begin{figure}[h!]
 	     \center
 	     \resizebox{110mm}{!}{
 		     \includegraphics{figures/connect.png}
@@ -250,16 +251,16 @@ minWidth="100" minHeight="28" prefWidth="200" prefHeight="27"
 	     \label{fig:connect}
      \end{figure} 
      Ekkor a felhasználónak lehetősége van bejelentkezni. Rossz felhasználónév vagy jelszó esetén az alkalmazás egy felugró ablakkal figyelmeztet (\ref{fig:login-error}.~ábra).
-     \begin{figure}[htbp]
+     \begin{figure}[h!]
      	\center
      	\resizebox{80mm}{!}{
      		\includegraphics{figures/login-error.png}
      	}
-     	\caption{Rossz felhasználónév vagy jelszó esetén hibaüzenet.}
+     	\caption{Rossz felhasználónév vagy jelszó esetén a hibaüzenet ablak.}
      	\label{fig:login-error}
      \end{figure}
      Bejelentkezés után a felhasználó megvizsgálhatja jelenlegi pontjait, tudás szintjét, illetve ki is jelentkezhet (\ref{fig:after-connect}.~ábra).     
-     \begin{figure}[htbp]
+     \begin{figure}[h!]
      	\center
      	\resizebox{110mm}{!}{
      		\includegraphics{figures/after-connect.png}
@@ -267,33 +268,33 @@ minWidth="100" minHeight="28" prefWidth="200" prefHeight="27"
      	\caption{A kezdőablak bejelentkezés után.}
      	\label{fig:after-connect}
      \end{figure}
-     A tanulást, azaz egy lecke megkezdését a \emph{Start Learning!} gombra kattintva kezdheti el, ahol a három különböző feladattípushoz a következő képernyők tartoznak (\ref{}, \ref{} és \ref{} ábra).
-     %       \begin{figure}[htbp]
-     %       	\center
-     %       	\resizebox{140mm}{!}{
-     %       		\includegraphics{messageformat.pdf}
-     %       	}
-     %       	\caption{Chat üzenet formátum}
-     %       	\label{fig:messageformat}
-     %       \end{figure}
-     %       \begin{figure}[htbp]
-     %       	\center
-     %       	\resizebox{140mm}{!}{
-     %       		\includegraphics{messageformat.pdf}
-     %       	}
-     %       	\caption{Chat üzenet formátum}
-     %       	\label{fig:messageformat}
-     %       \end{figure}
-     %       \begin{figure}[htbp]
-     %       	\center
-     %       	\resizebox{140mm}{!}{
-     %       		\includegraphics{messageformat.pdf}
-     %       	}
-     %       	\caption{Chat üzenet formátum}
-     %       	\label{fig:messageformat}
-     %       \end{figure}
+     A tanulást, azaz egy lecke megkezdését a \emph{Start Learning!} gombra kattintva kezdheti el, ahol a három különböző feladattípushoz a következő képernyők tartoznak (\ref{fig:exercise-word}., \ref{fig:exercise-sentence}. és \ref{fig:exercise-image}.~ábra).
+     \begin{figure}[h!]
+     	\center
+     	\resizebox{110mm}{!}{
+     		\includegraphics{figures/exercise-word.png}
+     	}
+     	\caption{Feladat: helyes szó kiválasztása.}
+     	\label{fig:exercise-word}
+     \end{figure}
+	 \begin{figure}[h!]
+	 	\center
+	 	\resizebox{110mm}{!}{
+	 		\includegraphics{figures/exercise-sentence.png}
+	 	}
+	 	\caption{Feladat: angol mondat lefordítása.}
+	 	\label{fig:exercise-sentence}
+	 \end{figure}
+	\begin{figure}[h!]
+		\center
+		\resizebox{110mm}{!}{
+			\includegraphics{figures/exercise-image.png}
+		}
+		\caption{Feladat: a kép által ábrázolt objektum megadása.}
+		\label{fig:exercise-image}
+	\end{figure}
      Leckék kezelését (hozzáadás, törlés, listázás) a felhasználó a \emph{Manage Exercises} fülön végezheti (\ref{fig:manage-exercises}.~ábra).
-     \begin{figure}[htbp]
+     \begin{figure}[h!]
      	\center
      	\resizebox{110mm}{!}{
      		\includegraphics{figures/manage-exercises.png}
@@ -301,8 +302,8 @@ minWidth="100" minHeight="28" prefWidth="200" prefHeight="27"
      	\caption{A leckék kezelését segítő ablak.}
      	\label{fig:manage-exercises}
      \end{figure}
-     Végül a grafikus felületen található egy adminisztrációs felület is (\emph{Manage Users}), amelyet adminisztrátor felhasználók vehetnek igénybe (\ref{fig:manage-users}.~ábra). Itt lehet felhasználókat törölni, illetve új felhasználókat hozzáadni az alkalmazáshoz.
-     \begin{figure}[htbp]
+     Végül a grafikus felületen található egy adminisztrációs felület is (\emph{Manage Users}), amelyet adminisztrátor felhasználók vehetnek igénybe (\ref{fig:manage-users}.~ábra). Itt lehet felhasználókat törölni, illetve új felhasználókat hozzáadni az alkalmazáshoz.    
+     \begin{figure}[h!]
      	\center
      	\resizebox{110mm}{!}{
      		\includegraphics{figures/manage-users.png}
@@ -310,12 +311,27 @@ minWidth="100" minHeight="28" prefWidth="200" prefHeight="27"
      	\caption{A leckék kezelését segítő ablak.}
      	\label{fig:manage-users}
      \end{figure}
+ 
+ 	\textbf{Megjelenés a kódban:} \textit{src/main/resources} mappában a \textit{View.fxml} fájl.
    
-     \subsubsection{Controller}
-     A Controller felelős a felhasználói interakciók kezeléséért és az alkalmazáslogika megvalósításáért. A felhasználói interakciók lekezelése handler metódusokkal történik.
+     \subsubsection{Üzleti logika: Controller osztály}
+     A Controller osztály felelős a felhasználói interakciók kezeléséért és az alkalmazáslogika megvalósításáért. A felhasználói interakciók kezelése \emph{handler} metódusokkal történik, amelyeket a View FXML fájlok esetén az egyes vezérlők onAction attribútumánál lehet beregisztrálni.
      
-     Az alkalamzáslogika legbonyolultabb része a leckék levezénylésének a folyamata.
-     \subsubsection{Service access}
+     Az alkalamzáslogika legbonyolultabb része a leckék levezénylésének a folyamata. Ennek folyamatát \aref{fig:business-logic}.~ábrán bemutatott állapotgép írja le.
+     \begin{figure}[h!]
+     	\center
+     	\resizebox{110mm}{!}{
+     		\includegraphics{figures/business-logic.pdf}
+     	}
+     	\caption{A leckék kezelését segítő ablak.}
+     	\label{fig:business-logic}
+     \end{figure}
+ 
+ 	A felhasználó bejelentkezése után az alkalmazás alapállapotba (\emph{Idle}) kerül, innen lehet elkezdeni egy lecke megtanulását (\emph{Start Learning!}~gomb). Az alkalmazás ekkor a tanító állapotba kerül (\emph{Coaching}), ahol bemutatja, hogy milyen szópárokat kell memorizálni. Ha az összes szópárt bemutatta, elkezdődik a kikérdező fázis (\emph{Survey}), ahol a felhasználónak a jó válaszokat kell adni a kérdésekre. A jó válaszokat az alkalmazás számolja. A lecke végén a felhasználó megtekintheti eredményeit (\emph{Result}). Ezután az alkalmazás elmenti az eredményeket és visszakerül alapállapotba.
+     
+     \textbf{Megjelenés a kódban:} \textit{language.learning.client} package-ben a \textit{Controller.java} osztály.
+     
+     \subsubsection{Szolgáltatás hozzáférési réteg: ServiceAccess osztály}
      
     \section{Telepítési útmutató}
     

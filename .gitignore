@@ -1,4 +1,6 @@
 document.pdf
+*.pdf
+language.learning.*
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

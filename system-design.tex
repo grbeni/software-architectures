@@ -1,4 +1,4 @@
-\documentclass[a4paper]{article}
+\documentclass[11pt, a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{t1enc}
 \usepackage[magyar]{babel}
@@ -27,7 +27,7 @@
     
     \section{Architektúra}
     \label{sec:architektúra}
-    Jelen fejezet bemutatja az elkészített szótanuló alkalmazás architektúráját, azaz hogy \textit{1)} a rendszer milyen komponensekből épül fel, \textit{2)} az egyes komponenseknek milyen lényeges részletei vannak, \textit{3)} a komponensek hogyan kapcsolódnak egymáshoz.
+    Jelen fejezet bemutatja az elkészített szótanuló alkalmazás architektúráját, azaz hogy \textit{1)} a rendszer milyen komponensekből épül fel, \textit{2)} az egyes komponenseknek milyen lényeges elemei vannak, \textit{3)} a komponensek hogyan kapcsolódnak egymáshoz.
     
     Az általunk tervezett rendszer egy adatközpontú alkalmazás, amely kliens-szerver architektúrát követ. A szerver tárolja a szükséges adatokat, például a felhasználók adatait és az egyes leckékhez tartozó adatokat (szavakat és képeket). A kliens feladata, hogy a felhasználó kérésére fogyasztható formában tárja a felhasználó elé ezen adatokat, és kezelje az esetleges interakciókat. Az adatok (az objektum-orientáltság szabályai szerint) objektumokban (DTO) kerülnek továbbításra és feldolgozásra. A szerver és a kliens kommunikációját jól meghatározott interfészek teszik lehetővé.
     
@@ -46,13 +46,19 @@
     	\item A felhasználói kérések teljesítéséhez felveszi a kapcsolatot a szerverrel, hogy lekérje a szükséges adatokat, illetve perzisztálja adatok módosításának az eredményét.
     \end{enumerate}
 
-	A kliens egy réteges felépítést követ, minden réteghez egy fent meghatározott feladat társul. A kliens felépítését \aref{} ábra mutatja be.
+	A kliens egy réteges felépítést követ, minden réteghez egy fent meghatározott feladat társul. A kliens felépítését \aref{fig:client-arch}.~ábra mutatja be.
+	       \begin{figure}[htbp]
+	       	\center
+	       	\resizebox{60mm}{!}{
+	       		\includegraphics{figures/client-arch.pdf}
+	       	}
+	       	\caption{A kliens architektúrája.}
+	       	\label{fig:client-arch}
+	       \end{figure}
 	
-	A View réteg felhasználja a Controller nyújtotta szolgáltatásokat, a Controller a Service access réetegre támaszkodik.
-    
-     A következő szekciók részletesebben bemutatják az egyes rétegek megvalósítását. Egy réteget egy osztály valósít meg.
+	Amint látható, a kliens egy tisztán rétegelt architektúrát valósít meg. A megjelenítési réteg csak az üzleti logikai réteg  nyújtotta szolgáltatásokat használja fel, az üzleti logikai réteg pedig csak a szolgáltatás hozzáférési rétegre támaszkodik. Az alkalmazásban egy réteget egy osztály valósít meg. A következő szekciók részletesebben bemutatják az egyes rétegek megvalósítását.
      
-     \subsubsection{View}
+     \subsubsection{Megjelenítési réteg: View osztály}
      A View osztály felelős a grafikus felhasználói felület megvalósításáért. A grafikus felület a JavaFX FXML technológia felhasználásával került definiálásra. Ennek segítségével a felületen található vezérlőket deklaratív jelleggel lehet definiálni az XML szintaktikának megfelelően: vezérlő hierarchiákat lehet létrehozni, illetve az egyes vezérlők tulajdonságait lehet definiálni (méret, szín, elrendezési algoritmus). A következő kódrészlet a bejelentkezéshez szükséges vezérlők definiálását mutatja be.
      
 \begin{lstlisting}

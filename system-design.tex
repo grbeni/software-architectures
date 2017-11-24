@@ -11,7 +11,7 @@
 \sloppy
 
 \begin{document}
-\title{Szoftver architektúrák \\ Szótanulást segítő alkalmazás \\ \large{Rendszerterv}}
+\title{Szoftver architektúrák \\ Szótanulást segítő alkalmazás \\ \large{Dokumentáció}}
     \author{Graics Bence \and Verbőczy Kristóf}
 
     \maketitle
@@ -21,9 +21,9 @@
     
     \section{Bevezetés}
     \label{sec:bevezetes}
-    Jelen dokumentum a Szoftver architektúrák nevű tárgyra kidolgozott házi feladat rendszertervet mutatja be. A házi feladat során a cél egy szótanulást segítő alkalmazás megtervezése és implementálása volt. Az alkalmazással kapcsolatos követelmény specifikációt a \textit{https://www.aut.bme.hu/} tanszéki oldal \textit{Eredmények} oldalára töltöttük fel.
+    Jelen dokumentum a Szoftver architektúrák nevű tárgyra kidolgozott házi feladat dokumentációja. A házi feladat során a cél egy szótanulást segítő alkalmazás megtervezése és implementálása volt. Az alkalmazással kapcsolatos követelmény specifikációt a \textit{https://www.aut.bme.hu/} tanszéki oldal \textit{Eredmények} oldalára töltöttük fel.
     
-    A dokumentum a következők szerint épül fel. \Aref{sec:architektúra}.~fejezet bemutatja az alkalmazás architektúráját, a terveket, illetve pár érdekes megvalósítási részletet. \Aref{sec:telepítés}.~fejezet megmutatja, hogyan lehet telepíteni és elindítani az alkalmazást. Végül \aref{sec:összefoglalás}.~fejezet összefoglalja a munkánkat és továbbfejlesztési lehetőségeket mutat be.
+    A dokumentum a következők szerint épül fel. \Aref{sec:architektúra}.~fejezet bemutatja az alkalmazás architektúráját, a terveket, illetve pár érdekes megvalósítási részletet. \Aref{sec:telepítés}.~fejezet bemutatja, hogyan lehet telepíteni és elindítani az alkalmazást. Végül \aref{sec:összefoglalás}.~fejezet összefoglalja a munkánkat és továbbfejlesztési lehetőségeket mutat be.
     
     \section{Architektúra}
     \label{sec:architektúra}
@@ -32,8 +32,7 @@
     Az általunk tervezett rendszer egy adatközpontú alkalmazás, amely \emph{kliens-szerver} architektúrát követ. A szerver tárolja a szükséges adatokat, például a felhasználók adatait és az egyes leckékhez tartozó adatokat (szavakat és képeket). A kliens feladata, hogy a felhasználó kérésére fogyasztható formában tárja a felhasználó elé ezen adatokat, és kezelje az esetleges interakciókat. Az adatok (az objektum-orientáltság szabályai szerint) objektumokban (DTO) kerülnek továbbításra és feldolgozásra. A szerver és a kliens kommunikációját jól meghatározott interfészek teszik lehetővé.
     
     \subsection{Objektumok}
-    A kliens és a szerver az adatokat objektumokban tárolják, és ezek kerülnek sorosításra, illetve visszasorosításra, amikor kommunikáció történik a két fél között. Az alkalmazás a által támogatott objektumokat \aref{fig:objects-uml}.~ábra mutatja be.
-    
+    A kliens és a szerver az adatokat objektumokban tárolják, és ezek kerülnek sorosításra, illetve visszasorosításra, amikor kommunikáció történik a két fél között. Az alkalmazás által támogatott objektum típusokat \aref{fig:objects-uml}.~ábra mutatja be.    
     \begin{figure}[htbp]
     	\center
     	\resizebox{140mm}{!}{
@@ -42,12 +41,13 @@
     	\caption{Osztálydiagram a támogatott objektumokról.}
     	\label{fig:objects-uml}
     \end{figure}
+    Az objektum típusok a következők.
     
     \paragraph{ExerciseType} Egy enumeráció, amely a lehetséges feladat típusokat (mondat lefordítása, helyes szó kiválasztása, kép leírása) definiálja.
     
     \paragraph{KnowledgeLevel} Egy enumeráció, amely különböző feladat nehézségi szinteket, illetve felhasználói tudásszinteket definiál: kezdő, haladó, szakértő.
     
-    \paragraph{Exercise} Egy osztály, amely egy ``mondat lefordítása'' feladatot szimbolizál. Tartalmaz egy angol és egy magyar sztringet mint szópárt.
+    \paragraph{Exercise} Egy osztály, amely egy ``mondat lefordítása'' feladatot szimbolizál. Kettő sztringet (egy angol és egy magyar mondat) mint szópárt tartalmaz.
     
     \paragraph{ExerciseWithImage} Egy osztály, amely egy ``kép leírása'' feladatot szimbolizál. Az Exercise osztályból származik le. Az ősének a mezői mellett tartalmaz egy képet is, amelyet a felhasználónak le kell írnia.
     
@@ -59,6 +59,7 @@
     
     \paragraph{FourWordsExercises} Egy csomagolóosztály, ``helyes szó kiválasztása'' feladatokat tartalmaz.
     
+    \vspace{3mm}
     \textbf{Megjelenés a kódban:} \textit{language.learning.exercise} package-ben található enumerációk és osztályok.
     
     \subsection{Interfészek}
@@ -70,43 +71,42 @@
     
     \paragraph{ILearning} Ez az interfész a tanulással és a felhasználók tanulással szerzett pontjainak menedzselésével kapcsolatos funkcionalitást írja le. Metódusai:
     \begin{itemize}
-    	\item SentenceExercises getSentenceExercises(String userLevel, boolean equals, int count): adott számú (count) ``mondat lefordítása'' feladat visszaadását teszi lehetővé a felhasználó szintjének megfelelően (userLevel), illetve attól függően, hogy csak a felhasználó szintjéről, vagy alacsonyabb szintű feladatokból is lehet a feladatokat választani (equals).
+    	\item \textsl{SentenceExercises getSentenceExercises(String userLevel, boolean equals, int count)}: adott számú (count) ``mondat lefordítása'' feladat visszaadását teszi lehetővé a felhasználó szintjének megfelelően (userLevel), illetve attól függően, hogy csak a felhasználó szintjéről, vagy alacsonyabb szintű feladatokból is lehet a feladatokat választani (equals).
     	
-    	\item FourWordsExercises getWordExercises(String userLevel, boolean equals, int count): adott számú ``helyes szó kiválasztása'' feladat visszaadását teszi lehetővé.
+    	\item \textsl{FourWordsExercises getWordExercises(String userLevel, boolean equals, int count)}: adott számú ``helyes szó kiválasztása'' feladat visszaadását teszi lehetővé.
     	
-    	\item ImageExercises getImageExercises(String userLevel, boolean equals, int count): adott számú ``kép leírása'' feladat visszaadását teszi lehetővé.
+    	\item \textit{ImageExercises getImageExercises(String userLevel, boolean equals, int count)}: adott számú ``kép leírása'' feladat visszaadását teszi lehetővé.
     	
-    	\item void updateUserScore(int score, User user): egy felhasználó tapasztalati pontjainak a számának a változtatását teszi lehetővé.
+    	\item \textit{void updateUserScore(int score, User user)}: egy felhasználó tapasztalati pontjainak a számának a változtatását teszi lehetővé.
     	
-    	\item void updateUserLevel(String userLevel, User user): egy tudásszintjének a változtatását teszi lehetővé.
+    	\item \textit{void updateUserLevel(String userLevel, User user)}: egy tudásszintjének a változtatását teszi lehetővé.
     \end{itemize}
     \paragraph{IExerciseManagement} Ez az interfész a feladatok menedzsmentjével kapcsolatos funkcionalitást írja le. Metódusai:
     \begin{itemize}
-    	\item void addExercise(String username, Exercise exercise): egy egyszerű feladat (angol-magyar szópár vagy mondatpár) regisztrálását teszi lehetővé.
+    	\item \textsl{void addExercise(String username, Exercise exercise)}: egy egyszerű feladat (angol-magyar szópár vagy mondatpár) regisztrálását teszi lehetővé.
     	
-    	\item void addExercise(String username, ExerciseWithImage exercise): egy  ``kép leírása'' feladat regisztrálását teszi lehetővé.
+    	\item \textsl{void addExercise(String username, ExerciseWithImage exercise)}: egy  ``kép leírása'' feladat regisztrálását teszi lehetővé.
     	
-    	\item void deleteExercise(String username, Exercise exercise): egy feladat törlését teszi lehetővé.
+    	\item \textsl{void deleteExercise(String username, Exercise exercise)}: egy feladat törlését teszi lehetővé.
     	
-    	\item SentenceExercises listExercises(): lehetővé teszi az összes feladat (angol-magyar szópár) lekérését.
+    	\item \textsl{SentenceExercises listExercises()}: lehetővé teszi az összes feladat (angol-magyar szópár) lekérését.
     \end{itemize}
     
     \paragraph{IUserManagement} Ez az interfész a felhasználók menedzsmentjével kapcsolatos funkcionalitást írja le (adminisztrátorok feladatai). Metódusai:
     \begin{itemize}
-   	\item User logIn(String username): Lehetővé teszi egy felhasználó lekérését egy felhasználónév alapján.
+   	\item \textsl{User logIn(String username)}: Lehetővé teszi egy felhasználó lekérését egy felhasználónév alapján.
    	
-   	\item boolean addUser(User user): Egy felhasználó regisztrálását teszi lehetővé.
+   	\item \textsl{boolean addUser(User user)}: Egy felhasználó regisztrálását teszi lehetővé.
    	
-   	\item void deleteExercise(String username, Exercise exercise): Lehetővé teszi egy feladat törlését.
+   	\item \textsl{void deleteExercise(String username, Exercise exercise)}: Lehetővé teszi egy feladat törlését.
    	
-   	\item boolean deleteUser(String username): Egy felhasználó törlését teszi lehetővé.
+   	\item \textsl{boolean deleteUser(String username)}: Egy felhasználó törlését teszi lehetővé.
    \end{itemize} 
    
-    
     \textbf{Megjelenés a kódban:} \textit{language.learning.server} package-ben található interfészek.
     
     \subsection{A szerver}
-    A szerver rétegelt architektúrája négy fő részre bontható. Ezek az alábbiak:
+    A szerver feladata az adatok tárolása, illetve az adatokkal kapcsolatos műveletek (hozzáadás, törlés, módosítás) elvégzése. A szerver rétegelt architektúrája négy fő részre bontható. Ezek az alábbiak:
     \begin{itemize}
     	\item szolgáltatás hozzáférési réteg (Rest API),
     	\item üzleti logika réteg,
@@ -127,39 +127,29 @@
     \subsubsection{Szolgáltatás hozzáférési réteg}
     Az a réteg egy REST API-nak felel meg, amelyen keresztül http kérésekkel és erre adott http válaszokkal lehet igénybe venni a szerver szolgáltatását (lásd \ref{sec:interfészek}.~fejezet).
     
-    \textbf{Megjelenés a kódban:} \textit{language.learning.server} package-ben található interfészek: 
-    \begin{itemize}
-    	\item ILearning
-    	\item IExerciseManager
-    	\item IUserManager
-    \end{itemize}
+    \textbf{Megjelenés a kódban:} \textit{language.learning.server} package-ben található interfészek: \textsl{ILearning}, \textsl{IExerciseManager}, \textsl{IUserManager}.
     
     A fejlesztés során lehetőség volt a program kliens nélküli tesztelésére, hiszen elég http kéréseket küldeni neki. Erre a \textit{Postman}\footnote{https://www.getpostman.com/} nevezetű programot használtuk.
     
     \subsubsection{Üzleti logika réteg}
-    Ez a réteg a szolgáltatás interfészek konkrét megvalósításaiból áll. Feladata adatelérési réteg megfelelő metódusainak meghívása, és az eredmény az interfészben definiált formára hozása. Erre jó példa, hogy véletlenszerűen kell visszaadnia a szervernek N darab feladatot, ahol N-t a kliens kérése határozza meg. Ez a feladat tipikusan üzleti logika hatáskörébe tartozik.
+    Ez a réteg a szolgáltatás interfészek konkrét megvalósításaiból áll. Feladata az adatelérési réteg megfelelő metódusainak meghívása, és az eredmény az interfészben definiált formára hozása. Erre jó példa, hogy véletlenszerűen kell visszaadnia a szervernek $N$ darab feladatot, ahol az $N$ értéket a kliens kérése határozza meg. Ez a feladat tipikusan üzleti logika hatáskörébe tartozik.
     
-    \textbf{Megjelenés a kódban:} \textit{language.learning.server} package-ben található osztályok: 
-    \begin{itemize}
-    	\item Learning
-    	\item ExerciseManager
-    	\item UserManager
-    \end{itemize}
+    \textbf{Megjelenés a kódban:} \textit{language.learning.server} package-ben található osztályok: \textsl{Learning}, \textsl{ExerciseManager}, \textsl{UserManager}.
     
     \subsubsection{Adatelérési réteg}
     Feladata az adatbázishoz való hozzáférés, melynek során biztosítja a szükséges \textit{lekérdezéseket, beszúrásokat, módosításokat, törléseket}. Ezen a szinten történik a védekezés az SQL injection ellen, a \textit{java.sql.PreparedStatement} interfész segítségével.
     
-    \textbf{Megjelenés a kódban:} \textit{language.learning.database} package-ben IDatabase interfész, és ennek a megvalósítása a Database osztály.
+    \textbf{Megjelenés a kódban:} \textit{language.learning.database} package-ben \textsl{IDatabase} interfész, és ennek a megvalósítása a \textsl{Database} osztály.
     
-    Az adatbázis elérésére az Oracle JDBC 7-es verziójú drivere került felhasználásra, ezt a kódban a Database osztályban meg is kell adni.
+    Az adatbázis elérésére az Oracle JDBC 7-es verziójú drivere került felhasználásra, ezt a kódban a \textsl{Database} osztályban kellett definiálni.
     
     \subsubsection{Adatbázis réteg}
-    Feladata az adatok perzisztens tárolása. A használt adatbázis az Oracle Database 11g Express Edition\footnote{http://www.oracle.com/technetwork/database/database-technologies/express-edition/overview/index.html}. Azért erre esett a választás, mert ingyenes, és mivel korábbi ismereteink és tapasztalataink az Oracle adatbázisokhoz voltak köthetők, ezért mindenféleképpen Oracle terméket szerettünk volna használni. Bár vannak újabb verziók is, a 11g verzió stabilnak és elterjedtnek mondható, ezért döntöttünk emellett.
+    Az adatbázis réteg feladata az adatok perzisztens tárolása. A használt adatbázis az Oracle Database 11g Express Edition\footnote{http://www.oracle.com/technetwork/database/database-technologies/express-edition/overview/index.html}. Azért erre esett a választás, mert ingyenes és platformfüggetlen. Korábbi ismereteink és tapasztalataink az Oracle adatbázisokhoz voltak köthetők, ezért mindenféleképpen Oracle terméket szerettünk volna használni. Bár vannak újabb verziók is, a 11g verzió stabilnak és elterjedtnek mondható, ezért döntöttünk emellett.
     
-   \textbf{ Megjelenés a kódban:} nem írtunk hozzá komponenst, viszont a függőségek között megjelenik az ojdbc7.jar, ami szintén ingyenesen letölthető az Oracle honlapjáról\footnote{http://www.oracle.com/technetwork/apps-tech/jdbc-112010-090769.html}. Érdekesség, hogy a projektünk Maven projekt, így a pom.xml-be megadott függőségek automatikusan letöltődnek, viszont az Oracle nem teszi ki publikus repository-ba az ojdbc driver-t, ezért manuálisan kell letölteni és beállítani a függőségeket.
+   \textbf{ Megjelenés a kódban:} nem írtunk hozzá komponenst, viszont a függőségek között megjelenik az ojdbc7.jar, amely szintén ingyenesen letölthető az Oracle honlapjáról\footnote{http://www.oracle.com/technetwork/apps-tech/jdbc-112010-090769.html}. Érdekesség, hogy a projektünk Maven projekt, így a pom.xml-be megadott függőségek automatikusan letöltődnek, viszont az Oracle nem teszi ki publikus repository-ba az OJDBC driver-t, ezért manuálisan kell letölteni és beállítani a függőségeket.
     
     \subsection{Adatbázis terv}
-    Ezen fejezetben bemutatásra kerülnek az adatbázisban elmentett \emph{entitások}. Az adatbázis egyed-kapcsolat diagramja látható \aref{fig:er_diag}. ábrán.
+    Ezen fejezetben bemutatásra kerülnek az adatbázisban tárolt \emph{entitások}. Az adatbázis egyed-kapcsolat diagramja látható \aref{fig:er_diag}. ábrán.
     
     \begin{figure}[htbp]
     	\center
@@ -171,7 +161,7 @@
     \end{figure}
     
     \subsubsection{Word Exercise}
-    Ez az entitás a szó feladatokhoz szükséges adatok tárolására alkalmas. Egy angol-magyar szópárt tárol, de az entitás könnyen kibővíthető lehetne további, más nyelvű szavakkal. Továbbá tárolja, hogy milyen nehézségű a feladat, és azt is, hogy melyik felhasználó hozta létre.
+    Ez az entitás a szó feladatokhoz szükséges adatok tárolására alkalmas (lásd \ref{tab:word-exercise}.~táblázat). Egy angol-magyar szópárt tárol, de az entitás könnyen kibővíthető lehetne további, más nyelvű szavakkal. Továbbá tárolja, hogy milyen nehézségű a feladat, és azt is, hogy melyik felhasználó hozta létre.
     
     Az id értékének generálására a \textit{WORDEXERCISE\_SEQ} szekvencia szolgál.
     
@@ -188,10 +178,12 @@
     		knowledgelevelID & number \textbf{(FK)} & int \\
     		\hline
     	\end{tabular}
+		\caption{A word exercise entitás attribútumainak leírása.}
+		\label{tab:word-exercise}
     \end{table}
     
     \subsubsection{Sentence Exercise}
-    Nagyon hasonlít a \textit{Word Exercise}-ra, de ez alkalmas hosszabb karakterlánc párok eltárolására is, tehát nem csak szavakat, hanem hosszabb mondatokat is tudunk tárolni benne. Elképzelhető, hogy össze lehetne vonni a \textit{Word Exercise} és \textit{Sentence Exercise} táblákat, de akkor az új entitásban szükség lenne további attribútumok bevezetésére (pl.:~feladat típus), továbbá ez a struktúra egyértelműen tükrözi, hogy miképp válnak külön a feladattípusok.
+    Nagyon hasonlít a \textit{Word Exercise}-ra, de ez alkalmas hosszabb karakterlánc párok eltárolására is, tehát nem csak szavakat, hanem hosszabb mondatokat is tudunk tárolni benne (lásd \ref{tab:sentence-exercise}.~táblázat). Elképzelhető, hogy össze lehetne vonni a \textit{Word Exercise} és \textit{Sentence Exercise} entitásokat, de akkor az új entitásban szükség lenne további attribútumok bevezetésére (pl.:~feladat típus), továbbá ez a struktúra egyértelműen tükrözi, hogy miképp válnak külön a feladattípusok.
     
     Az id értékének generálására a \textit{SENTENCEEXERCISE\_SEQ} szekvencia szolgál.
     
@@ -208,10 +200,12 @@
     		knowledgelevelID & number \textbf{(FK)} & int \\
     		\hline
     	\end{tabular}
+    	\caption{A sentence exercise entitás attribútumainak leírása.}
+		\label{tab:sentence-exercise}
     \end{table}
     
     \subsubsection{Image Exercise}
-    Annyiban különbözik a \textit{Word Exercise}-tól, hogy képes képek tárolására. Az id értékének generálására az \textit{IMAGEEXERCISE\_SEQ} szekvencia szolgál.
+    Annyiban különbözik a \textit{Word Exercise}-tól, hogy képes \emph{képek} tárolására (lásd \ref{tab:image-exercise}.~táblázat). Az id értékének generálására az \textit{IMAGEEXERCISE\_SEQ} szekvencia szolgál.
     
     \begin{table}[!h]
     	\centering
@@ -227,10 +221,12 @@
     		image & BLOB & byte[] \\
     		\hline
     	\end{tabular}
+    	\caption{Az image exercise entitás attribútumainak leírása.}
+		\label{tab:image-exercise}
     \end{table}
     
     \subsubsection{Application User}
-    A felhasználó adatait tartalmazza. Az egyértelmű felhasználónév, jelszón páron kívül tárolja még a pontszámát, a tudásszintjét és azt, hogy rendelkezik-e adminisztrátori jogosultsággal.
+    A felhasználó adatait tartalmazza (lásd \ref{tab:application-user}.~táblázat). Az egyértelmű felhasználónév, jelszón páron kívül tárolja még a pontszámát, a tudásszintjét és azt, hogy rendelkezik-e adminisztrátori jogosultsággal.
     
     Az id értékének generálására a \textit{USER\_SEQ} szekvencia szolgál.
     
@@ -248,10 +244,12 @@
     		isadmin & number & boolean \\
     		\hline
     	\end{tabular}
+    	\caption{Az application user entitás attribútumainak leírása.}
+		\label{tab:application-user}
     \end{table}
     
     \subsubsection{Knowledge Level}
-    A különböző tudásszinteket tárolja. Mivel ezt a felhasználók nem tudják befolyásolni és kevés típus van, ezért nem szükséges szekvencia az id értékének generálására.
+    A különböző tudásszinteket tárolja (lásd \ref{tab:knowledge-level}.~táblázat). Mivel ezt a felhasználók nem tudják befolyásolni és kevés típus van, ezért nem szükséges szekvencia az id értékének generálására.
     
     \begin{table}[!h]
     	\centering
@@ -263,6 +261,8 @@
     		levelname & nvarchar2(10) & enumeráció \\
     		\hline
     	\end{tabular}
+   	 	\caption{A knowledge level entitás attribútumainak leírása.}
+		\label{tab:knowledge-level}
     \end{table}
     
     \subsection{A kliens}
@@ -287,7 +287,7 @@
 	Amint látható, a kliens egy tisztán rétegelt architektúrát valósít meg. A megjelenítési réteg csak az üzleti logikai réteg  nyújtotta szolgáltatásokat használja fel, az üzleti logikai réteg pedig csak a szolgáltatás hozzáférési rétegre támaszkodik. Az alkalmazásban egy réteget egy-egy osztály/fájl valósít meg. A következő szekciók részletesebben bemutatják az egyes rétegek megvalósítását.
      
      \subsubsection{Megjelenítési réteg: View fájl}
-     A View fájl felelős a grafikus felhasználói felület megvalósításáért. A grafikus felület a JavaFX FXML\footnote{https://docs.oracle.com/javafx/2/get\_started/fxml\_tutorial.htm} technológia felhasználásával került definiálásra. Ennek segítségével a felületen található vezérlőket deklaratív jelleggel lehet definiálni az XML szintaktikának megfelelően: vezérlő hierarchiákat lehet létrehozni, illetve az egyes vezérlők tulajdonságait lehet definiálni (méret, szín, elrendezési algoritmus). A következő kódrészlet a bejelentkezéshez szükséges vezérlők definiálását mutatja be.
+     A \textsl{View} fájl felelős a grafikus felhasználói felület megvalósításáért. A grafikus felület a JavaFX FXML\footnote{https://docs.oracle.com/javafx/2/get\_started/fxml\_tutorial.htm} technológia felhasználásával került definiálásra. Ennek segítségével a felületen található vezérlőket deklaratív jelleggel lehet definiálni az XML szintaktikának megfelelően: vezérlő hierarchiákat lehet létrehozni, illetve az egyes vezérlők tulajdonságait lehet definiálni (méret, szín, elrendezési algoritmus). A következő kódrészlet a bejelentkezéshez szükséges vezérlők definiálását mutatja be.
      
 \begin{lstlisting}[
 basicstyle=\small, %or \small or \footnotesize etc.
@@ -381,10 +381,11 @@ minWidth="100" minHeight="28" prefWidth="200" prefHeight="27"
      	\label{fig:manage-users}
      \end{figure}
  
+ 	\vspace{3mm}
  	\textbf{Megjelenés a kódban:} \textit{src/main/resources} mappában a \textit{View.fxml} fájl.
    
      \subsubsection{Üzleti logika: Controller osztály}
-     A Controller osztály felelős a felhasználói interakciók kezeléséért és az alkalmazáslogika megvalósításáért. A felhasználói interakciók kezelése \emph{handler} metódusokkal történik, amelyeket a View FXML fájlok esetén az egyes vezérlők onAction attribútumánál lehet beregisztrálni.
+     A \textsl{Controller} osztály felelős a felhasználói interakciók kezeléséért és az alkalmazáslogika megvalósításáért. A felhasználói interakciók kezelése \emph{handler} metódusokkal történik, amelyeket az egyes vezérlők \emph{onAction} attribútumánál lehet beregisztrálni. Ez kényelmesen megtehető az FXML fájlban.
      
      Az alkalamzáslogika legbonyolultabb része a leckék levezénylésének a folyamata. Ennek folyamatát \aref{fig:business-logic}.~ábrán bemutatott állapotgép írja le.
      \begin{figure}[h!]
@@ -404,6 +405,7 @@ minWidth="100" minHeight="28" prefWidth="200" prefHeight="27"
      
      A ServiceAccess osztály felelős a szerver elérésért. Megvalósítja \aref{sec:interfészek}.~fejezetben ismertetett interfészeket. Egy interfész megvalósítása abból áll, hogy létrehoz egy alkalmas RestEasy\footnote{http://resteasy.jboss.org/} kliens objektumot, amelynek megadja a szerver elérhetőségét, majd delegálja a kapott hívást a létrehozott objektumnak.
      
+     \vspace{3mm}
      \textbf{Megjelenés a kódban:} \textit{language.learning.client} package-ben a \textit{ServiceAccess.java} osztály.
      
     \section{Telepítési útmutató}
@@ -428,9 +430,9 @@ mvn wildfly:deploy
 	
 	\section{Összefoglalás}
 	\label{sec:összefoglalás}
-	Munkánk során megterveztük, megvalósítottuk és dokumentáltuk a Szoftver architektúrák tárgyra készített szótanuló alkalmazást. Az alkalmazás segítségével angol szavakat és kifejezéseket lehet tanulni.
+	Munkánk során megterveztük, megvalósítottuk és dokumentáltuk a Szoftver architektúrák tárgyra készített szótanulást segítő alkalmazást. Az alkalmazás segítségével magyarul tudó felhasználók tanulhatnak angol szavakat és kifejezéseket.
 	
-	Az elkészített alkalmazás egy kliens-szerver architektúrát használ. Az alkalmazás az adatokat egy szerveren egy Oracle
+	Az elkészített alkalmazás egy kliens-szerver architektúrán alapul. Az alkalmazás az adatokat egy szerveren egy Oracle
 	adatbázisban tárolja. A felhasználók az alkalmazást egy kliens segítségével grafikus felületen keresztül érhetik el. A kliens és szerver kommunikációja REST hívásokkal történik. 
 	
 	Munkánk során alaposan megterveztük a rendszert. A terveket magas minőséggel implementáltuk; az összes követelmény, amelyet a követelményspecifikációban megfogalmaztunk (kötelező és opcionális), megvalósításra került. Az alkalmazást gondosan teszteltük, a hibákat javítottuk, így a program megbízhatónak és stabilnak mondható.

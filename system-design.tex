@@ -32,9 +32,58 @@
     Az általunk tervezett rendszer egy adatközpontú alkalmazás, amely \emph{kliens-szerver} architektúrát követ. A szerver tárolja a szükséges adatokat, például a felhasználók adatait és az egyes leckékhez tartozó adatokat (szavakat és képeket). A kliens feladata, hogy a felhasználó kérésére fogyasztható formában tárja a felhasználó elé ezen adatokat, és kezelje az esetleges interakciókat. Az adatok (az objektum-orientáltság szabályai szerint) objektumokban (DTO) kerülnek továbbításra és feldolgozásra. A szerver és a kliens kommunikációját jól meghatározott interfészek teszik lehetővé.
     
     \subsection{Objektumok}
+    A kliens és a szerver az adatokat objektumokban tárolják, és ezek kerülnek sorosításra, illetve visszasorosításra, amikor kommunikáció történik a két fél között. Az alkalmazás a által támogatott objektumokat \aref{fig:objects-uml}.~ábra mutatja be.
+    
+    \begin{figure}[htbp]
+    	\center
+    	\resizebox{140mm}{!}{
+    		\includegraphics{figures/objects-uml.pdf}
+    	}
+    	\caption{Osztálydiagram a támogatott objektumokról.}
+    	\label{fig:objects-uml}
+    \end{figure}
+    
+    \paragraph{ExerciseType} Egy enumeráció, amely a lehetséges feladat típusokat (mondat lefordítása, helyes szó kiválasztása, kép leírása) definiálja.
+    
+    \paragraph{KnowledgeLevel} Egy enumeráció, amely különböző feladat nehézségi szinteket, illetve felhasználói tudásszinteket definiál: kezdő, haladó, szakértő.
+    
+    \paragraph{Exercise} Egy osztály, amely egy ``mondat lefordítása'' feladatot szimbolizál. Tartalmaz egy angol és egy magyar sztringet mint szópárt.
+    
+    \paragraph{ExerciseWithImage} Egy osztály, amely egy ``kép leírása'' feladatot szimbolizál. Az Exercise osztályból származik le. Az ősének a mezői mellett tartalmaz egy képet is, amelyet a felhasználónak le kell írnia.
+    
+    \paragraph{FourWordsExercise} Egy osztály, amely egy ``helyes szó kiválasztása'' feladatot szimbolizál. Az Exercise osztályból származik le. Az ősének a mezői mellett tartalmaz sztring listát, amely a lehetséges rossz válaszokat tartalmazza.
+    
+    \paragraph{SentenceExercises} Egy csomagolóosztály, ``mondat lefordítása'' feladatokat tartalmaz.
+    
+    \paragraph{ImageExercises} Egy csomagolóosztály, ``kép leírása'' feladatokat tartalmaz.
+    
+    \paragraph{FourWordsExercises} Egy csomagolóosztály, ``helyes szó kiválasztása'' feladatokat tartalmaz.
+    
+    \textbf{Megjelenés a kódban:} \textit{language.learning.exercise} package-ben található enumerációk és osztályok.
     
     \subsection{Interfészek}
     \label{sec:interfészek}
+    
+    A kliens és a szerver közötti kommunikációt jól definiált interfészek teszik lehetővé. Az interfészeken és a deklarált metódusaikon különböző annotációk találhatók, amelyek a hálózati REST kommunikációhoz szükségesek. Ezekkel lehet definiálni az elérési útvonalat (path), a REST metódust (POST, PUT, DELETE, GET), illetve a hálózaton közlekedő adatnak a formátumát (XML vagy JSON).
+    
+    A funkcionalitást három interfész definiálja: ILearning, IExerciseManager és IUserManager. Az interfészek a következőképpen épülnek fel.
+    
+    \paragraph{ILearning} Ez az interfész a tanulással és a felhasználók tanulással szerzett pontjainak menedzselésével kapcsolatos funkcionalitást írja le. Metódusai:
+    \begin{itemize}
+    	\item SentenceExercises getSentenceExercises(String userLevel, boolean equals, int count): adott számú (count) ``mondat lefordítása'' feladat visszaadását teszi lehetővé a felhasználó szintjének megfelelően (userLevel), illetve attól függően, hogy csak a felhasználó szintjéről, vagy alacsonyabb szintű feladatokból is lehet a feladatokat választani (equals).
+    	
+    	\item FourWordsExercises getWordExercises(String userLevel, boolean equals, int count): adott számú ``helyes szó kiválasztása'' feladat visszaadását teszi lehetővé.
+    	
+    	\item ImageExercises getImageExercises(String userLevel, boolean equals, int count): adott számú ``kép leírása'' feladat visszaadását teszi lehetővé.
+    	
+    	\item void updateUserScore(int score, User user): egy felhasználó tapasztalati pontjainak a számának a változtatását teszi lehetővé.
+    	
+    	\item void updateUserLevel(String userLevel, User user): egy tudásszintjének a változtatását teszi lehetővé.
+    \end{itemize}
+    \paragraph{IExerciseManagement} Ez az interfész a feladatok menedzsmentjével kapcsolatos funkcionalitást írja le. Metódusai:
+    \paragraph{IUserManagement} Ez az interfész a felhasználók menedzsmentjével kapcsolatos funkcionalitást írja le (adminisztrátorok feladatai). Metódusai:
+    
+    \textbf{Megjelenés a kódban:} \textit{language.learning.server} package-ben található interfészek.
     
     \subsection{A szerver}
     A szerver rétegelt architektúrája négy fő részre bontható. Ezek az alábbiak:
@@ -51,7 +100,7 @@
     	\resizebox{140mm}{!}{
     		\includegraphics{figures/server_architecture.pdf}
     	}
-    	\caption{A szerver architekturális felépítése}
+    	\caption{A szerver architekturális felépítése.}
     	\label{fig:server_arch}
     \end{figure}
     
@@ -95,9 +144,9 @@
     \begin{figure}[htbp]
     	\center
     	\resizebox{140mm}{!}{
-    		\includegraphics{figures/er.pdf}
+    		\includegraphics{figures/er.png}
     	}
-    	\caption{A szerver architekturális felépítése}
+    	\caption{A szerver architekturális felépítése.}
     	\label{fig:er_diag}
     \end{figure}
     
@@ -332,6 +381,10 @@ minWidth="100" minHeight="28" prefWidth="200" prefHeight="27"
      \textbf{Megjelenés a kódban:} \textit{language.learning.client} package-ben a \textit{Controller.java} osztály.
      
      \subsubsection{Szolgáltatás hozzáférési réteg: ServiceAccess osztály}
+     
+     A ServiceAccess osztály felelős a szerver elérésért. Megvalósítja \aref{sec:interfészek}.~fejezetben ismertetett interfészeket. Egy interfész megvalósítása abból áll, hogy létrehoz egy alkalmas RestEasy\footnote{http://resteasy.jboss.org/} kliens objektumot, amelynek megadja a szerver elérhetőségét, majd delegálja a kapott hívást a létrehozott objektumnak.
+     
+     \textbf{Megjelenés a kódban:} \textit{language.learning.client} package-ben a \textit{ServiceAccess.java} osztály.
      
     \section{Telepítési útmutató}
     

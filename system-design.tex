@@ -21,9 +21,9 @@
     
     \section{Bevezetés}
     \label{sec:bevezetes}
-    Jelen dokumentum a Szoftver architektúrák nevű tárgyra kidolgozott házi feladat rendszertervet mutatja be. A házi feladat során a cél egy szótanulást segítő alkalmazás megtervezése és implementálása volt. A követelmények és a specifikáció a ... érhető el.
+    Jelen dokumentum a Szoftver architektúrák nevű tárgyra kidolgozott házi feladat rendszertervet mutatja be. A házi feladat során a cél egy szótanulást segítő alkalmazás megtervezése és implementálása volt. Az alkalmazással kapcsolatos követelmény specifikációt a \textit{https://www.aut.bme.hu/} tanszéki oldal \textit{Eredmények} oldalára töltöttük fel.
     
-    A dokumentum a következők szerint épül fel:
+    A dokumentum a következők szerint épül fel. \Aref{sec:architektúra}.~fejezet bemutatja az alkalmazás architektúráját, a terveket, illetve pár érdekes megvalósítási részletet. \Aref{sec:telepítés}.~fejezet megmutatja, hogyan lehet telepíteni és elindítani az alkalmazást. Végül \aref{sec:összefoglalás}.~fejezet összefoglalja a munkánkat és továbbfejlesztési lehetőségeket mutat be.
     
     \section{Architektúra}
     \label{sec:architektúra}
@@ -81,7 +81,27 @@
     	\item void updateUserLevel(String userLevel, User user): egy tudásszintjének a változtatását teszi lehetővé.
     \end{itemize}
     \paragraph{IExerciseManagement} Ez az interfész a feladatok menedzsmentjével kapcsolatos funkcionalitást írja le. Metódusai:
+    \begin{itemize}
+    	\item void addExercise(String username, Exercise exercise): egy egyszerű feladat (angol-magyar szópár vagy mondatpár) regisztrálását teszi lehetővé.
+    	
+    	\item void addExercise(String username, ExerciseWithImage exercise): egy  ``kép leírása'' feladat regisztrálását teszi lehetővé.
+    	
+    	\item void deleteExercise(String username, Exercise exercise): egy feladat törlését teszi lehetővé.
+    	
+    	\item SentenceExercises listExercises(): lehetővé teszi az összes feladat (angol-magyar szópár) lekérését.
+    \end{itemize}
+    
     \paragraph{IUserManagement} Ez az interfész a felhasználók menedzsmentjével kapcsolatos funkcionalitást írja le (adminisztrátorok feladatai). Metódusai:
+    \begin{itemize}
+   	\item User logIn(String username): Lehetővé teszi egy felhasználó lekérését egy felhasználónév alapján.
+   	
+   	\item boolean addUser(User user): Egy felhasználó regisztrálását teszi lehetővé.
+   	
+   	\item void deleteExercise(String username, Exercise exercise): Lehetővé teszi egy feladat törlését.
+   	
+   	\item boolean deleteUser(String username): Egy felhasználó törlését teszi lehetővé.
+   \end{itemize} 
+   
     
     \textbf{Megjelenés a kódban:} \textit{language.learning.server} package-ben található interfészek.
     
@@ -387,15 +407,38 @@ minWidth="100" minHeight="28" prefWidth="200" prefHeight="27"
      \textbf{Megjelenés a kódban:} \textit{language.learning.client} package-ben a \textit{ServiceAccess.java} osztály.
      
     \section{Telepítési útmutató}
-    
-%       \begin{figure}[htbp]
-%       	\center
-%       	\resizebox{140mm}{!}{
-%       		\includegraphics{messageformat.pdf}
-%       	}
-%       	\caption{Chat üzenet formátum}
-%       	\label{fig:messageformat}
-%       \end{figure}
-    
+    \label{sec:telepítés}
+    Az alkalmazás használatához a következő programok szükségesek:
+    \begin{itemize}
+    	\item Java 8,
+    	\item Maven 3.3,
+    	\item WildFly 10.1.
+    \end{itemize}
 
+	Az alkalmazás használatához először el kell indítani a szervert. Ehhez nyitni kell egy \emph{parancssort} és bele kell navigálni a szerver projektbe (\textsl{language.learning.server}). Itt ki kell adni a következő parancsokat:
+\begin{lstlisting}[
+basicstyle=\small, %or \small or \footnotesize etc.
+]
+mvn package
+mvn wildfly:deploy
+\end{lstlisting}
+	A szerver ezek után elérhető lesz.
+	
+	A kliens elindításához csupán a \textsl{language.learning.client} fájlt kell elindítani, az elindulást a grafikus felület megjelenése mutatja.
+	
+	\section{Összefoglalás}
+	\label{sec:összefoglalás}
+	Munkánk során megterveztük, megvalósítottuk és dokumentáltuk a Szoftver architektúrák tárgyra készített szótanuló alkalmazást. Az alkalmazás segítségével angol szavakat és kifejezéseket lehet tanulni.
+	
+	Az elkészített alkalmazás egy kliens-szerver architektúrát használ. Az alkalmazás az adatokat egy szerveren egy Oracle
+	adatbázisban tárolja. A felhasználók az alkalmazást egy kliens segítségével grafikus felületen keresztül érhetik el. A kliens és szerver kommunikációja REST hívásokkal történik. 
+	
+	Munkánk során alaposan megterveztük a rendszert. A terveket magas minőséggel implementáltuk; az összes követelmény, amelyet a követelményspecifikációban megfogalmaztunk (kötelező és opcionális), megvalósításra került. Az alkalmazást gondosan teszteltük, a hibákat javítottuk, így a program megbízhatónak és stabilnak mondható.
+	
+	Kiterjesztési lehetőségként a következő pontokat azonosítottuk:
+	\begin{itemize}
+		\item további feladattípusok felvétele,
+		\item felhasználó által összeállítható leckék támogatása,
+		\item kliensek készítése más platformokon (okostelefon, webes felület).
+	\end{itemize}
 \end{document}

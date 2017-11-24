@@ -61,39 +61,54 @@
      \subsubsection{Megjelenítési réteg: View osztály}
      A View osztály felelős a grafikus felhasználói felület megvalósításáért. A grafikus felület a JavaFX FXML technológia felhasználásával került definiálásra. Ennek segítségével a felületen található vezérlőket deklaratív jelleggel lehet definiálni az XML szintaktikának megfelelően: vezérlő hierarchiákat lehet létrehozni, illetve az egyes vezérlők tulajdonságait lehet definiálni (méret, szín, elrendezési algoritmus). A következő kódrészlet a bejelentkezéshez szükséges vezérlők definiálását mutatja be.
      
-\begin{lstlisting}
-tartalom...
+\begin{lstlisting}[
+basicstyle=\small, %or \small or \footnotesize etc.
+]
+<HBox fx:id="connectionLayout" alignment="CENTER_LEFT"
+	spacing="10">
+<!-- Username field -->
+<TextField fx:id="userNameField" maxWidth="200" maxHeight="27"
+minWidth="100" minHeight="28" prefWidth="200" prefHeight="27" 
+	promptText="User name" />	
+<!-- Password field -->
+<PasswordField fx:id="passwordField" prefWidth="200" 
+	prefHeight="27" promptText="Password" />	
+<Pane HBox.hgrow="ALWAYS" />
+<!-- Connect button -->			
+<Button fx:id="connectButton" text="Connect" prefWidth="100" 
+	onAction="#connectEventHandler" />
+</HBox>
 \end{lstlisting}
      
-     A grafikus felület egy \emph{egyablakos} megközelítést követ; az egyes funkciók különböző \emph{tabokon} keresztül érhetők el. A következőkben bemutatjuk a legfontosabb képernyőket, amelyek az alkalmazás jelentősebb funkcionalitásaihoz tartoznak.
+     A grafikus felület egy \emph{egyablakos} megközelítést követ; az egyes funkciók különböző \emph{füleken} keresztül érhetők el. A következőkben bemutatjuk a legfontosabb képernyőket, amelyek az alkalmazás jelentősebb funkcionalitásaihoz tartoznak.
      
-     A program indulása utána a következő képernyő fogad (lásd \ref{} ábra).     
-     %       \begin{figure}[htbp]
-     %       	\center
-     %       	\resizebox{140mm}{!}{
-     %       		\includegraphics{messageformat.pdf}
-     %       	}
-     %       	\caption{Chat üzenet formátum}
-     %       	\label{fig:messageformat}
-     %       \end{figure}
-     A felhasználónak lehetősége van bejelentkezni. Rossz felhasználónév vagy jelszó esetén az alkalmazás egy felugró ablakkal figyelmeztet (\ref{} ábra).
-     %       \begin{figure}[htbp]
-     %       	\center
-     %       	\resizebox{140mm}{!}{
-     %       		\includegraphics{messageformat.pdf}
-     %       	}
-     %       	\caption{Chat üzenet formátum}
-     %       	\label{fig:messageformat}
-     %       \end{figure}
-     Bejelentkezés után a felhasználó megvizsgálhatja jelenlegi pontjait, tudás szintjét, illetve ki is jelentkezhet.     
-     %       \begin{figure}[htbp]
-     %       	\center
-     %       	\resizebox{140mm}{!}{
-     %       		\includegraphics{messageformat.pdf}
-     %       	}
-     %       	\caption{Chat üzenet formátum}
-     %       	\label{fig:messageformat}
-     %       \end{figure}
+     A program indulása utána a következő képernyő fogad (lásd \ref{fig:connect}.~ábra).     
+     \begin{figure}[htbp]
+	     \center
+	     \resizebox{110mm}{!}{
+		     \includegraphics{figures/connect.png}
+	     }
+	     \caption{A bejelentkező képernyő.}
+	     \label{fig:connect}
+     \end{figure} 
+     Ekkor a felhasználónak lehetősége van bejelentkezni. Rossz felhasználónév vagy jelszó esetén az alkalmazás egy felugró ablakkal figyelmeztet (\ref{fig:login-error}.~ábra).
+     \begin{figure}[htbp]
+     	\center
+     	\resizebox{80mm}{!}{
+     		\includegraphics{figures/login-error.png}
+     	}
+     	\caption{Rossz felhasználónév vagy jelszó esetén hibaüzenet.}
+     	\label{fig:login-error}
+     \end{figure}
+     Bejelentkezés után a felhasználó megvizsgálhatja jelenlegi pontjait, tudás szintjét, illetve ki is jelentkezhet (\ref{fig:after-connect}.~ábra).     
+     \begin{figure}[htbp]
+     	\center
+     	\resizebox{110mm}{!}{
+     		\includegraphics{figures/after-connect.png}
+     	}
+     	\caption{A kezdőablak bejelentkezés után.}
+     	\label{fig:after-connect}
+     \end{figure}
      A tanulást, azaz egy lecke megkezdését a \emph{Start Learning!} gombra kattintva kezdheti el, ahol a három különböző feladattípushoz a következő képernyők tartoznak (\ref{}, \ref{} és \ref{} ábra).
      %       \begin{figure}[htbp]
      %       	\center
@@ -119,24 +134,24 @@ tartalom...
      %       	\caption{Chat üzenet formátum}
      %       	\label{fig:messageformat}
      %       \end{figure}
-     Leckék kezelését (hozzáadás, törlés, listázás) a felhasználó a következő ablakon végezheti (\ref{} ábra).
-     %       \begin{figure}[htbp]
-     %       	\center
-     %       	\resizebox{140mm}{!}{
-     %       		\includegraphics{messageformat.pdf}
-     %       	}
-     %       	\caption{Chat üzenet formátum}
-     %       	\label{fig:messageformat}
-     %       \end{figure}
-     Végül a grafikus felületen található egy adminisztrációs felület is, amelyet adminisztrátor felhasználók vehetnek igénybe (\ref{} ábra). Itt lehet felhasználókat törölni, illetve új felhasználókat hozzáadni az alkalmazáshoz.
-     %       \begin{figure}[htbp]
-     %       	\center
-     %       	\resizebox{140mm}{!}{
-     %       		\includegraphics{messageformat.pdf}
-     %       	}
-     %       	\caption{Chat üzenet formátum}
-     %       	\label{fig:messageformat}
-     %       \end{figure}
+     Leckék kezelését (hozzáadás, törlés, listázás) a felhasználó a \emph{Manage Exercises} fülön végezheti (\ref{fig:manage-exercises}.~ábra).
+     \begin{figure}[htbp]
+     	\center
+     	\resizebox{110mm}{!}{
+     		\includegraphics{figures/manage-exercises.png}
+     	}
+     	\caption{A leckék kezelését segítő ablak.}
+     	\label{fig:manage-exercises}
+     \end{figure}
+     Végül a grafikus felületen található egy adminisztrációs felület is (\emph{Manage Users}), amelyet adminisztrátor felhasználók vehetnek igénybe (\ref{fig:manage-users}.~ábra). Itt lehet felhasználókat törölni, illetve új felhasználókat hozzáadni az alkalmazáshoz.
+     \begin{figure}[htbp]
+     	\center
+     	\resizebox{110mm}{!}{
+     		\includegraphics{figures/manage-users.png}
+     	}
+     	\caption{A leckék kezelését segítő ablak.}
+     	\label{fig:manage-users}
+     \end{figure}
    
      \subsubsection{Controller}
      A Controller felelős a felhasználói interakciók kezeléséért és az alkalmazáslogika megvalósításáért. A felhasználói interakciók lekezelése handler metódusokkal történik.

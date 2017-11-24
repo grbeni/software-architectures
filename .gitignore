@@ -1,5 +1,6 @@
 document.pdf
-*.pdf
+swarch_spec.pdf
+system-design.pdf
 language.learning.*
 
 ## Core latex/pdflatex auxiliary files:

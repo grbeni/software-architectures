@@ -1,8 +1,10 @@
+-- in case sequences exist drop them, otherwise comment or delete the next 4 lines
 drop sequence WORDEXERCISE_SEQ;
 drop sequence SENTENCEEXERCISE_SEQ;
 drop sequence IMAGEEXERCISE_SEQ;
 drop sequence USER_SEQ;
 
+-- create sequences
 create sequence WORDEXERCISE_SEQ
 start with 1 increment by 1;
 
@@ -15,12 +17,14 @@ start with 1 increment by 1;
 create sequence USER_SEQ
 start with 1 increment by 1;
 
+-- in case tables exist drop them, otherwise comment or delete the next 5 lines
 drop table WordExercise;
 drop table SentenceExercise;
 drop table ImageExercise;
 drop table ApplicationUser;
 drop table KnowledgeLevel;
 
+-- create tables
 create table KnowledgeLevel
 (
   ID int primary key,
@@ -65,6 +69,7 @@ create table ImageExercise
 	Image BLOB
 );
 
+-- insert data into tables
 insert into KnowledgeLevel(ID, LevelName) values (1, 'EASY');
 insert into KnowledgeLevel(ID, LevelName) values (2, 'MEDIUM');
 insert into KnowledgeLevel(ID, LevelName) values (3, 'HARD');

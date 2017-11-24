@@ -36,6 +36,164 @@
     \subsection{Interfészek}
     
     \subsection{A szerver}
+    A szerver architektúrája négy fő részre bontható. Ezek az alábbiak:
+    \begin{itemize}
+    	\item szolgáltatás hozzáférési réteg (Rest API),
+    	\item üzleti logika réteg,
+    	\item adatelérési réteg,
+    	\item adatbázis réteg.
+    \end{itemize}
+    A közöttük lévő kapcsolatot mutatja be \aref{fig:server_arch}. ábra.
+    
+    \begin{figure}[htbp]
+    	\center
+    	\resizebox{140mm}{!}{
+    		\includegraphics{figures/server_architecture.pdf}
+    	}
+    	\caption{A szerver architekturális felépítése}
+    	\label{fig:server_arch}
+    \end{figure}
+    
+    \subsubsection{Szolgáltatás hozzáférési réteg}
+    Az a réteg egy REST API-nak felel meg, amelyen keresztül http kérésekkel és erre adott http válaszokkal lehet igénybe venni a szerver szolgáltatását. Az előző \textit{Interfészek} fejezet ezt írta le részletesen, ezért itt nem kerül megismétlésre.
+    
+    \textbf{Megjelenés a kódban:} \textit{language.learning.server} package-ben található interfészek: 
+    \begin{itemize}
+    	\item ILearning
+    	\item IExerciseManager
+    	\item IUserManager
+    \end{itemize}
+    
+    A fejlesztés során lehetőség volt a program kliens nélküli tesztelésére, hiszen elég http kéréseket küldeni neki. Erre a \textit{Postman} nevezetű programot használtuk.
+    
+    \subsubsection{Üzleti logika réteg}
+    Ez a réteg tulajdonképpen a szolgáltatás interfészek konkrét megvalósításaiból áll. Feladata adatelérési réteg megfelelő metódusainak meghívása, és az eredmény az interfészben definiált formára hozása. Erre jó példa, hogy véletlenszerűen kell visszaadnia a szervernek N darab feladatot, ahol N-t a kliens kérése határozza meg. Ez a feladat tipikusan üzleti logika hatáskörébe tartozik.
+    
+    \textbf{Megjelenés a kódban:} \textit{language.learning.server} package-ben található osztályok: 
+    \begin{itemize}
+    	\item Learning
+    	\item ExerciseManager
+    	\item UserManager
+    \end{itemize}
+    
+    \subsubsection{Adatelérési réteg}
+    Feladata az adatbázishoz való hozzáférés, melynek során biztosítja a szükséges \textit{lekérdezéseket, beszúrásokat, módosításokat, törléseket}. Ezen a szinten történik a védekezés az SQL injection ellen, a \textit{java.sql.PreparedStatement} interfész segítségével.
+    
+    \textbf{Megjelenés a kódban:} \textit{language.learning.database} package-ben IDatabase interfész, és ennek a megvalósítása a Database osztály.
+    
+    Az adatbázis elérésére az Oracle jdbc drivere került felhasználásra, ezt a kódban a Database osztályban meg is kell adni.
+    
+    \subsubsection{Adatbázis réteg}
+    Feladata az adatok perzisztens tárolása. A használt adatbázis az Oracle Database11g Express Edition. Azért erre esett a választás, mert ingyenes, és mivel korábbi tapasztalataink az Oracle adatbázisokhoz voltak köthetők, ezért mindenféleképpen Oracle terméket szerettünk volna használni. Bár vannak újabb verziók is, de azokat nem sikerült telepíteni, ezért maradt a 11g verzió.
+    
+    Megjelenés a kódban: nem írtunk hozzá komponenst, viszont a függőségek között megjelenik az ojdbc7.jar, ami szintén ingyenesen letölthető az Oracle honlapjáról. Érdekesség, hogy a projektünk Maven projekt, így a pom.xml-be megadott függőségek automatikusan letöltődnek, viszont az Oracle nem teszi ki publikus repository-ba az ojdbc driver-t, ezért manuálisan kell letölteni és beállítani a függőségeket.
+    
+    \subsection{Adatbázis terv}
+    Ezen fejezetben bemutatásra kerülnek az adatbázisban elmentett entitások. Az adatbázis (nem teljesen szabványos) egyed-kapcsolat diagramja látható \aref{fig:er_diag}. ábrán.
+    
+    \begin{figure}[htbp]
+    	\center
+    	\resizebox{140mm}{!}{
+    		\includegraphics{figures/er.pdf}
+    	}
+    	\caption{A szerver architekturális felépítése}
+    	\label{fig:er_diag}
+    \end{figure}
+    
+    \subsubsection{WORDEXERCISE}
+    A szó feladatokhoz szükséges adatok tárolására alkalmas. Egy szópárt tárol, ami egyébként könnyedén kibővíthető új nyelvekkel. Továbbá tárolja, hogy milyen nehézségű a feladat, és azt is, hogy melyik felhasználó hozta létre.
+    
+    Az id értékének generálására a \textit{WORDEXERCISE\_SEQ} szekvencia szolgál.
+    
+    \begin{table}[!h]
+    	\centering
+    	\begin{tabular} {|c|c|c|}
+    		\hline
+    		Név & Adatbázis típus & Java típus \\
+    		\hline
+    		id & number \textbf{(PK)} & nem jelenik meg ez a mező \\
+    		english & nvarchar2(30) & String \\
+    		hungarian & nvarchar2(30) & String \\
+    		userid & number \textbf{(FK)} & int \\
+    		knowledgelevelID & number \textbf{(FK)} & int \\
+    		\hline
+    	\end{tabular}
+    \end{table}
+    
+    \subsubsection{SENTENCEEXERCISE}
+    Nagyon hasonlít a \textit{WORDEXERCISE}-ra, de ez alkalmas hosszabb karakterlánc párok eltárolására is, tehát nem csak szavakat, hanem hosszabb mondatokat is tudunk tárolni benne. Elképzelhetőnek tartom, hogy össze lehetne vonni a \textit{WORDEXERCISE} és \textit{SENTENCEEXERCISE} táblákat, de akkor szükség lenne a típus bevezetésére, továbbá így érthetőbb miképp válnak külön a feladattípusok.
+    
+    Az id értékének generálására a \textit{SENTENCEEXERCISE\_SEQ} szekvencia szolgál.
+    
+    \begin{table}[!h]
+    	\centering
+    	\begin{tabular} {|c|c|c|}
+    		\hline
+    		Név & Adatbázis típus & Java típus \\
+    		\hline
+    		id & number \textbf{(PK)} & nem jelenik meg ez a mező \\
+    		english & nvarchar2(200) & String \\
+    		hungarian & nvarchar2(200) & String \\
+    		userid & number \textbf{(FK)} & int \\
+    		knowledgelevelID & number \textbf{(FK)} & int \\
+    		\hline
+    	\end{tabular}
+    \end{table}
+    
+    \subsubsection{IMAGEEXERCISE}
+    Annyiban különbözik a \textit{WORDEXERCISE}-tól, hogy képes képek tárolására. Az id értékének generálására az \textit{IMAGEEXERCISE\_SEQ} szekvencia szolgál.
+    
+    \begin{table}[!h]
+    	\centering
+    	\begin{tabular} {|c|c|c|}
+    		\hline
+    		Név & Adatbázis típus & Java típus \\
+    		\hline
+    		id & number \textbf{(PK)} & nem jelenik meg ez a mező \\
+    		english & nvarchar2(30) & String \\
+    		hungarian & nvarchar2(30) & String \\
+    		userid & number \textbf{(FK)} & int \\
+    		knowledgelevelID & number \textbf{(FK)} & int \\
+    		image & BLOB & byte[] \\
+    		\hline
+    	\end{tabular}
+    \end{table}
+    
+    \subsubsection{APPLICATIONUSER}
+    A felhasználó adatait tárolja. Az egyértelmű felhasználónév, jelszón kívül még a pontszámát, a tudásszintjét és azt, hogy rendelkezik-e adminisztrátori jogosultsággal.
+    
+    Az id értékének generálására a \textit{USER\_SEQ} szekvencia szolgál.
+    
+    \begin{table}[!h]
+    	\centering
+    	\begin{tabular} {|c|c|c|}
+    		\hline
+    		Név & Adatbázis típus & Java típus \\
+    		\hline
+    		id & number \textbf{(PK)} & nem jelenik meg ez a mező \\
+    		username & nvarchar2(15) & String \\
+    		userpassword & nvarchar2(128) & String \\
+    		userscore & number & int \\
+    		knowledgelevelID & number \textbf{(FK)} & int \\
+    		isadmin & number & boolean \\
+    		\hline
+    	\end{tabular}
+    \end{table}
+    
+    \subsubsection{KNOWLEDGELEVEL}
+    A különböző tudásszinteket tárolja. Mivel ezt a felhasználók nem tudják befolyásolni és kevés típus van, ezért nem szükséges szekvencia az id értékének generálására.
+    
+    \begin{table}[!h]
+    	\centering
+    	\begin{tabular} {|c|c|c|}
+    		\hline
+    		Név & Adatbázis típus & Java típus \\
+    		\hline
+    		id & number \textbf{(PK)} & nem jelenik meg ez a mező \\
+    		levelname & nvarchar2(10) & enumeráció \\
+    		\hline
+    	\end{tabular}
+    \end{table}
     
     \subsection{A kliens}
     \label{sec:kliens}
